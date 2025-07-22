@@ -1,0 +1,3762 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noodp, notranslate, noimageindex" />
+    <meta name="googlebot" content="noindex, nofollow" />
+    <meta name="bingbot" content="noindex, nofollow" />
+    <!-- Mobile-specific meta tags for better drawer handling -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" content="#4682b4" />
+    <title>Geolantis360 Map</title>
+
+    <!-- Shoelace styles and utils -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.13.1/cdn/themes/light.css"
+    />
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.13.1/cdn/shoelace-autoloader.js"
+    ></script>
+
+    <!-- Maplibre -->
+    
+    <script src="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Stylesheets -->
+    <link href="src/css/icons.lucide.css" rel="stylesheet" />
+    <link href="src/css/modernstyle.css" rel="stylesheet" />
+    <link href="src/css/responsive-variables.css" rel="stylesheet" />
+
+    <link href="src/css/styles.css" rel="stylesheet" />
+    <link href="src/css/mobile-overrides.css" rel="stylesheet" />
+    <link href="src/css/mobile-drawer-fixes.css" rel="stylesheet" />
+    <link href="src/css/sidebar-headers.css" rel="stylesheet" />
+
+    <link href="src/css/layer-catogories.css" rel="stylesheet" />
+    <link href="src/css/basemap-layers.css" rel="stylesheet" />
+    <link href="src/css/drawer-tabs.css" rel="stylesheet" />
+    <link href="src/css/button-themes.css" rel="stylesheet" />
+    <link href="src/css/terrain-control.css" rel="stylesheet" />
+    
+    <link rel="stylesheet" href="src/css/shoelace-custom.css" />
+    
+    <!-- Measurement CSS - MUST be last to override styles.css -->
+    
+    <!-- Drawer Padding Fix - MUST be absolutely last -->
+    <link href="src/css/drawer-padding-fix.css" rel="stylesheet" />
+    
+    <!-- Search Fix - Override all search-related styles -->
+    <link href="src/css/search-fix.css" rel="stylesheet" />
+    
+    <!-- Basemap Layout - Clean and simple -->
+    <link href="src/css/basemap-layout.css" rel="stylesheet" />
+    
+    <!-- Drawer positioning fix to ensure proper z-index and full height -->
+    <link href="src/css/drawer-positioning-fix.css" rel="stylesheet" />
+    
+    <!-- Hide UI elements during initialization -->
+    <link href="src/css/initialization-hide.css" rel="stylesheet" />
+    
+    <!-- Status Footer positioning fix -->
+    <link href="src/css/status-footer-position.css" rel="stylesheet" />
+    
+    <!-- Clean White theme enhancements -->
+    <link href="src/css/status-footer-clean-white.css" rel="stylesheet" />
+    
+    <!-- Drawer width fix - MUST load after other drawer CSS -->
+    <link href="src/css/drawer-width-fix.css" rel="stylesheet" />
+    
+    <!-- Bookmarks styling -->
+    <link href="src/css/bookmarks.css" rel="stylesheet" />
+    
+    <!-- Mobile drawer center fix - MUST be absolutely last -->
+    <link href="src/css/mobile-drawer-center-fix.css" rel="stylesheet" />
+    
+    <!-- Additional override to ensure it works -->
+    <style>
+        /* Emergency override for TerraDraw buttons using the ACTUAL classes */
+        .maplibregl-terradraw-add-control,
+        button.maplibregl-terradraw-add-control {
+            width: 50px !important;
+            height: 50px !important;
+            font-size: 16px !important;
+        }
+        
+        /* Tools panel styling */
+        .tools-content {
+            padding: 20px;
+        }
+        
+        .tools-content h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        
+        .tools-content h4 {
+            margin-top: 10px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--sl-color-neutral-700);
+        }
+        
+        .tools-content sl-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .tools-content sl-range {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        
+        .tools-content .info-text {
+            font-size: 12px;
+            color: var(--sl-color-neutral-600);
+            margin-top: 10px;
+        }
+        
+        /* Offline maps styling */
+        .offline-maps-content {
+            padding: 15px;
+        }
+        
+        .offline-maps-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--sl-color-neutral-600);
+        }
+        
+        .offline-maps-empty p {
+            margin: 10px 0;
+        }
+        
+        .offline-maps-empty .info-text {
+            font-size: 12px;
+            color: var(--sl-color-neutral-500);
+        }
+        
+        .offline-map-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--sl-color-neutral-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+        
+        .offline-map-item:hover {
+            background-color: var(--sl-color-neutral-50);
+        }
+        
+        .offline-map-item.selected {
+            background-color: var(--sl-color-primary-50);
+            border-left: 3px solid var(--sl-color-primary-600);
+            padding-left: 12px;
+        }
+        
+        .offline-map-info {
+            flex: 1;
+            text-align: left;
+        }
+        
+        .offline-map-name {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .offline-map-details {
+            font-size: 12px;
+            color: var(--sl-color-neutral-600);
+        }
+        
+        .offline-map-controls {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        
+        /* Emergency z-index fix for left drawers to appear above StatusFooter */
+        sl-drawer[placement="start"]::part(overlay),
+        sl-drawer[placement="start"]::part(panel) {
+            z-index: 20001 !important;
+        }
+        
+        /* Ensure all left drawer IDs are covered */
+        #left1-drawer::part(overlay),
+        #left1-drawer::part(panel),
+        #left2-drawer::part(overlay),
+        #left2-drawer::part(panel),
+        #left3-drawer::part(overlay),
+        #left3-drawer::part(panel),
+        #left4-drawer::part(overlay),
+        #left4-drawer::part(panel),
+        #left4a-drawer::part(overlay),
+        #left4a-drawer::part(panel) {
+            z-index: 20001 !important;
+        }
+        
+        /* StatusBar Settings Styles */
+        .statusbar-settings {
+            padding: 20px;
+        }
+        
+        .statusbar-settings h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .statusbar-settings h4 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--sl-color-neutral-700);
+        }
+        
+        .statusbar-section {
+            margin-bottom: 20px;
+        }
+        
+        .statusbar-control-group {
+            margin-bottom: 15px;
+        }
+        
+        .statusbar-control-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--sl-color-neutral-700);
+        }
+        
+        .statusbar-preset-buttons label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--sl-color-neutral-700);
+        }
+        
+        .preset-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .preset-grid sl-button {
+            width: 100%;
+        }
+        
+        .statusbar-elements {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .statusbar-settings sl-divider {
+            margin: 20px 0;
+        }
+        
+        .statusbar-settings .info-text {
+            font-size: 12px;
+            color: var(--sl-color-neutral-600);
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+        
+        .statusbar-settings sl-range {
+            width: 100%;
+        }
+        
+        .statusbar-settings sl-select {
+            width: 100%;
+        }
+        
+        .statusbar-settings sl-switch {
+            margin-bottom: 0;
+        }
+        
+        /* StatusFooter will position itself */
+        
+        /* Ensure all tabs in settings are visible */
+        #left2-drawer sl-tab-group sl-tab {
+            display: inline-flex !important;
+            visibility: visible !important;
+        }
+        
+        /* Ensure StatusFooter is visible and positioned */
+        status-footer-ultrathin {
+            position: fixed !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            z-index: 1000 !important;
+            display: block !important;
+            visibility: visible !important;
+        }
+    </style>
+    
+    <!-- Scripts -->
+    
+    <!-- UI Initialization Manager - Load early to prevent flash of unstyled content -->
+    <script src="src/ui-initialization-manager.js"></script>
+    
+    <script src="src/tilt-icons.js" defer></script>
+    <script src="https://unpkg.com/@maplibre/maplibre-gl-geocoder@1.5.0/dist/maplibre-gl-geocoder.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/@maplibre/maplibre-gl-inspect@latest/dist/maplibre-gl-inspect.js"></script>
+    <link
+      href="https://unpkg.com/@maplibre/maplibre-gl-inspect@latest/dist/maplibre-gl-inspect.css"
+      rel="stylesheet"
+    />
+    <!--<script src="https://cdn.jsdelivr.net/npm/geotiff"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.7.5/proj4.js"></script>
+
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@maplibre/maplibre-gl-geocoder@1.5.0/dist/maplibre-gl-geocoder.css"
+    />
+    
+    <!-- CORS Proxy Configuration -->
+    <script src="cors-proxy-config.js"></script>
+  </head>
+  <body class="button-size-medium">
+    <div id="map">
+      <!-- Sidebar 1 - Baselayers -->
+      <!-- Updated sl-drawer with two collapsible sections -->
+      <sl-drawer id="left1-drawer" placement="start" no-header style="--size: 350px">
+        <div class="sidebar-content">
+          <div class="drawer-header">
+            <h3 data-i18n="ui.tabs.layers">Layers</h3>
+          </div>
+
+          <sl-tab-group placement="start">
+            <!-- Basemaps Tab (Basemap Switcher) -->
+            <sl-tab slot="nav" panel="basemaps" aria-label="Basemaps" active>
+              <sl-icon name="globe2"></sl-icon>
+            </sl-tab>
+
+            <!-- Overlays Tab -->
+            <sl-tab slot="nav" panel="overlays" aria-label="Overlays">
+              <sl-icon name="layers"></sl-icon>
+            </sl-tab>
+
+            <!-- Basemap Layers Tab -->
+            <sl-tab slot="nav" panel="basemap-layers" aria-label="Basemap Layers">
+              <sl-icon name="stack"></sl-icon>
+            </sl-tab>
+
+            <!-- Offline Maps Tab -->
+            <sl-tab slot="nav" panel="offline-maps" aria-label="Offline Maps">
+              <sl-icon name="box"></sl-icon>
+            </sl-tab>
+
+            <!-- Bookmarks Tab -->
+            <sl-tab slot="nav" panel="bookmarks" aria-label="Bookmarks">
+              <sl-icon name="bookmark"></sl-icon>
+            </sl-tab>
+
+            <!-- PDF Overlays Tab -->
+            <sl-tab slot="nav" panel="pdf-overlays" aria-label="PDF Overlays">
+              <sl-icon name="file-image"></sl-icon>
+            </sl-tab>
+
+            <!-- Placeholder Tab -->
+            <sl-tab slot="nav" panel="tools" aria-label="Tools">
+              <sl-icon name="gear"></sl-icon>
+            </sl-tab>
+
+
+            <!-- Basemaps Panel (Basemap Switcher) -->
+            <sl-tab-panel name="basemaps" active>
+              <h3 data-i18n="ui.tabs.basemaps">Basemaps</h3>
+              <div class="controls" id="basemap-controls">
+                <!-- Basemap controls populated by createBasemapControls() -->
+              </div>
+            </sl-tab-panel>
+
+            <!-- Overlays Panel -->
+            <sl-tab-panel name="overlays">
+              <h3 data-i18n="ui.tabs.overlays">Overlays</h3>
+              <div class="overlaycontrols">
+                <sl-tooltip content="Adds the KAGIS Basemap">
+                  <sl-button
+                    id="toggleKataster"
+                    variant="outline"
+                    size="medium"
+                    data-i18n="kataster.toggle"
+                  >
+                    Toggle Kataster
+                  </sl-button>
+                </sl-tooltip>
+
+                <sl-button
+                  id="toggleKatasterBEV"
+                  variant="outline"
+                  size="medium"
+                  data-i18n="kataster.toggleBEV"
+                >
+                  Toggle Kataster BEV
+                </sl-button>
+
+                <sl-button
+                  id="toggleKatasterBEVGrau"
+                  variant="outline"
+                  size="medium"
+                  data-i18n="kataster.toggleGray"
+                >
+                  Toggle Kataster Grau
+                </sl-button>
+
+                <sl-button
+                  id="toggleDkmBevSymbole"
+                  variant="outline"
+                  size="medium"
+                >
+                  Toggle dkm_bev_symbole
+                </sl-button>
+
+
+                <sl-button id="toggleFLAWI" variant="outline" size="medium">
+                  Widmung
+                </sl-button>
+
+                <sl-button id="toggleGEFAHR" variant="outline" size="medium">
+                  Gefahrenzonen
+                </sl-button>
+
+                <sl-button id="NZParcels" variant="outline" size="medium">
+                  NZ Parcels
+                </sl-button>
+
+                <sl-button id="zoomToGeoJson" variant="outline" size="medium">
+                  Zoom to GeoJSON Layers
+                </sl-button>
+
+                <sl-button
+                  id="toggleNSWBaseMap"
+                  variant="outline"
+                  size="medium"
+                >
+                  NSW BaseMap
+                </sl-button>
+
+                <sl-button
+                  id="toggleInspireWMS"
+                  variant="outline"
+                  size="medium"
+                >
+                  ADD Inspire WMS
+                </sl-button>
+
+                <sl-button id="toggleBEVDKMGST" variant="outline" size="medium">
+                  ADD BEV DKM GST
+                </sl-button>
+
+                <sl-button id="exploreBEVWMS" variant="outline" size="medium">
+                  Explore BEV WMS Layers
+                </sl-button>
+              </div>
+            </sl-tab-panel>
+
+            <!-- Basemap Layers Panel -->
+            <sl-tab-panel name="basemap-layers">
+              <div id="basemap-layers-container">
+                <!-- Basemap layers UI will be populated here -->
+              </div>
+            </sl-tab-panel>
+
+            <!-- Offline Maps Panel -->
+            <sl-tab-panel name="offline-maps">
+              <h3 data-i18n="ui.tabs.offlineMaps">Offline Maps</h3>
+              <div class="offline-maps-content">
+                <div id="offline-maps-list">
+                  <!-- Offline maps will be dynamically populated here -->
+                  <div class="offline-maps-empty">
+                    <p data-i18n="messages.noOfflineMaps">No offline maps available</p>
+                    <p class="info-text" data-i18n="messages.addOfflineMapsHint">Add .mbtiles or .pmtiles files to enable offline mode</p>
+                  </div>
+                </div>
+              </div>
+            </sl-tab-panel>
+
+            <!-- Bookmarks Panel -->
+            <sl-tab-panel name="bookmarks">
+              <div class="bookmarks-panel">
+                <div class="bookmarks-header">
+                  <h3 class="bookmarks-title" data-i18n="ui.tabs.bookmarks">Bookmarks</h3>
+                  <sl-icon-button 
+                    name="plus-circle" 
+                    label="Add bookmark"
+                    onclick="App.Map.Bookmarks.showCreateDialog()"
+                  ></sl-icon-button>
+                </div>
+                <div id="bookmarks-container">
+                  <!-- Bookmarks will be dynamically populated here -->
+                </div>
+              </div>
+            </sl-tab-panel>
+
+            <!-- Tools Panel -->
+            <sl-tab-panel name="tools">
+              <div class="tools-content">
+                <h4 data-i18n="ui.settings.mapSettings">Map Settings</h4>
+                <div class="controls">
+                  <sl-switch id="toggleRotation" checked data-i18n="ui.settings.mapRotation">Map Rotation</sl-switch>
+                  <sl-switch id="toggleRotationDevice" checked
+                    data-i18n="ui.settings.rotateWithCompass">Rotate with compass</sl-switch
+                  >
+                  <sl-switch id="togglePitch" checked data-i18n="ui.settings.allowPitch">Allow Pitch</sl-switch>
+                  <sl-switch id="toggleBackground" checked data-i18n="ui.settings.background">Background</sl-switch>
+                  <sl-switch id="toggle3DBuildings" checked
+                    data-i18n="ui.settings.threeDBuilding">3D Building</sl-switch
+                  >
+                  <sl-switch id="toggleAccuracyCircle" data-i18n="ui.settings.accuracyCircle">Accuracy Circle</sl-switch>
+                </div>
+                
+                <sl-divider></sl-divider>
+                
+                <h4 data-i18n="ui.settings.layerSettings">Layer Settings</h4>
+                <sl-button id="resetBasemapToDefault" size="small" variant="neutral" style="margin-bottom: 10px;">
+                  Reset to Default Basemap
+                </sl-button>
+                <sl-label for="backgroundTransparency"
+                  data-i18n="ui.settings.backgroundTransparency">Background Transparency</sl-label
+                >
+                <sl-range
+                  id="backgroundTransparency"
+                  min="0"
+                  max="100"
+                  value="100"
+                ></sl-range>
+                
+                <p class="info-text" data-i18n="ui.settings.backgroundTransparencyDesc">Adjust the transparency of background layers</p>
+              </div>
+            </sl-tab-panel>
+
+            <!-- PDF Overlays Panel -->
+            <sl-tab-panel name="pdf-overlays">
+              <h3>PDF Overlays</h3>
+              <div id="pdf-overlays-container">
+                <div id="pdf-overlays-loading" style="display: none; text-align: center; padding: 20px;">
+                  <sl-spinner></sl-spinner>
+                  <p>Loading PDF overlays...</p>
+                </div>
+                <div id="pdf-overlays-list">
+                  <!-- PDF overlays will be populated here -->
+                </div>
+                <div id="pdf-overlays-empty" style="display: none; text-align: center; padding: 20px; color: #666;">
+                  <sl-icon name="file-image" style="font-size: 48px; opacity: 0.5;"></sl-icon>
+                  <p>No PDF overlays found</p>
+                  <p style="font-size: 0.9em;">Upload and calibrate PDFs to see them here</p>
+                </div>
+              </div>
+              
+              <sl-divider style="margin: 16px 0;"></sl-divider>
+              
+              <div class="pdf-overlay-actions">
+                <sl-button size="small" variant="neutral" id="refresh-pdf-overlays">
+                  <sl-icon slot="prefix" name="refresh-cw"></sl-icon>
+                  Refresh
+                </sl-button>
+                <sl-button size="small" variant="neutral" id="zoom-to-all-overlays">
+                  <sl-icon slot="prefix" name="zoom-in"></sl-icon>
+                  Zoom to All
+                </sl-button>
+              </div>
+            </sl-tab-panel>
+          </sl-tab-group>
+        </div>
+      </sl-drawer>
+
+      <!-- Sidebar 2 - Map Settings -->
+      <sl-drawer id="left2-drawer" placement="start" no-header style="--size: 350px">
+        <div class="sidebar-content">
+          <div class="drawer-header">
+            <h3 data-i18n="ui.tabs.settings">Settings</h3>
+          </div>
+
+          <sl-tab-group placement="start">
+            <!-- UI Tab -->
+            <sl-tab slot="nav" panel="ui" aria-label="UI Settings" active>
+              <sl-icon name="sliders"></sl-icon>
+            </sl-tab>
+
+            <!-- UX Tab -->
+            <sl-tab slot="nav" panel="ux" aria-label="TOOLS">
+              <sl-icon name="box"></sl-icon>
+            </sl-tab>
+            
+            <!-- StatusBar Tab -->
+            <sl-tab slot="nav" panel="statusbar" aria-label="Status Bar">
+              <sl-icon name="tv"></sl-icon>
+            </sl-tab>
+
+            <!-- UI Panel -->
+            <sl-tab-panel name="ui" active>
+              <h3 data-i18n="ui.settings.uiSettings">UI Settings</h3>
+              <div class="controls">
+                <sl-switch id="toggleZoomControls"
+                  data-i18n="ui.settings.zoomControl">Zoom control</sl-switch
+                >
+                <sl-switch id="toggleScale" checked data-i18n="ui.settings.showScale">Show scale</sl-switch>
+                <sl-switch id="toggleUnits" checked data-i18n="ui.settings.metricUnits">Metric units</sl-switch>
+              </div>
+            </sl-tab-panel>
+
+            <!-- UX Panel -->
+            <sl-tab-panel name="ux">
+              <div class="controls">
+                <h3 data-i18n="ui.tabs.tools">Tools</h3>
+                
+                <sl-divider></sl-divider>
+                
+                <sl-button id="toggleCommandLine" variant="primary" size="medium" data-i18n="ui.tools.commandLineTool">
+                  Command Line Tool
+                </sl-button>
+                
+                <sl-divider></sl-divider>
+                
+                <h4 data-i18n="ui.tools.measurementModes">Measurement Modes</h4>
+                <div class="measurement-modes">
+                  <sl-switch id="measureModePoint" checked data-i18n="ui.tools.modes.point">Point</sl-switch>
+                  <sl-switch id="measureModeLinestring" checked data-i18n="ui.tools.modes.line">Line</sl-switch>
+                  <sl-switch id="measureModePolygon" checked data-i18n="ui.tools.modes.polygon">Polygon</sl-switch>
+                  <sl-switch id="measureModeAngledRectangle" checked data-i18n="ui.tools.modes.angledRectangle">Angled Rectangle</sl-switch>
+                  <sl-switch id="measureModeRectangle" data-i18n="ui.tools.modes.rectangle">Rectangle</sl-switch>
+                  <sl-switch id="measureModeCircle" data-i18n="ui.tools.modes.circle">Circle</sl-switch>
+                  <sl-switch id="measureModeSector" data-i18n="ui.tools.modes.sector">Sector</sl-switch>
+                  <sl-switch id="measureModeSensor" data-i18n="ui.tools.modes.sensor">Sensor</sl-switch>
+                  <sl-switch id="measureModeFreehand" data-i18n="ui.tools.modes.freehand">Freehand</sl-switch>
+                </div>
+                
+                <sl-divider></sl-divider>
+                
+                <p class="info-text" data-i18n="ui.tools.toggleMeasurementDesc">Toggle measurement modes on/off. Changes take effect when measurement tool is restarted.</p>
+              </div>
+            </sl-tab-panel>
+            
+            <!-- StatusBar Panel -->
+            <sl-tab-panel name="statusbar">
+              <div class="statusbar-settings">
+                <h3 data-i18n="ui.statusBar.statusBar">Status Bar</h3>
+                
+                <div class="statusbar-section">
+                  <h4 data-i18n="ui.settings.displaySettings">Display Settings</h4>
+                  
+                  <sl-switch id="statusbar-enabled" checked data-i18n="ui.settings.enableStatusBar">Enable Status Bar</sl-switch>
+                  
+                  <div class="statusbar-preset-buttons">
+                    <label>Quick Presets</label>
+                    <div class="preset-grid">
+                      <sl-button size="small" variant="neutral" id="preset-ultra-minimal">Ultra Minimal</sl-button>
+                      <sl-button size="small" variant="neutral" id="preset-compact-dark">Compact Dark</sl-button>
+                      <sl-button size="small" variant="neutral" id="preset-glass">Glass Effect</sl-button>
+                      <sl-button size="small" variant="neutral" id="preset-surveyor">Surveyor Pro</sl-button>
+                      <sl-button size="small" variant="neutral" id="preset-clean-black">Clean Black</sl-button>
+                      <sl-button size="small" variant="neutral" id="preset-clean-white-inv">White BG</sl-button>
+                    </div>
+                  </div>
+                  
+                  <sl-divider></sl-divider>
+                  
+                  <div class="statusbar-control-group">
+                    <label>Height</label>
+                    <sl-select id="statusbar-height" value="compact" size="small">
+                      <sl-option value="ultra" data-i18n="ui.settings.statusBarHeight.ultraThin">Ultra Thin (28px)</sl-option>
+                      <sl-option value="compact" data-i18n="ui.settings.statusBarHeight.compact">Compact (32px)</sl-option>
+                      <sl-option value="normal" data-i18n="ui.settings.statusBarHeight.normal">Normal (40px)</sl-option>
+                    </sl-select>
+                  </div>
+                  
+                  <div class="statusbar-control-group">
+                    <label>Theme</label>
+                    <sl-select id="statusbar-theme" value="clean-white" size="small">
+                      <sl-option value="default">Default Light</sl-option>
+                      <sl-option value="transparent">Transparent Dark</sl-option>
+                      <sl-option value="glass">Glass Effect</sl-option>
+                      <sl-option value="minimal">Minimal (No BG)</sl-option>
+                      <sl-option value="dji-light">DJI Light</sl-option>
+                      <sl-option value="clean-white">Clean White (Black Shadow)</sl-option>
+                      <sl-option value="clean-black">Clean Black (White Halo)</sl-option>
+                      <sl-option value="clean-white-inv">Clean White Inverted</sl-option>
+                    </sl-select>
+                  </div>
+                  
+                  <div class="statusbar-control-group">
+                    <label>Transparency</label>
+                    <sl-range id="statusbar-transparency" min="0" max="100" value="90" suffix="%"></sl-range>
+                  </div>
+                  
+                  <div class="statusbar-control-group">
+                    <label>Blur Effect</label>
+                    <sl-range id="statusbar-blur" min="0" max="30" value="20" suffix="px"></sl-range>
+                  </div>
+                </div>
+                
+                <sl-divider></sl-divider>
+                
+                <div class="statusbar-section">
+                  <h4>Visible Elements</h4>
+                  <p class="info-text">Accuracy and GNSS Status are always visible</p>
+                  
+                  <div class="statusbar-elements">
+                    <sl-switch id="elem-device" checked>Device Name</sl-switch>
+                    <sl-switch id="elem-time" checked>Time</sl-switch>
+                    <sl-switch id="elem-satellites" checked>Satellites</sl-switch>
+                    <sl-switch id="elem-battery">Battery</sl-switch>
+                    <sl-switch id="elem-expand" checked>Expand Button</sl-switch>
+                  </div>
+                </div>
+                
+                <sl-divider></sl-divider>
+                
+                <div class="statusbar-section">
+                  <h4>Test Data</h4>
+                  <sl-button size="small" variant="primary" id="statusbar-test-data">Generate Test Data</sl-button>
+                  <sl-button size="small" variant="neutral" id="statusbar-toggle-expand">Toggle Expand</sl-button>
+                </div>
+                
+              </div>
+            </sl-tab-panel>
+          </sl-tab-group>
+        </div>
+      </sl-drawer>
+
+      <!-- Sidebar 3 - Search -->
+      <sl-drawer id="left3-drawer" placement="start" no-header style="--size: 350px">
+        <div class="sidebar-content">
+          <br />
+          <h3>Search</h3>
+
+          <div id="search_wrapper" status="closed">
+            <!-- Search input field -->
+
+            <sl-input
+              id="map_search_input"
+              name="q"
+              placeholder="Suchtext eingeben"
+              autocomplete="on"
+              list="suggestions"
+              onkeyup="interface.do_search();"
+              onkeydown="interface.map_q_select();"
+            ></sl-input>
+            <!-- Search button -->
+            <div id="search_button">
+              <a
+                href="#"
+                title="Suche"
+                onclick="interface.do_search(); return false;"
+              >
+                <!-- SVG icon for search -->
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.25"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-search"
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="m21 21-4.3-4.3" />
+                </svg>
+              </a>
+            </div>
+
+            <!-- Map extent filter button -->
+            <div id="search_button_mapExtend">
+              <a
+                href="#"
+                title="Suche in Kartenausschnitt"
+                onclick="interface.filter_search2extent(); return false;"
+              >
+                <!-- SVG icon for map extent filter -->
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="28"
+                  height="28"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-scan-search"
+                >
+                  <path d="M3 7V5a2 2 0 0 1 2-2h2" />
+                  <path d="M17 3h2a2 2 0 0 1 2 2v2" />
+                  <path d="M21 17v2a2 2 0 0 1-2 2h-2" />
+                  <path d="M7 21H5a2 2 0 0 1-2-2v-2" />
+                  <circle cx="12" cy="12" r="3" />
+                  <path d="m16 16-1.9-1.9" />
+                </svg>
+              </a>
+            </div>
+            <!-- Search results container -->
+            <br />
+            <sl-divider style="--width: 1px"></sl-divider>
+            <div id="map_search_results"></div>
+          </div>
+        </div>
+      </sl-drawer>
+
+      <sl-drawer id="left4-drawer" placement="start" no-header style="--size: 350px">
+        <div class="sidebar-content">
+          <h3 data-i18n="ui.layers.featureLayers">Feature Layers</h3>
+
+          <div class="search-container">
+            <sl-input
+              id="layerSearchInput"
+              placeholder="Search feature clases..."
+              data-i18n-placeholder="ui.layers.searchPlaceholder"
+              clearable
+            >
+              <sl-icon name="search" slot="prefix"></sl-icon>
+            </sl-input>
+          </div>
+
+          <!-- Add this section -->
+          <div class="lc-layer-controls-header">
+            <div class="lc-layer-controls-master">
+              <div class="lc-master-control">
+                <sl-checkbox id="masterVisibleCheckbox" checked></sl-checkbox>
+                <span class="lc-control-label" data-i18n="ui.layers.visible">Visible</span>
+              </div>
+              <div class="lc-master-control">
+                <sl-tooltip content="Enable/disable selection for all layers">
+                  <sl-checkbox
+                    id="masterSelectableCheckbox"
+                    checked
+                  ></sl-checkbox>
+                </sl-tooltip>
+                <span class="lc-control-label" data-i18n="ui.layers.select">Select</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="categories-container" id="featureLayersContainer">
+            <!-- Feature categories will be dynamically inserted here -->
+          </div>
+        </div>
+      </sl-drawer>
+
+      <!-- Sidebar 4 - Overlays -->
+      <sl-drawer id="left4a-drawer" placement="start" no-header style="--size: 350px">
+        <div class="sidebar-content">
+          <br />
+          <br />
+          <br />
+          <h3>Overlays</h3>
+          <br />
+          <div class="controls">
+            <!-- All buttons have the same variant and size classes -->
+            <sl-tooltip content="Adds the KAGIS Basemap">
+              <sl-button id="toggleKataster" variant="outline" size="medium"
+                data-i18n="kataster.toggle"
+                >Toggle Kataster</sl-button
+              >
+            </sl-tooltip>
+
+            <sl-button id="toggleKatasterBEV" variant="outline" size="medium"
+              data-i18n="kataster.toggleBEV"
+              >Toggle Kataster BEV</sl-button
+            >
+            <sl-button id="toggleDkmBevSymbole" variant="outline" size="medium"
+              >Toggle dkm_bev_symbole</sl-button
+            >
+            <sl-button id="toggleFLAWI" variant="outline" size="medium"
+              >Widmung</sl-button
+            >
+            <sl-button id="toggleGEFAHR" variant="outline" size="medium"
+              >Gefahrenzonen</sl-button
+            >
+            <sl-button id="NZParcels" variant="outline" size="medium"
+              >NZ Parcels</sl-button
+            >
+            <sl-button id="zoomToGeoJson" variant="outline" size="medium"
+              >Zoom to GeoJSON Layers</sl-button
+            >
+            <sl-button id="toggleNSWBaseMap" variant="outline" size="medium"
+              >NSW BaseMap</sl-button
+            >
+            <sl-button id="toggleInspireWMS" variant="outline" size="medium"
+              >ADD Inspire WMS</sl-button
+            >
+            <sl-button id="toggleBEVDKMGST" variant="outline" size="medium"
+              >ADD BEV DKM GST</sl-button
+            >
+            <sl-button id="exploreBEVWMS" variant="outline" size="medium"
+              >Explore BEV WMS Layers</sl-button
+            >
+          </div>
+        </div>
+      </sl-drawer>
+
+      <!-- Right Sidebar -->
+      <sl-drawer
+        id="right1-drawer"
+        placement="end"
+        no-header
+        contained
+        style="--size: 400px"
+      >
+        <div class="sidebar-content">
+          <!-- Content for Right Sidebar -->
+          <object-info></object-info>
+        </div>
+      </sl-drawer>
+
+      <!-- New Right Sidebar (right2) -->
+      <!-- <sl-drawer id="right2-drawer" placement="end" no-header></sl-drawer> -->
+
+      <!-- Sidebar Toggle Group -->
+      <div class="sidebar-toggle-group">
+        <!-- Toggle button for Sidebar 1 -->
+        <div class="sidebar-toggle" onclick="interface.toggleSidebar('left1')">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-globe"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+            <path d="M2 12h20" />
+          </svg>
+        </div>
+
+        <!-- Toggle button for Sidebar 4 -->
+        <div class="sidebar-toggle" onclick="interface.toggleSidebar('left4')">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="28"
+            height="28"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-layers-3"
+          >
+            <path
+              d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"
+            />
+            <path
+              d="m6.08 9.5-3.5 1.6a1 1 0 0 0 0 1.81l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9a1 1 0 0 0 0-1.83l-3.5-1.59"
+            />
+            <path
+              d="m6.08 14.5-3.5 1.6a1 1 0 0 0 0 1.81l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9a1 1 0 0 0 0-1.83l-3.5-1.59"
+            />
+          </svg>
+        </div>
+
+        <!-- Toggle button for Sidebar 2 -->
+        <div class="sidebar-toggle left2" onclick="interface.toggleSidebar('left2')">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="28"
+            height="28"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-settings"
+          >
+            <path
+              d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+            />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+        </div>
+
+        <!-- Toggle button for Sidebar 3 -->
+        <div class="sidebar-toggle" onclick="interface.toggleSidebar('left3')">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="28"
+            height="28"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-scan-search"
+          >
+            <path d="M3 7V5a2 2 0 0 1 2-2h2" />
+            <path d="M17 3h2a2 2 0 0 1 2 2v2" />
+            <path d="M21 17v2a2 2 0 0 1-2 2h-2" />
+            <path d="M7 21H5a2 2 0 0 1-2-2v-2" />
+            <circle cx="12" cy="12" r="3" />
+            <path d="m16 16-1.9-1.9" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Right Sidebar Toggle Group -->
+      <div class="sidebar-toggle-group-right">
+        <!-- Toggle button for Right Sidebar 1 -->
+        <div
+          class="sidebar-toggle right1"
+          onclick="interface.toggleSidebar('right1')"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="28"
+            height="28"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-info"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 16v-4" />
+            <path d="M12 8h.01" />
+          </svg>
+        </div>
+
+        <!-- Toggle button for Right Sidebar 2 -->
+        <!-- This button controls the second right sidebar panel
+             - Class "sidebar-toggle right2" positions the button and applies styling
+             - Onclick handler calls interface.toggleSidebar('right2') to show/hide the sidebar
+             - The SVG icon is a "goal/target" icon from Lucide icon library
+             - This sidebar is likely used for displaying additional map tools or information
+        -->
+        <div
+          class="sidebar-toggle right2"
+          onclick="interface.toggleSidebar('right2')"
+        >
+          <!-- Goal/Target icon SVG - represents the purpose of this sidebar -->
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-goal"
+          >
+            <!-- Arrow pointing to target -->
+            <path d="M12 13V2l8 4-8 4" />
+            <!-- Outer circle of target -->
+            <path d="M20.561 10.222a9 9 0 1 1-12.55-5.29" />
+            <!-- Inner circle of target -->
+            <path d="M8.002 9.997a5 5 0 1 0 8.9 2.02" />
+          </svg>
+        </div>
+      </div>
+    </div>
+    <!-- Container for the status footer -->
+    <!-- OLD STATUS FOOTER DISABLED - Using new StatusFooter instead -->
+    <!-- <status-footer></status-footer> -->
+    <script src="src/mapconfig-fallback-complete.js"></script>
+    <script src="src/mapConfigLoader.js"></script>
+    <!-- Comment out the module version that's not working -->
+    <!-- <script type="module" src="src/components/status-footer-component.js"></script> -->
+    
+    <!-- Use non-module version of the original component -->
+    <!-- <script src="src/status-footer-nonmodule.js"></script> -->
+   
+    <script src="src/components/objectinfo-component.js"></script>
+    <script src="src/ui-bridge.js"></script>
+
+    <!-- I18n Manager - Must load before other app scripts -->
+    <script src="src/i18n/i18n-manager-fixed.js"></script>
+    
+    <!-- Android Language Setter - For Android-driven language setting -->
+    <script src="android-language-setter.js"></script>
+    
+    <!-- Fix Translation Display - Ensures translations show properly -->
+    <script src="fix-translation-display.js"></script>
+    
+    <!-- Force German Language -->
+    <script src="force-german.js"></script>
+    
+    <!-- Diagnose Translation Issue -->
+    <script src="diagnose-translation-issue.js"></script>
+    
+    <!-- Direct German Override - Bypasses i18n system -->
+    <script src="direct-german-override.js"></script>
+    
+    <!-- Enhanced German Override - More aggressive translation -->
+    <script src="enhanced-german-override.js"></script>
+    
+    <!-- Button Translations Fix - Temporarily disabled for debugging -->
+    <!-- <script src="button-translations-fix.js"></script> -->
+    
+    <!-- Translation Verification - Debug which translations work -->
+    <script src="verify-translations.js"></script>
+    
+    <!-- Translation Keys Fix - Temporarily disabled for debugging -->
+    <!-- <script src="translation-keys-fix.js"></script> -->
+    
+    <!-- I18n System Diagnostic - Tests the i18n system -->
+    <script src="i18n-system-diagnostic.js"></script>
+    
+    <!-- Test Language Setting - Tests the language setting mechanism -->
+    <script src="test-language-setting.js"></script>
+   
+    <!-- Add before your existing scripts -->
+    <script src="src/app.js"></script>
+    
+    <!-- Utility modules -->
+    <script src="src/utils/app.utils.js"></script>
+    <script src="src/core/app.core.state.js"></script>
+    <script src="src/core/app.core.persistence.js"></script>
+    <script src="src/utils/app.utils.bridge.js"></script>
+    <script src="src/utils/app.utils.coordinates.js"></script>
+
+    <!-- Bridge layer for system integration -->
+    <script src="src/bridge/app.bridge.js"></script>
+    <script src="src/bridge/objectinfo-bridge.js"></script>
+
+    <script src="src/core/app.core.init.js"></script>
+    <script src="src/core/app.core.bridge.js"></script>
+    <script src="src/bridgeInterfaceML.js"></script>
+    <script src="src/core/app.core.config.js"></script>
+    <script src="src/core/app.core.events.js"></script>
+    <script src="src/core/app.core.performance.js"></script>
+    <script src="src/core/app.core.performance-config.js"></script>
+    <script src="src/core/app.core.gps-throttle.js"></script>
+    <script src="src/core/app.core.layer-batch.js"></script>
+    <script src="src/core/app.core.diagnostics.js"></script>
+    <script src="src/diagnostics/gps-performance-diagnostic.js"></script>
+    <script src="src/utils/disable-gps-logging.js"></script>
+
+    <script src="src/ui/app.ui.controls.js"></script>
+    <script src="src/ui/app.ui.search.js"></script>
+    <script src="src/ui/app.ui.state.js"></script>
+    <script src="src/ui/app.ui.presets.js"></script>
+
+    <!-- Map-related modules -->
+    <script src="src/map/app.map.init.js"></script>
+
+    <script src="src/map/app.map.layers.js"></script>
+    <script src="src/map/app.map.layers.ui.js"></script>
+    <script src="src/map/app.map.layers.state.js"></script>
+    <script src="src/map/app.map.layers.presets.js"></script>
+    <script src="src/map/app.map.navigation.js"></script>
+    <script src="src/map/app.map.overlay.js"></script>
+    <script src="src/map/app.map.events.js"></script>
+
+    <script src="src/map/app.map.terrain.js"></script>
+    <script src="src/map/app.map.basemap.js"></script>
+    <script src="src/map/app.map.basemap.ui.js"></script>
+    <script src="src/map/app.map.offline.js"></script>
+    <script src="src/map/app.map.labels.enhanced.js"></script>
+    <script src="src/map/app.map.coordinates.js"></script>
+    <script src="src/map/app.map.controls.js"></script>
+    <script src="src/map/app.map.layer-order.js"></script>
+    <script src="src/map/app.map.terradraw-top.js"></script>
+    <script src="src/map/app.map.bookmarks.js"></script>
+    <script src="src/map/app.map.pdf-overlays.js"></script>
+    <script src="src/utils/app.utils.debug.js"></script>
+    <script src="src/utils/app.utils.android-log.js"></script>
+
+    <script src="src/ui/app.ui.footer.js"></script>
+    <script src="src/ui/app.ui.sidebar.js"></script>
+    <script src="src/ui/app.ui.featureselector.js"></script>
+    <script src="src/ui/app.ui.dynamicbutton.js"></script>
+    <script src="src/ui/app.ui.contextmenu.js"></script>
+    <script src="src/ui/app.ui.radialmenu.js"></script>
+    <script src="src/ui/app.ui.performance-dashboard.js"></script>
+    <script src="src/ui/TiltDisplayWidget.js"></script>
+    <script src="src/features/app.features.stakeout.js"></script>
+    <script src="src/features/app.features.stakeout.extension.js"></script>
+    <script src="src/features/app.features.stakeout.alerts.js"></script>
+    <script src="src/features/app.features.stakeout.integration.js"></script>
+    <script src="src/features/stakeout-dynamic-integration.js"></script>
+    <script src="src/features/terradraw-font-patch.js"></script>
+    <script src="src/features/app.features.measure.js"></script>
+    <script src="src/features/measure-dynamic-integration.js"></script>
+    <script src="src/features/terradraw-glyph-fix.js"></script>
+    <script src="src/features/terradraw-glyph-force-fix.js"></script>
+    <script src="src/features/stakeout/feature-check.js"></script>
+    <script src="src/features/stakeout/gps-listener.js"></script>
+    <script src="src/features/stakeout/continuous-updates.js"></script>
+    <script src="src/features/stakeout/master-integration.js"></script>
+    <script src="src/features/stakeout/location-integration.js"></script>
+    <script src="src/features/stakeout/circle-updates.js"></script>
+    <script src="src/features/stakeout/circle-rendering.js"></script>
+    <script src="src/map/app.map.featureenhancer.js"></script>
+    <script src="src/turf.js"></script>
+    <script src="src/bridgeInterfaceHelper.js"></script>
+    <script src="src/returnHandler.js"></script>
+
+    <script src="src/ui/radialmenu.js"></script>
+    <script src="src/StakeOutUI.js"></script>
+    <script src="src/StakeOutUICompact.js"></script>
+    
+    <!-- StakeOut AI Enhancements - Load immediately after StakeOutUICompact -->
+    <script src="src/stakeout-ai/direct-enhance.js"></script>
+    <!-- Full enhancement suite (optional) -->
+    <!-- <script src="src/stakeout-ai/loader.js"></script> -->
+
+    <script src="src/appML.js"></script>
+    <script src="src/appMl-functions.js"></script>
+
+    <script src="src/commandline/commandline-interface.js"></script>
+    <script src="src/commandline/commandline-extension.js"></script>
+    <script src="src/commandline/commandline-buttons-extension.js"></script>
+
+    <script src="src/commandline/commandline-log-extension.js"></script>
+    <script src="src/gnss-simulator.js"></script>
+    <script src="src/button-visibility-controller.js"></script>
+    <script src="src/button-commands.js"></script>
+
+    <script src="src/feature-snapper.js"></script>
+    <script src="src/snapping-integration.js"></script>
+
+    <script src="src/shoelace-bridge.js"></script>
+    <script src="src/commandline/commandline-log-mailer.js"></script>
+    <script src="src/components/basemap-selector-component.js"></script>
+    <script src="src/ui/feature-selector-fix.js"></script>
+    <script src="src/ui/feature-selector-debug.js"></script>
+    <script>
+      console.log("Checking turf.js availability...");
+      if (typeof turf !== "undefined") {
+        console.log("✅ Turf.js is available. Version:", turf.version);
+      } else {
+        console.error("❌ Turf.js is not available!");
+      }
+
+      // Add this at the end of your HTML file
+      document.addEventListener("DOMContentLoaded", function () {
+        // Add style for our controls
+        const styleEl = document.createElement("style");
+        styleEl.textContent = `
+          .settings-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            gap: 4px;
+          }
+          .settings-buttons button {
+            flex: 1;
+            margin: 0;
+            padding: 5px 2px;
+            border: 1px solid #ccc;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          .settings-buttons button.active {
+            background: #e0e0e0;
+            font-weight: bold;
+          }
+          .settings-label {
+            font-weight: bold;
+            margin: 10px 0 5px 0;
+          }
+          /* Color theme buttons - grid layout for better spacing */
+          .button-color-controls {
+            display: grid !important;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px !important;
+          }
+          .button-color-controls button {
+            min-width: 0;
+            padding: 8px 4px;
+            font-size: 11px;
+            line-height: 1.3;
+            white-space: normal;
+            height: auto;
+            min-height: 40px;
+          }
+          .color-option-default {
+            background-color: rgba(255, 255, 255, 0.7) !important;
+            color: black !important;
+          }
+          .color-option-steelblue {
+            background-color: rgba(70, 130, 180, 0.7) !important;
+            color: white !important;
+          }
+          .color-option-steelblue-glow {
+            background-color: rgba(70, 130, 180, 0.7) !important;
+            color: white !important;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.6) !important;
+          }
+          .color-option-transparent {
+            background-color: rgba(0, 0, 0, 0.1) !important;
+            color: black !important;
+            border: 1px dashed #999 !important;
+          }
+          .color-option-transparent-white {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            color: black !important;
+            border: 1px dashed #666 !important;
+          }
+        `;
+        document.head.appendChild(styleEl);
+
+        // Wait for the map settings to be available
+        const checkSettings = setInterval(function () {
+          const settingsPanel = document.querySelector(
+            "#left2-drawer .sidebar-content .controls"
+          );
+          if (settingsPanel) {
+            clearInterval(checkSettings);
+
+            // Create HTML for custom button controls
+            const customControlsHTML = `
+              <sl-divider></sl-divider>
+              <div class="settings-label">Button Size</div>
+              <div class="settings-buttons button-size-controls">
+                <button data-size="small">Small</button>
+                <button data-size="medium" class="active">Medium</button>
+                <button data-size="large">Large</button>
+                <button data-size="extra-large">Extra Large</button>
+              </div>
+
+              <sl-divider></sl-divider>
+              <div class="settings-label">Color Theme</div>
+              <div class="settings-buttons button-color-controls color-grid">
+                <button data-color="default" class="color-option-default">Light</button>
+                <button data-color="steelblue">Geolantis</button>
+                <button data-color="steelblue-glow">Geolantis<br>Glow</button>
+                <button data-color="transparent">Trans<br>Black</button>
+                <button data-color="transparent-white">Trans<br>White</button>
+              </div>
+            `;
+
+            // Add our custom controls to the end of the settings panel
+            settingsPanel.insertAdjacentHTML("beforeend", customControlsHTML);
+
+            // Button size click handlers
+            document
+              .querySelectorAll(".button-size-controls button")
+              .forEach((button) => {
+                button.addEventListener("click", function () {
+                  const size = this.getAttribute("data-size");
+                  setButtonSize(size);
+
+                  // Update active state
+                  document
+                    .querySelectorAll(".button-size-controls button")
+                    .forEach((btn) => {
+                      btn.classList.remove("active");
+                    });
+                  this.classList.add("active");
+                });
+              });
+
+            // Color theme click handlers
+            document
+              .querySelectorAll(".button-color-controls button")
+              .forEach((button) => {
+                button.addEventListener("click", function () {
+                  const color = this.getAttribute("data-color");
+                  setButtonColor(color);
+
+                  // Update active state
+                  document
+                    .querySelectorAll(".button-color-controls button")
+                    .forEach((btn) => {
+                      btn.classList.remove("active");
+                      btn.classList.remove("color-option-default");
+                      btn.classList.remove("color-option-steelblue");
+                      btn.classList.remove("color-option-steelblue-glow");
+                      btn.classList.remove("color-option-transparent");
+                      btn.classList.remove("color-option-transparent-white");
+                    });
+                  this.classList.add("active");
+                  this.classList.add(`color-option-${color}`);
+                });
+              });
+
+            // Apply saved settings if available
+            try {
+              const savedSize = localStorage.getItem("buttonSize");
+              if (savedSize) {
+                setButtonSize(savedSize);
+                // Update active button
+                document.querySelectorAll(".button-size-controls button").forEach((btn) => {
+                  btn.classList.remove("active");
+                });
+                document
+                  .querySelector(
+                    `.button-size-controls button[data-size="${savedSize}"]`
+                  )
+                  ?.classList.add("active");
+              }
+
+              const savedColor = localStorage.getItem("buttonColor");
+              if (savedColor) {
+                setButtonColor(savedColor);
+                // Update active button
+                document.querySelectorAll(".button-color-controls button").forEach((btn) => {
+                  btn.classList.remove("active");
+                  btn.classList.remove("color-option-default");
+                  btn.classList.remove("color-option-steelblue");
+                  btn.classList.remove("color-option-steelblue-glow");
+                  btn.classList.remove("color-option-transparent");
+                  btn.classList.remove("color-option-transparent-white");
+                });
+                const colorButton = document.querySelector(
+                  `.button-color-controls button[data-color="${savedColor}"]`
+                );
+                if (colorButton) {
+                  colorButton.classList.add("active");
+                  colorButton.classList.add(`color-option-${savedColor}`);
+                }
+              } else {
+                // Default to "default" theme if nothing saved
+                setButtonColor("default");
+                const defaultButton = document.querySelector(
+                  `.button-color-controls button[data-color="default"]`
+                );
+                if (defaultButton) {
+                  defaultButton.classList.add("active");
+                  defaultButton.classList.add("color-option-default");
+                }
+              }
+            } catch (e) {
+              console.warn("Could not load saved settings");
+            }
+          }
+        }, 200);
+
+        // Function to set button sizes
+        function setButtonSize(size) {
+          // Remove all button size classes from body
+          document.body.classList.remove(
+            "button-size-small",
+            "button-size-medium",
+            "button-size-large",
+            "button-size-extra-large"
+          );
+          
+          // Add the new button size class
+          document.body.classList.add("button-size-" + size);
+
+          // Save setting to localStorage
+          try {
+            localStorage.setItem("buttonSize", size);
+          } catch (e) {
+            console.warn("Could not save button size setting");
+          }
+          
+          // Trigger events for other components
+          if (window.App && window.App.Core && window.App.Core.Events) {
+            window.App.Core.Events.trigger('buttonSize:changed', { size: size });
+          }
+          
+          // Trigger repositioning of measurement buttons
+          if (window.adjustMeasurementPosition) {
+            setTimeout(() => window.adjustMeasurementPosition(), 100);
+          }
+          
+          // Trigger repositioning of TerraDraw buttons
+          if (window.fixPosition) {
+            setTimeout(() => window.fixPosition(), 100);
+          }
+        }
+
+        // Add responsive CSS for mobile
+        const mobileStyles = `
+          @media (max-width: 768px) {
+            .sidebar {
+              width: 80vw;
+              max-width: 300px;
+            }
+
+            .right1, .right2 {
+              width: 85vw;
+              max-width: 400px;
+            }
+
+            .sidebar-toggle-group {
+              position: fixed;
+              left: 10px;
+              top: 50%;
+              transform: translateY(-50%);
+              z-index: 15;
+            }
+
+            .sidebar-toggle-group-right {
+              position: fixed;
+              right: 10px;
+              top: 50%;
+              transform: translateY(-50%);
+              z-index: 15;
+            }
+
+            .left1.collapsed, .left2.collapsed, .left3.collapsed, .left4.collapsed {
+              transform: translateX(-100%);
+            }
+
+            .right1.collapsed, .right2.collapsed {
+              transform: translateX(100%);
+            }
+          }
+        `;
+
+        // Add this to your code
+        function forceButtonColor(theme) {
+          // Create a style element specifically for sidebar-toggle background
+          const styleId = "sidebar-toggle-color-override";
+          let styleEl = document.getElementById(styleId);
+
+          if (!styleEl) {
+            styleEl = document.createElement("style");
+            styleEl.id = styleId;
+            document.head.appendChild(styleEl);
+          }
+
+          // Use the highest specificity possible to override any other styles
+          const color =
+            theme === "steelblue"
+              ? "rgba(70, 130, 180, 0.7)"
+              : "rgba(70, 130, 180, 0.7)";
+          styleEl.textContent = `
+    .sidebar-toggle {
+      background-color: ${color} !important;
+    }
+  `;
+
+          // Also try direct inline styling as well
+          document.querySelectorAll(".sidebar-toggle").forEach((toggle) => {
+            toggle.style.setProperty("background-color", color, "important");
+          });
+        }
+
+        // Updated setButtonColor function that applies theme to ALL map buttons
+        function setButtonColor(theme) {
+          console.log(`Setting color theme to: ${theme}`);
+
+          // Define colors with proper transparency
+          const steelblueColor = "rgba(70, 130, 180, 0.7)"; // Steel blue with 0.7 opacity
+          const steelblueHover = "rgba(70, 130, 180, 0.85)"; // Hover state
+          const steelblueActive = "rgba(70, 130, 180, 0.95)"; // Active state
+          const defaultColor = "rgba(255, 255, 255, 0.7)"; // Default white with transparency
+          const defaultHover = "rgba(255, 255, 255, 0.85)"; // Default hover
+          const defaultActive = "rgba(255, 255, 255, 0.95)"; // Default active
+
+          // Create or update the style sheet
+          const styleId = "button-color-theme-override";
+          let styleEl = document.getElementById(styleId);
+
+          if (!styleEl) {
+            styleEl = document.createElement("style");
+            styleEl.id = styleId;
+            document.head.appendChild(styleEl);
+          }
+
+          // Generate CSS based on theme
+          let cssContent = '';
+          
+          if (theme === "steelblue") {
+            // Apply steel blue theme to ALL button types
+            cssContent = `
+      /* Sidebar toggle buttons */
+      .sidebar-toggle {
+        background-color: ${steelblueColor} !important;
+      }
+      .sidebar-toggle:hover {
+        background-color: ${steelblueHover} !important;
+      }
+      
+      /* MapLibre control buttons (navigation, zoom, etc.) */
+      .maplibregl-ctrl button,
+      .maplibregl-ctrl-group button,
+      .mapboxgl-ctrl button,
+      .mapboxgl-ctrl-group button {
+        background-color: ${steelblueColor} !important;
+      }
+      .maplibregl-ctrl button:hover,
+      .maplibregl-ctrl-group button:hover,
+      .mapboxgl-ctrl button:hover,
+      .mapboxgl-ctrl-group button:hover {
+        background-color: ${steelblueHover} !important;
+      }
+      .maplibregl-ctrl button:active,
+      .maplibregl-ctrl-group button:active,
+      .mapboxgl-ctrl button:active,
+      .mapboxgl-ctrl-group button:active {
+        background-color: ${steelblueActive} !important;
+      }
+      
+      /* Dynamic button (stakeout/measure/etc.) */
+      .dynamic-button-primary,
+      .dynamic-button-secondary,
+      .dynamic-button-sub {
+        background-color: ${steelblueColor} !important;
+      }
+      .dynamic-button-primary:hover,
+      .dynamic-button-secondary:hover,
+      .dynamic-button-sub:hover {
+        background-color: ${steelblueHover} !important;
+      }
+      
+      /* Terrain control buttons */
+      .terrain-control button {
+        background-color: ${steelblueColor} !important;
+      }
+      .terrain-control button:hover {
+        background-color: ${steelblueHover} !important;
+      }
+      
+      /* TerraDraw measurement buttons */
+      .maplibregl-terradraw-add-control,
+      button.maplibregl-terradraw-add-control {
+        background-color: ${steelblueColor} !important;
+      }
+      .maplibregl-terradraw-add-control:hover,
+      button.maplibregl-terradraw-add-control:hover {
+        background-color: ${steelblueHover} !important;
+      }
+      
+      /* Geolocate control active state */
+      .maplibregl-ctrl-geolocate-active {
+        background-color: ${steelblueActive} !important;
+      }
+      
+      /* Compass/navigation control */
+      .maplibregl-ctrl-compass {
+        background-color: ${steelblueColor} !important;
+      }
+      .maplibregl-ctrl-compass:hover {
+        background-color: ${steelblueHover} !important;
+      }
+    `;
+
+            // Also handle overlay buttons in drawers
+            document.querySelectorAll("sl-button[variant='outline']").forEach((button) => {
+              button.style.setProperty(
+                "--sl-button-outline-background-color",
+                steelblueColor
+              );
+              button.style.setProperty(
+                "--sl-button-outline-border-color",
+                steelblueColor
+              );
+            });
+            
+          } else if (theme === "steelblue-glow") {
+            // Transparent theme with Geolantis blue icons and white glow
+            cssContent = `
+      /* Common transparent button styles */
+      .sidebar-toggle,
+      .maplibregl-ctrl button,
+      .maplibregl-ctrl-group button,
+      .mapboxgl-ctrl button,
+      .mapboxgl-ctrl-group button,
+      .dynamic-button-primary,
+      .dynamic-button-secondary,
+      .dynamic-button-sub,
+      .terrain-control button,
+      .maplibregl-terradraw-add-control,
+      button.maplibregl-terradraw-add-control,
+      .maplibregl-ctrl-compass {
+        background-color: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+      }
+      
+      /* SVG icons - Geolantis blue color with white glow */
+      .sidebar-toggle svg,
+      .maplibregl-ctrl button svg,
+      .maplibregl-ctrl-group button svg,
+      .dynamic-button-primary svg,
+      .dynamic-button-secondary svg,
+      .dynamic-button-sub svg,
+      .terrain-control button svg {
+        stroke: #4682B4 !important;
+        /* Only fill if the icon originally had fill */
+        fill: none !important;
+        filter: drop-shadow(0 0 2px rgba(255, 255, 255, 1)) 
+                drop-shadow(0 0 4px rgba(255, 255, 255, 0.8)) 
+                drop-shadow(0 0 6px rgba(255, 255, 255, 0.6)) !important;
+      }
+      
+      /* For filled icons (like certain lucide icons) */
+      .sidebar-toggle svg[fill]:not([fill="none"]),
+      .maplibregl-ctrl button svg[fill]:not([fill="none"]) {
+        fill: #4682B4 !important;
+      }
+      
+      /* Icon glows on hover */
+      .sidebar-toggle:hover,
+      .maplibregl-ctrl button:hover,
+      .maplibregl-ctrl-group button:hover,
+      .dynamic-button-primary:hover,
+      .dynamic-button-secondary:hover,
+      .dynamic-button-sub:hover,
+      .terrain-control button:hover,
+      .maplibregl-terradraw-add-control:hover,
+      .maplibregl-ctrl-compass:hover {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+      }
+      
+      .sidebar-toggle:hover svg,
+      .maplibregl-ctrl button:hover svg,
+      .dynamic-button-primary:hover svg {
+        filter: drop-shadow(0 0 3px rgba(255, 255, 255, 1)) 
+                drop-shadow(0 0 6px rgba(255, 255, 255, 0.9)) 
+                drop-shadow(0 0 9px rgba(255, 255, 255, 0.7)) !important;
+      }
+      
+      /* MapLibre icon fonts */
+      .maplibregl-ctrl-icon:before,
+      .mapboxgl-ctrl-icon:before {
+        color: #4682B4 !important;
+        text-shadow: 
+          0 0 2px rgba(255, 255, 255, 1),
+          0 0 4px rgba(255, 255, 255, 0.8),
+          0 0 6px rgba(255, 255, 255, 0.6) !important;
+      }
+      
+      /* Preserve stroke width */
+      .sidebar-toggle svg {
+        stroke-width: 1.5 !important;
+      }
+      
+      .maplibregl-ctrl button svg {
+        stroke-width: 2 !important;
+      }
+    `;
+            
+          } else if (theme === "transparent") {
+            // Transparent theme with black icons and white glow
+            cssContent = `
+      /* Common transparent button styles */
+      .sidebar-toggle,
+      .maplibregl-ctrl button,
+      .maplibregl-ctrl-group button,
+      .mapboxgl-ctrl button,
+      .mapboxgl-ctrl-group button,
+      .dynamic-button-primary,
+      .dynamic-button-secondary,
+      .dynamic-button-sub,
+      .terrain-control button,
+      .maplibregl-terradraw-add-control,
+      button.maplibregl-terradraw-add-control,
+      .maplibregl-ctrl-compass {
+        background-color: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+      }
+      
+      /* SVG icons - keep original stroke style, just change color and add glow */
+      .sidebar-toggle svg,
+      .maplibregl-ctrl button svg,
+      .maplibregl-ctrl-group button svg,
+      .dynamic-button-primary svg,
+      .dynamic-button-secondary svg,
+      .dynamic-button-sub svg,
+      .terrain-control button svg {
+        stroke: #000000 !important;
+        /* Only fill if the icon originally had fill */
+        fill: none !important;
+        filter: drop-shadow(0 0 2px rgba(255, 255, 255, 1)) 
+                drop-shadow(0 0 4px rgba(255, 255, 255, 0.8)) 
+                drop-shadow(0 0 6px rgba(255, 255, 255, 0.6)) !important;
+      }
+      
+      /* For filled icons (like certain lucide icons) */
+      .sidebar-toggle svg[fill]:not([fill="none"]),
+      .maplibregl-ctrl button svg[fill]:not([fill="none"]) {
+        fill: #000000 !important;
+      }
+      
+      /* Icon glows on hover */
+      .sidebar-toggle:hover,
+      .maplibregl-ctrl button:hover,
+      .maplibregl-ctrl-group button:hover,
+      .dynamic-button-primary:hover,
+      .dynamic-button-secondary:hover,
+      .dynamic-button-sub:hover,
+      .terrain-control button:hover,
+      .maplibregl-terradraw-add-control:hover,
+      .maplibregl-ctrl-compass:hover {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+      }
+      
+      .sidebar-toggle:hover svg,
+      .maplibregl-ctrl button:hover svg,
+      .dynamic-button-primary:hover svg {
+        filter: drop-shadow(0 0 3px rgba(255, 255, 255, 1)) 
+                drop-shadow(0 0 6px rgba(255, 255, 255, 0.9)) 
+                drop-shadow(0 0 9px rgba(255, 255, 255, 0.7)) !important;
+      }
+      
+      /* MapLibre icon fonts */
+      .maplibregl-ctrl-icon:before,
+      .mapboxgl-ctrl-icon:before {
+        color: #000000 !important;
+        text-shadow: 
+          0 0 2px rgba(255, 255, 255, 1),
+          0 0 4px rgba(255, 255, 255, 0.8),
+          0 0 6px rgba(255, 255, 255, 0.6) !important;
+      }
+      
+      /* Preserve stroke width */
+      .sidebar-toggle svg {
+        stroke-width: 1.5 !important;
+      }
+      
+      .maplibregl-ctrl button svg {
+        stroke-width: 2 !important;
+      }
+    `;
+            
+          } else if (theme === "transparent-white") {
+            // Transparent theme with white icons and black glow
+            cssContent = `
+      /* Common transparent button styles */
+      .sidebar-toggle,
+      .maplibregl-ctrl button,
+      .maplibregl-ctrl-group button,
+      .mapboxgl-ctrl button,
+      .mapboxgl-ctrl-group button,
+      .dynamic-button-primary,
+      .dynamic-button-secondary,
+      .dynamic-button-sub,
+      .terrain-control button,
+      .maplibregl-terradraw-add-control,
+      button.maplibregl-terradraw-add-control,
+      .maplibregl-ctrl-compass {
+        background-color: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+      }
+      
+      /* SVG icons - keep original stroke style, just change color and add glow */
+      .sidebar-toggle svg,
+      .maplibregl-ctrl button svg,
+      .maplibregl-ctrl-group button svg,
+      .dynamic-button-primary svg,
+      .dynamic-button-secondary svg,
+      .dynamic-button-sub svg,
+      .terrain-control button svg {
+        stroke: #FFFFFF !important;
+        /* Only fill if the icon originally had fill */
+        fill: none !important;
+        filter: drop-shadow(0 0 2px rgba(0, 0, 0, 1)) 
+                drop-shadow(0 0 4px rgba(0, 0, 0, 0.8)) 
+                drop-shadow(0 0 6px rgba(0, 0, 0, 0.6)) !important;
+      }
+      
+      /* For filled icons (like certain lucide icons) */
+      .sidebar-toggle svg[fill]:not([fill="none"]),
+      .maplibregl-ctrl button svg[fill]:not([fill="none"]) {
+        fill: #FFFFFF !important;
+      }
+      
+      /* Icon glows on hover */
+      .sidebar-toggle:hover,
+      .maplibregl-ctrl button:hover,
+      .maplibregl-ctrl-group button:hover,
+      .dynamic-button-primary:hover,
+      .dynamic-button-secondary:hover,
+      .dynamic-button-sub:hover,
+      .terrain-control button:hover,
+      .maplibregl-terradraw-add-control:hover,
+      .maplibregl-ctrl-compass:hover {
+        background-color: rgba(0, 0, 0, 0.05) !important;
+      }
+      
+      .sidebar-toggle:hover svg,
+      .maplibregl-ctrl button:hover svg,
+      .dynamic-button-primary:hover svg {
+        filter: drop-shadow(0 0 3px rgba(0, 0, 0, 1)) 
+                drop-shadow(0 0 6px rgba(0, 0, 0, 0.9)) 
+                drop-shadow(0 0 9px rgba(0, 0, 0, 0.7)) !important;
+      }
+      
+      /* MapLibre icon fonts */
+      .maplibregl-ctrl-icon:before,
+      .mapboxgl-ctrl-icon:before {
+        color: #FFFFFF !important;
+        text-shadow: 
+          0 0 2px rgba(0, 0, 0, 1),
+          0 0 4px rgba(0, 0, 0, 0.8),
+          0 0 6px rgba(0, 0, 0, 0.6) !important;
+      }
+      
+      /* Preserve stroke width */
+      .sidebar-toggle svg {
+        stroke-width: 1.5 !important;
+      }
+      
+      .maplibregl-ctrl button svg {
+        stroke-width: 2 !important;
+      }
+    `;
+            
+          } else {
+            // Default theme
+            cssContent = `
+      /* Sidebar toggle buttons */
+      .sidebar-toggle {
+        background-color: ${defaultColor} !important;
+      }
+      .sidebar-toggle:hover {
+        background-color: ${defaultHover} !important;
+      }
+      
+      /* MapLibre control buttons */
+      .maplibregl-ctrl button,
+      .maplibregl-ctrl-group button,
+      .mapboxgl-ctrl button,
+      .mapboxgl-ctrl-group button {
+        background-color: ${defaultColor} !important;
+      }
+      .maplibregl-ctrl button:hover,
+      .maplibregl-ctrl-group button:hover,
+      .mapboxgl-ctrl button:hover,
+      .mapboxgl-ctrl-group button:hover {
+        background-color: ${defaultHover} !important;
+      }
+      .maplibregl-ctrl button:active,
+      .maplibregl-ctrl-group button:active,
+      .mapboxgl-ctrl button:active,
+      .mapboxgl-ctrl-group button:active {
+        background-color: ${defaultActive} !important;
+      }
+      
+      /* Dynamic button */
+      .dynamic-button-primary,
+      .dynamic-button-secondary,
+      .dynamic-button-sub {
+        background-color: ${defaultColor} !important;
+      }
+      .dynamic-button-primary:hover,
+      .dynamic-button-secondary:hover,
+      .dynamic-button-sub:hover {
+        background-color: ${defaultHover} !important;
+      }
+      
+      /* Terrain control buttons */
+      .terrain-control button {
+        background-color: ${defaultColor} !important;
+      }
+      .terrain-control button:hover {
+        background-color: ${defaultHover} !important;
+      }
+      
+      /* TerraDraw measurement buttons */
+      .maplibregl-terradraw-add-control,
+      button.maplibregl-terradraw-add-control {
+        background-color: ${defaultColor} !important;
+      }
+      .maplibregl-terradraw-add-control:hover,
+      button.maplibregl-terradraw-add-control:hover {
+        background-color: ${defaultHover} !important;
+      }
+      
+      /* Geolocate control active state */
+      .maplibregl-ctrl-geolocate-active {
+        background-color: ${defaultActive} !important;
+      }
+      
+      /* Compass/navigation control */
+      .maplibregl-ctrl-compass {
+        background-color: ${defaultColor} !important;
+      }
+      .maplibregl-ctrl-compass:hover {
+        background-color: ${defaultHover} !important;
+      }
+    `;
+
+            // Restore overlay buttons
+            document.querySelectorAll("sl-button[variant='outline']").forEach((button) => {
+              button.style.removeProperty("--sl-button-outline-background-color");
+              button.style.removeProperty("--sl-button-outline-border-color");
+            });
+          }
+          
+          // Apply the generated CSS
+          styleEl.textContent = cssContent;
+
+          // Save setting to localStorage
+          try {
+            localStorage.setItem("buttonColor", theme);
+          } catch (e) {
+            console.warn("Could not save button color setting");
+          }
+
+          // Update button UI in settings panel
+          const defaultBtn = document.getElementById("btn-color-default");
+          const steelblueBtn = document.getElementById("btn-color-steelblue");
+
+          if (defaultBtn && steelblueBtn) {
+            if (theme === "steelblue") {
+              steelblueBtn.style.backgroundColor = "rgba(70, 130, 180, 0.7)";
+              steelblueBtn.style.color = "white";
+              defaultBtn.style.backgroundColor = "";
+              defaultBtn.style.color = "black";
+            } else {
+              defaultBtn.style.backgroundColor = defaultColor;
+              defaultBtn.style.color = "white";
+              steelblueBtn.style.backgroundColor = "";
+              steelblueBtn.style.color = "black";
+            }
+          }
+        }
+
+        // Function to apply saved theme after map controls are loaded
+        function applySavedTheme() {
+          try {
+            const savedColor = localStorage.getItem("buttonColor");
+            if (savedColor) {
+              setButtonColor(savedColor);
+              console.log(`Applied saved ${savedColor} theme`);
+            }
+          } catch (e) {
+            console.warn("Error loading saved color theme:", e);
+          }
+        }
+
+        // Apply saved theme on page load and after map initialization
+        document.addEventListener("DOMContentLoaded", function () {
+          // Apply immediately for sidebar toggles
+          applySavedTheme();
+          
+          // Also apply after map controls are created
+          setTimeout(() => {
+            applySavedTheme();
+            
+            // Listen for when map controls are added dynamically
+            const observer = new MutationObserver(() => {
+              if (document.querySelector('.maplibregl-ctrl')) {
+                applySavedTheme();
+                observer.disconnect();
+              }
+            });
+            
+            observer.observe(document.body, {
+              childList: true,
+              subtree: true
+            });
+          }, 1000);
+        });
+        // Add mobile styles
+        const mobileStyleEl = document.createElement("style");
+        mobileStyleEl.innerHTML = mobileStyles;
+        document.head.appendChild(mobileStyleEl);
+      });
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("Checking script loading status:");
+        console.log("- App namespace defined:", typeof App !== "undefined");
+        console.log(
+          "- App.Map defined:",
+          typeof App !== "undefined" && typeof App.Map !== "undefined"
+        );
+        console.log(
+          "- App.Map.Init defined:",
+          typeof App !== "undefined" &&
+            typeof App.Map !== "undefined" &&
+            typeof App.Map.Init !== "undefined"
+        );
+
+        if (
+          typeof App !== "undefined" &&
+          typeof App.Map !== "undefined" &&
+          typeof App.Map.Init !== "undefined"
+        ) {
+          console.log(
+            "- App.Map.Init.initializeMap is a function:",
+            typeof App.Map.Init.initializeMap === "function"
+          );
+          console.log(
+            "- App.Map.Init.getMap is a function:",
+            typeof App.Map.Init.getMap === "function"
+          );
+        }
+      });
+
+      function checkLocalScripts() {
+        console.log("Checking all local scripts...");
+
+        // List of all expected local scripts
+        const expectedScripts = [
+          "src/mapconfig.js",
+          "src/app.js",
+          "src/utils/app.utils.js",
+          "src/core/app.core.init.js",
+          "src/core/app.core.persistence.js",
+          "src/utils/app.utils.bridge.js",
+          "src/utils/app.utils.coordinates.js",
+          "src/bridge/app.bridge.js",
+          "src/map/app.map.init.js",
+          "src/map/app.map.controls.js",
+          "src/map/app.map.layers.js",
+          "src/map/app.map.layers.ui.js",
+          "src/map/app.map.layers.presets.js",
+          "src/map/app.map.navigation.js",
+          "src/map/app.map.overlay.js",
+          "src/map/app.map.events.js",
+          "src/map/app.map.terrain.js",
+          "src/map/app.map.basemap.js",
+          "src/map/app.map.coordinates.js",
+          "src/core/app.core.init.js",
+          "src/core/app.core.bridge.js",
+          "src/bridgeInterfaceML.js",
+          "src/core/app.core.config.js",
+          "src/core/app.core.events.js",
+          "src/ui/app.ui.controls.js",
+          "src/ui/app.ui.search.js",
+          "src/ui/app.ui.state.js",
+          "src/ui/app.ui.presets.js",
+          // "src/ui/app.ui.footer.js", // Disabled - using StatusFooter
+          "src/ui/app.ui.sidebar.js",
+          "src/features/app.features.stakeout.js",
+          "src/turf.js",
+          "src/bridgeInterfaceHelper.js",
+          "src/returnHandler.js",
+          "src/StakeOutUI.js",
+          "src/StakeOutUICompact.js",
+          "src/appML.js",
+          "src/appMl-functions.js",
+
+          "src/ui-bridge.js",
+          "src/commandline/commandline-interface.js",
+          "src/commandline/commandline-extension.js",
+          "src/commandline/commandline-buttons-extension.js",
+          "src/commandline/commandline-log-extension.js",
+          "src/gnss-simulator.js",
+          "src/button-visibility-controller.js",
+          "src/button-commands.js",
+          "src/feature-snapper.js",
+          "src/snapping-integration.js",
+          "src/shoelace-bridge.js",
+
+          // "src/components/status-footer-component.js", // Disabled - using new StatusFooter
+          "src/components/objectinfo-component.js",
+          "src/commandline/commandline-log-mailer.js",
+          // "src/status-footer.js", // Disabled - using new StatusFooter
+          "src/tilt-icons.js",
+        ];
+
+        // Get all loaded script elements with src attribute
+        const loadedScripts = Array.from(
+          document.querySelectorAll("script[src]")
+        )
+          .map((script) => script.src)
+          .filter((src) => src.includes("/src/"));
+
+        console.log("Found " + loadedScripts.length + " loaded local scripts");
+
+        // Check each expected script
+        const results = {
+          found: [],
+          missing: [],
+        };
+
+        expectedScripts.forEach((scriptPath) => {
+          // Check if script is loaded
+          const isLoaded = loadedScripts.some(
+            (src) => src.includes(scriptPath) || src.endsWith(scriptPath)
+          );
+
+          if (isLoaded) {
+            results.found.push(scriptPath);
+          } else {
+            results.missing.push(scriptPath);
+          }
+        });
+
+        // Check for unexpected scripts
+        const unexpected = loadedScripts.filter((src) => {
+          const relativePath = src.split("/src/")[1];
+          if (!relativePath) return false;
+          return !expectedScripts.some((expected) => src.includes(expected));
+        });
+
+        // Return detailed results
+        return {
+          total: {
+            expected: expectedScripts.length,
+            loaded: loadedScripts.length,
+            found: results.found.length,
+            missing: results.missing.length,
+            unexpected: unexpected.length,
+          },
+          found: results.found,
+          missing: results.missing,
+          unexpected: unexpected,
+        };
+      }
+
+      // Call the function and log results
+      const scriptCheckResults = checkLocalScripts();
+      console.log("=== SCRIPT CHECK RESULTS ===");
+      console.log(`Total expected: ${scriptCheckResults.total.expected}`);
+      console.log(`Total loaded: ${scriptCheckResults.total.loaded}`);
+      console.log(`Found: ${scriptCheckResults.total.found}`);
+      console.log(`Missing: ${scriptCheckResults.total.missing}`);
+      console.log(`Unexpected: ${scriptCheckResults.total.unexpected}`);
+
+      if (scriptCheckResults.missing.length > 0) {
+        console.error("MISSING SCRIPTS:");
+        scriptCheckResults.missing.forEach((script, index) => {
+          console.error(`${index + 1}. ${script}`);
+        });
+      }
+
+      if (scriptCheckResults.unexpected.length > 0) {
+        console.warn("UNEXPECTED SCRIPTS:");
+        scriptCheckResults.unexpected.forEach((script, index) => {
+          console.warn(`${index + 1}. ${script}`);
+        });
+      }
+
+      // Add this script at the end of your HTML
+      document.addEventListener("DOMContentLoaded", function () {
+        // Wait for the map to be fully initialized
+        function initUIControls() {
+          console.log("Checking if map is ready to initialize UI Controls...");
+
+          // Try to get the map instance
+          let map = null;
+
+          if (
+            App.Map &&
+            App.Map.Init &&
+            typeof App.Map.Init.getMap === "function"
+          ) {
+            map = App.Map.Init.getMap();
+          }
+
+          if (!map && window.interface && window.interface.map) {
+            map = window.interface.map;
+          }
+
+          if (map) {
+            console.log("Map instance found, initializing UI Controls...");
+
+            // Initialize App.UI.Controls if it exists
+            if (
+              App.UI &&
+              App.UI.Controls &&
+              typeof App.UI.Controls.initialize === "function"
+            ) {
+              try {
+                console.log("Calling App.UI.Controls.initialize with map");
+                App.UI.Controls.initialize(map);
+                console.log("UI Controls initialization complete");
+              } catch (error) {
+                console.error("Error initializing UI Controls:", error);
+              }
+            } else {
+              console.error(
+                "App.UI.Controls module or initialize function not found"
+              );
+            }
+
+            // Also initialize GNSS if needed
+            if (App.Features && !App.Features.GNSS) {
+              console.log("Creating GNSS module...");
+
+              // Create the GNSS module
+              App.Features.GNSS = (function () {
+                var _map = map;
+                var _active = false;
+                var _intervalId = null;
+
+                return {
+                  initialize: function (mapInstance) {
+                    if (mapInstance) _map = mapInstance;
+                    console.log("GNSS module initialized");
+                    return true;
+                  },
+
+                  start: function () {
+                    if (_active) return "Already running";
+                    _active = true;
+                    console.log("GNSS simulator started");
+                    return "GNSS simulator started";
+                  },
+
+                  stop: function () {
+                    if (!_active) return "Not running";
+                    _active = false;
+                    if (_intervalId) {
+                      clearInterval(_intervalId);
+                      _intervalId = null;
+                    }
+                    console.log("GNSS simulator stopped");
+                    return "GNSS simulator stopped";
+                  },
+                };
+              })();
+
+              console.log("GNSS module created. Access via App.Features.GNSS");
+            }
+          } else {
+            // Map not ready yet, try again in a moment
+            console.log("Map not ready yet, retrying in 500ms...");
+            setTimeout(initUIControls, 500);
+          }
+        }
+
+        // Start the initialization sequence
+        setTimeout(initUIControls, 500);
+      });
+    </script>
+    <script>
+      // Ensure the first tab is selected on load
+      document.addEventListener("DOMContentLoaded", function () {
+        const tabGroup = document.querySelector("#left1-drawer sl-tab-group");
+        if (tabGroup) {
+          // Wait for Shoelace components to be defined
+          customElements.whenDefined("sl-tab-group").then(() => {
+            // Select the first tab
+            tabGroup.show("basemaps");
+            
+            // Initialize basemap controls when the tab is shown
+            setTimeout(() => {
+              if (typeof createBasemapControls === 'function') {
+                console.log('Initializing basemap controls');
+                createBasemapControls();
+              }
+            }, 100);
+          });
+        }
+        
+        // Also initialize basemap controls when the drawer is opened
+        const left1Drawer = document.getElementById('left1-drawer');
+        if (left1Drawer) {
+          left1Drawer.addEventListener('sl-show', () => {
+            setTimeout(() => {
+              if (typeof createBasemapControls === 'function' && !document.querySelector('#basemap-controls table')) {
+                console.log('Initializing basemap controls on drawer show');
+                createBasemapControls();
+              }
+            }, 100);
+          });
+        }
+      });
+    </script>
+    <script>
+      // StatusFooter Integration
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log('[StatusFooter] Starting integration setup');
+        console.log('[StatusFooter] DOMContentLoaded fired');
+        
+        // Function to initialize StatusFooter
+        function initializeStatusFooter() {
+          // Check if map is ready
+          let map = null;
+          if (App.Map && App.Map.Init && typeof App.Map.Init.getMap === "function") {
+            map = App.Map.Init.getMap();
+          }
+          if (!map && window.interface && window.interface.map) {
+            map = window.interface.map;
+          }
+          
+          if (!map) {
+            console.log('[StatusFooter] Map not ready, retrying in 500ms');
+            setTimeout(initializeStatusFooter, 500);
+            return;
+          }
+          
+          console.log('[StatusFooter] Map ready, loading components');
+          
+          // Load StatusFooter components
+          function loadScript(src, callback) {
+            const script = document.createElement('script');
+            script.src = src;
+            script.onload = callback;
+            script.onerror = () => console.error('[StatusFooter] Failed to load:', src);
+            document.head.appendChild(script);
+          }
+          
+          // Load components in sequence
+          /* DISABLED - Using mobile footer instead
+          loadScript('src/ui/status-footer-ultrathin.js', function() {
+            console.log('[StatusFooter] Ultrathin component loaded');
+            loadScript('src/bridge/status-footer-ultrathin-bridge.js', function() {
+              console.log('[StatusFooter] Bridge loaded');
+              loadScript('src/ui/app.ui.statusfooter.js', function() {
+                console.log('[StatusFooter] App integration loaded');
+                
+                // Load bridge for legacy compatibility
+                loadScript('src/bridge/app.bridge.statusfooter.js', function() {
+                  console.log('[StatusFooter] Bridge loaded');
+                });
+                
+                // Initialize StatusFooter with default configuration
+                const config = {
+                  defaultPreset: 'compact-dark',
+                  initialConfig: {
+                    style: {
+                      theme: 'glass',
+                      height: 'compact',
+                      backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                      backdropFilter: 'blur(20px)'
+                    },
+                    layout: {
+                      statusBar: {
+                        accuracy: { visible: true, position: 'right' },
+                        gnssStatus: { visible: true, position: 'right' },
+                        deviceName: { visible: true, position: 'left' },
+                        time: { visible: true, position: 'center' },
+                        satellites: { visible: true, position: 'right' },
+                        battery: { visible: false, position: 'right' },
+                        expandButton: { visible: true, position: 'right' }
+                      }
+                    }
+                  }
+                };
+                
+                // Ensure App namespace exists
+                window.App = window.App || {};
+                window.App.UI = window.App.UI || {};
+                
+                // DISABLED - Using mobile footer instead
+                if (false && App.UI.StatusFooter && App.UI.StatusFooter.initialize) {
+                  const success = App.UI.StatusFooter.initialize(config);
+                  if (success) {
+                    console.log('[StatusFooter] Initialized successfully');
+                    setupStatusBarSettings();
+                    
+                    // Send initial test data
+                    App.UI.StatusFooter.updateGNSSData({
+                      accuracy: 2.34,
+                      accuracyUnit: 'cm',
+                      gnssStatus: 'FIX',
+                      latitude: 46.626374,
+                      longitude: 14.222974,
+                      altitude: 524.38,
+                      // Local coordinates
+                      x: '5682455.66',
+                      y: '4538269.67',
+                      z: '524.63 m',
+                      satellites: 0,
+                      battery: 88,
+                      deviceName: 'R2 Plus',
+                      quality: {
+                        hdop: 1.6,
+                        pdop: 2.4,
+                        speed: 0.2,
+                        ntrip: 'Connected',
+                        rtcm: 'OK',
+                        wifi: 'Connected',
+                        tilt: '0.5°'
+                      },
+                      deviceInfo: {
+                        temperature: '23°C',
+                        uptime: '2h 34m',
+                        memory: '84%'
+                      }
+                    });
+                  }
+                } else {
+                  console.error('[StatusFooter] App.UI.StatusFooter not found');
+                }
+              });
+            });
+          });
+        }
+        
+        // Setup StatusBar settings controls
+        function setupStatusBarSettings() {
+          console.log('[StatusFooter] Setting up settings controls');
+          
+          // Enable/Disable toggle
+          const enableToggle = document.getElementById('statusbar-enabled');
+          if (enableToggle) {
+            enableToggle.addEventListener('sl-change', (e) => {
+              if (e.target.checked) {
+                App.UI.StatusFooter.show();
+              } else {
+                App.UI.StatusFooter.hide();
+              }
+            });
+          }
+          
+          // Preset buttons
+          const presets = [
+            { id: 'preset-ultra-minimal', preset: 'ultra-minimal' },
+            { id: 'preset-compact-dark', preset: 'compact-dark' },
+            { id: 'preset-glass', preset: 'glass' },
+            { id: 'preset-surveyor', preset: 'surveyor' }
+          ];
+          
+          presets.forEach(({ id, preset }) => {
+            const btn = document.getElementById(id);
+            if (btn) {
+              btn.addEventListener('click', () => {
+                App.UI.StatusFooter.applyPreset(preset);
+                updateControlsFromConfig();
+              });
+            }
+          });
+          
+          // Height control
+          const heightSelect = document.getElementById('statusbar-height');
+          if (heightSelect) {
+            heightSelect.addEventListener('sl-change', (e) => {
+              App.UI.StatusFooter.configure({ style: { height: e.target.value } });
+            });
+          }
+          
+          // Theme control
+          const themeSelect = document.getElementById('statusbar-theme');
+          if (themeSelect) {
+            themeSelect.addEventListener('sl-change', (e) => {
+              App.UI.StatusFooter.configure({ style: { theme: e.target.value } });
+            });
+          }
+          
+          // Transparency control
+          const transparencyRange = document.getElementById('statusbar-transparency');
+          if (transparencyRange) {
+            transparencyRange.addEventListener('sl-input', (e) => {
+              const opacity = e.target.value / 100;
+              App.UI.StatusFooter.configure({ transparency: opacity });
+            });
+          }
+          
+          // Blur control
+          const blurRange = document.getElementById('statusbar-blur');
+          if (blurRange) {
+            blurRange.addEventListener('sl-input', (e) => {
+              App.UI.StatusFooter.configure({ blur: `blur(${e.target.value}px)` });
+            });
+          }
+          
+          // Element toggles
+          const elements = ['device', 'time', 'satellites', 'battery', 'expand'];
+          elements.forEach(elem => {
+            const toggle = document.getElementById(`elem-${elem}`);
+            if (toggle) {
+              toggle.addEventListener('sl-change', (e) => {
+                const config = {};
+                config[elem === 'expand' ? 'expandButton' : (elem === 'device' ? 'deviceName' : elem)] = e.target.checked;
+                App.UI.StatusFooter.configure({ elements: config });
+              });
+            }
+          });
+          
+          // Test data button
+          const testDataBtn = document.getElementById('statusbar-test-data');
+          if (testDataBtn) {
+            testDataBtn.addEventListener('click', () => {
+              const accuracy = (Math.random() * 5 + 0.5).toFixed(2);
+              const gnssStatus = Math.random() > 0.3 ? (Math.random() > 0.5 ? 'FIX' : 'FLOAT') : 'NO FIX';
+              const satellites = Math.floor(Math.random() * 12) + 10;
+              const battery = Math.floor(Math.random() * 40) + 60;
+              
+              App.UI.StatusFooter.updateGNSSData({
+                accuracy: accuracy,
+                accuracyUnit: 'cm',
+                gnssStatus: gnssStatus,
+                latitude: 46.626374 + (Math.random() - 0.5) * 0.001,
+                longitude: 14.222974 + (Math.random() - 0.5) * 0.001,
+                altitude: 524.38 + (Math.random() - 0.5) * 10,
+                satellites: satellites,
+                battery: battery,
+                deviceName: `Device ${Math.floor(Math.random() * 100)}`
+              });
+            });
+          }
+          
+          // Toggle expand button
+          const toggleExpandBtn = document.getElementById('statusbar-toggle-expand');
+          if (toggleExpandBtn) {
+            toggleExpandBtn.addEventListener('click', () => {
+              App.UI.StatusFooter.toggle();
+            });
+          }
+        }
+        
+        // Update controls based on current configuration
+        function updateControlsFromConfig() {
+          const config = App.UI.StatusFooter.getConfiguration();
+          if (!config) return;
+          
+          // Update controls to match current configuration
+          const heightSelect = document.getElementById('statusbar-height');
+          if (heightSelect) heightSelect.value = config.style.height;
+          
+          const themeSelect = document.getElementById('statusbar-theme');
+          if (themeSelect) themeSelect.value = config.style.theme;
+          
+          // Update element toggles
+          const elements = config.layout.statusBar;
+          if (elements.deviceName) document.getElementById('elem-device').checked = elements.deviceName.visible;
+          if (elements.time) document.getElementById('elem-time').checked = elements.time.visible;
+          if (elements.satellites) document.getElementById('elem-satellites').checked = elements.satellites.visible;
+          if (elements.battery) document.getElementById('elem-battery').checked = elements.battery.visible;
+          if (elements.expandButton) document.getElementById('elem-expand').checked = elements.expandButton.visible;
+        }
+        
+        // Listen for map ready event
+        if (App.Core && App.Core.Events) {
+          App.Core.Events.on('map:ready', initializeStatusFooter);
+        } else {
+          // Fallback: try to initialize after a delay
+          setTimeout(initializeStatusFooter, 1000);
+        }
+        
+        // Additional fallback: ensure it loads
+        setTimeout(function() {
+          console.log('[StatusFooter] Fallback check at 2 seconds');
+          const existingFooter = document.querySelector('status-footer-ultrathin');
+          if (!existingFooter) {
+            console.log('[StatusFooter] Not found, attempting direct initialization');
+            initializeStatusFooter();
+          } else {
+            console.log('[StatusFooter] Already exists:', existingFooter);
+          }
+        }, 2000);
+      });
+    </script>
+    
+    <!-- Quick StatusFooter initialization -->
+    <script>
+      // Simple StatusFooter initialization
+      window.addEventListener('load', function() {
+        console.log('[StatusFooter] Window loaded, attempting simple initialization');
+        
+        // Check if the component exists
+        if (!customElements.get('status-footer-ultrathin')) {
+          console.log('[StatusFooter] Component not registered, loading scripts...');
+          
+          // Load the scripts directly
+          const script1 = document.createElement('script');
+          script1.src = 'src/ui/status-footer-ultrathin.js';
+          script1.onload = function() {
+            console.log('[StatusFooter] Component script loaded');
+            
+            const script2 = document.createElement('script');
+            script2.src = 'src/bridge/status-footer-bridge.js';
+            script2.onload = function() {
+              console.log('[StatusFooter] Bridge script loaded');
+              
+              // Load the cache patch for performance
+              const cachePatch = document.createElement('script');
+              cachePatch.src = 'src/ui/status-footer-cache-patch.js';
+              cachePatch.onload = function() {
+                console.log('[StatusFooter] Cache patch loaded');
+              };
+              document.head.appendChild(cachePatch);
+              
+              // Create and initialize the footer
+              setTimeout(function() {
+                if (window.statusFooterBridge) {
+                  const footer = document.createElement('status-footer-ultrathin');
+                  document.body.appendChild(footer);
+                  window.statusFooterBridge.initialize(footer);
+                  
+                  // Apply default configuration with clean-white theme
+                  window.statusFooterBridge.configure({
+                    style: {
+                      theme: 'clean-white',
+                      background: 'transparent',
+                      opacity: 1
+                    },
+                    layout: {
+                      mode: 'auto'
+                    },
+                    flags: {
+                      showGnssStatus: true,
+                      showLocatorStatus: true,
+                      enableGestures: true,
+                      persistState: false
+                    }
+                  });
+                  
+                  // Send initial data
+                  window.statusFooterBridge.updateAllStatus({
+                    statusBar: {
+                      deviceName: 'Map Engine',
+                      tiltStatus: 'Ready',
+                      fixTime: new Date().toLocaleTimeString(),
+                      rtkStatus: 'FIX',
+                      accuracy: '±2.34cm',
+                      accuracyClass: 'high'
+                    },
+                    coordinates: {
+                      longitude: 14.222974,
+                      latitude: 46.626374,
+                      altitude: '524.38 m',
+                      x: '5682455.66',
+                      y: '4538269.67',
+                      z: '524.63 m'
+                    },
+                    gnssInfo: {
+                      vrmsHrms: '1.005[m] / 0.298[m]',
+                      vdopPdop: '1.6 / 2.4',
+                      ntripStatus: 'Connected',
+                      rtcmStatus: 'Receiving',
+                      satelliteCount: 0,
+                      speed: '0.4 m/s'
+                    },
+                    deviceInfo: {
+                      tiltInfo: 'No Sensor (0.4°)',
+                      batteryPercentage: 88,
+                      connectionType: 'WiFi',
+                      locator: {
+                        type: 'WiFi',
+                        model: 'Locator',
+                        signal: 'Strong',
+                        accuracy: '±2m'
+                      }
+                    }
+                  });
+                  
+                  console.log('[StatusFooter] Mobile footer initialization complete');
+                  
+                  // Store reference for settings panel
+                  window.currentStatusFooter = footer;
+                  window.currentStatusFooterBridge = window.statusFooterBridge;
+                  
+                  // Setup settings panel event listeners
+                  setupStatusBarSettings();
+                  
+                  // Update time every second
+                  setInterval(() => {
+                    window.statusFooterBridge.updateStatusBar({
+                      fixTime: new Date().toLocaleTimeString()
+                    });
+                  }, 1000);
+                  
+                } else {
+                  console.error('[StatusFooter] Bridge not found after loading scripts');
+                }
+              }, 100);
+            };
+            document.head.appendChild(script2);
+          };
+          document.head.appendChild(script1);
+        } else {
+          console.log('[StatusFooter] Component already registered');
+          
+          // Check if footer exists
+          let footer = document.querySelector('status-footer-ultrathin');
+          if (!footer) {
+            footer = document.createElement('status-footer-ultrathin');
+            document.body.appendChild(footer);
+          }
+          
+          // Initialize if bridge is available
+          if (window.statusFooterBridge) {
+            window.statusFooterBridge.initialize(footer);
+            console.log('[StatusFooter] Initialized existing component');
+          }
+        }
+      });
+      
+      // Settings setup for status bar controls
+      function setupStatusBarSettings() {
+        console.log('[StatusFooter] Setting up status bar settings controls');
+        
+        // Enable/Disable toggle
+        const enableToggle = document.getElementById('statusbar-enabled');
+        if (enableToggle) {
+          enableToggle.addEventListener('sl-change', (e) => {
+            const footer = document.querySelector('status-footer-ultrathin');
+            if (footer) {
+              footer.style.display = e.target.checked ? 'block' : 'none';
+            }
+          });
+        }
+        
+        // Theme selector
+        const themeSelect = document.getElementById('statusbar-theme');
+        if (themeSelect) {
+          themeSelect.addEventListener('sl-change', (e) => {
+            if (window.statusFooterBridge) {
+              const theme = e.target.value;
+              const transparentThemes = ['clean-white', 'clean-black'];
+              window.statusFooterBridge.configure({
+                style: {
+                  theme: theme,
+                  background: transparentThemes.includes(theme) ? 'transparent' : undefined
+                }
+              });
+            }
+          });
+        }
+        
+        // Test data button
+        const testDataBtn = document.getElementById('statusbar-test-data');
+        if (testDataBtn) {
+          testDataBtn.addEventListener('click', () => {
+            if (window.statusFooterBridge) {
+              const randomLat = 46.626374 + (Math.random() - 0.5) * 0.001;
+              const randomLon = 14.222974 + (Math.random() - 0.5) * 0.001;
+              const randomAlt = 524.38 + (Math.random() - 0.5) * 2;
+              const randomAcc = (Math.random() * 5 + 0.5).toFixed(1);
+              
+              window.statusFooterBridge.updateAllStatus({
+                statusBar: {
+                  accuracy: `±${randomAcc}cm`,
+                  accuracyClass: randomAcc < 2 ? 'high' : randomAcc < 4 ? 'medium' : 'low',
+                  fixTime: new Date().toLocaleTimeString()
+                },
+                coordinates: {
+                  longitude: randomLon,
+                  latitude: randomLat,
+                  altitude: `${randomAlt.toFixed(2)} m`
+                }
+              });
+            }
+          });
+        }
+        
+        // Toggle expand button
+        const toggleExpandBtn = document.getElementById('statusbar-toggle-expand');
+        if (toggleExpandBtn) {
+          toggleExpandBtn.addEventListener('click', () => {
+            if (window.statusFooterBridge) {
+              window.statusFooterBridge.toggleExpandedSections();
+            }
+          });
+        }
+        
+        // Preset buttons
+        const presets = {
+          'preset-ultra-minimal': {
+            style: { theme: 'minimal' },
+            layout: { mode: 'minimal' }
+          },
+          'preset-compact-dark': {
+            style: { theme: 'transparent' },
+            layout: { mode: 'compact' }
+          },
+          'preset-glass': {
+            style: { theme: 'glass' },
+            layout: { mode: 'auto' }
+          },
+          'preset-surveyor': {
+            style: { theme: 'clean-white', background: 'transparent' },
+            layout: { mode: 'auto' }
+          },
+          'preset-clean-black': {
+            style: { theme: 'clean-black', background: 'transparent' },
+            layout: { mode: 'auto' }
+          },
+          'preset-clean-white-inv': {
+            style: { theme: 'clean-white-inv' },
+            layout: { mode: 'auto' }
+          }
+        };
+        
+        Object.entries(presets).forEach(([id, config]) => {
+          const btn = document.getElementById(id);
+          if (btn) {
+            btn.addEventListener('click', () => {
+              if (window.statusFooterBridge) {
+                window.statusFooterBridge.configure(config);
+                // Update theme selector to match
+                if (themeSelect) {
+                  themeSelect.value = config.style.theme;
+                }
+              }
+            });
+          }
+        });
+        
+        console.log('[StatusFooter] Settings controls setup complete');
+      }
+      
+      // Simple settings setup that works with the bridge directly (legacy)
+      function setupSimpleStatusBarSettings() {
+        console.log('[StatusFooter] Setting up simple settings controls');
+        
+        // Legacy preset buttons
+        const presets = [
+          { id: 'preset-ultra-minimal', preset: 'ultra-minimal' },
+          { id: 'preset-compact-dark', preset: 'compact-dark' },
+          { id: 'preset-glass', preset: 'glass' },
+          { id: 'preset-surveyor', preset: 'surveyor' }
+        ];
+        
+        presets.forEach(({ id, preset }) => {
+          const btn = document.getElementById(id);
+          if (btn) {
+            btn.addEventListener('click', () => {
+              if (window.ultraThinFooterBridge) {
+                window.ultraThinFooterBridge.applyPreset(preset);
+              }
+            });
+          }
+        });
+        
+        // Height control
+        const heightSelect = document.getElementById('statusbar-height');
+        if (heightSelect) {
+          heightSelect.addEventListener('sl-change', (e) => {
+            if (window.ultraThinFooterBridge) {
+              window.ultraThinFooterBridge.configure({ style: { height: e.target.value } });
+            }
+          });
+        }
+        
+        // Theme control
+        const themeSelect = document.getElementById('statusbar-theme');
+        if (themeSelect) {
+          themeSelect.addEventListener('sl-change', (e) => {
+            if (window.ultraThinFooterBridge) {
+              window.ultraThinFooterBridge.configure({ style: { theme: e.target.value } });
+            }
+          });
+        }
+        
+        // Transparency control
+        const transparencyRange = document.getElementById('statusbar-transparency');
+        if (transparencyRange) {
+          transparencyRange.addEventListener('sl-input', (e) => {
+            const opacity = e.target.value / 100;
+            if (window.ultraThinFooterBridge) {
+              window.ultraThinFooterBridge.setTransparency(
+                `rgba(255, 255, 255, ${opacity})`,
+                document.getElementById('statusbar-blur').value + 'px'
+              );
+            }
+          });
+        }
+        
+        // Blur control
+        const blurRange = document.getElementById('statusbar-blur');
+        if (blurRange) {
+          blurRange.addEventListener('sl-input', (e) => {
+            if (window.ultraThinFooterBridge) {
+              const opacity = document.getElementById('statusbar-transparency').value / 100;
+              window.ultraThinFooterBridge.setTransparency(
+                `rgba(255, 255, 255, ${opacity})`,
+                `blur(${e.target.value}px)`
+              );
+            }
+          });
+        }
+        
+        // Element toggles
+        const elements = ['device', 'time', 'satellites', 'battery', 'expand'];
+        elements.forEach(elem => {
+          const toggle = document.getElementById(`elem-${elem}`);
+          if (toggle) {
+            toggle.addEventListener('sl-change', (e) => {
+              if (window.ultraThinFooterBridge) {
+                const elementName = elem === 'expand' ? 'expandButton' : (elem === 'device' ? 'deviceName' : elem);
+                window.ultraThinFooterBridge.configureElements({
+                  [elementName]: { visible: e.target.checked }
+                });
+              }
+            });
+          }
+        });
+        
+        // Test data button
+        const testDataBtn = document.getElementById('statusbar-test-data');
+        if (testDataBtn) {
+          testDataBtn.addEventListener('click', () => {
+            if (window.ultraThinFooterBridge) {
+              const accuracy = (Math.random() * 5 + 0.5).toFixed(2);
+              const gnssStatus = Math.random() > 0.3 ? (Math.random() > 0.5 ? 'FIX' : 'FLOAT') : 'NO FIX';
+              const satellites = Math.floor(Math.random() * 12) + 10;
+              const battery = Math.floor(Math.random() * 40) + 60;
+              
+              window.ultraThinFooterBridge.updateAll({
+                accuracy: accuracy,
+                accuracyUnit: 'cm',
+                gnssStatus: gnssStatus,
+                latitude: 46.626374 + (Math.random() - 0.5) * 0.001,
+                longitude: 14.222974 + (Math.random() - 0.5) * 0.001,
+                altitude: 524.38 + (Math.random() - 0.5) * 10,
+                satellites: satellites,
+                battery: battery,
+                deviceName: `Device ${Math.floor(Math.random() * 100)}`
+              });
+            }
+          });
+        }
+        
+        // Toggle expand button
+        const toggleExpandBtn = document.getElementById('statusbar-toggle-expand');
+        if (toggleExpandBtn) {
+          toggleExpandBtn.addEventListener('click', () => {
+            if (window.ultraThinFooterBridge) {
+              window.ultraThinFooterBridge.toggleExpanded();
+            }
+          });
+        }
+        
+        console.log('[StatusFooter] Simple settings setup complete');
+      }
+      
+      // Debug: Add global function to open settings
+      window.openSettings = function() {
+        console.log('Opening settings drawer...');
+        const drawer = document.getElementById('left2-drawer');
+        if (drawer) {
+          if (drawer.show) {
+            drawer.show();
+          } else {
+            console.error('Drawer show method not found');
+          }
+        } else {
+          console.error('Settings drawer not found');
+        }
+      };
+      
+      // Debug: Add global function to check StatusFooter
+      window.checkStatusFooter = function() {
+        const footer = document.querySelector('status-footer-ultrathin');
+        if (footer) {
+          console.log('StatusFooter found:', footer);
+          console.log('Display:', getComputedStyle(footer).display);
+          console.log('Visibility:', getComputedStyle(footer).visibility);
+          console.log('Position:', getComputedStyle(footer).position);
+          console.log('Bottom:', getComputedStyle(footer).bottom);
+          console.log('Z-index:', getComputedStyle(footer).zIndex);
+          console.log('Height:', footer.offsetHeight);
+          console.log('Shadow root:', footer.shadowRoot);
+          
+          if (footer.shadowRoot) {
+            const statusBar = footer.shadowRoot.querySelector('.status-bar');
+            if (statusBar) {
+              console.log('Status bar found, height:', statusBar.offsetHeight);
+            } else {
+              console.log('Status bar not found in shadow DOM');
+            }
+          }
+        } else {
+          console.log('StatusFooter not found');
+        }
+      };
+      
+      // Debug: Test expand
+      window.toggleFooter = function() {
+        if (window.ultraThinFooterBridge) {
+          window.ultraThinFooterBridge.toggleExpanded();
+          console.log('Toggled StatusFooter expand');
+        } else {
+          console.log('Bridge not found');
+        }
+      };
+      
+      // Debug: Check if interface exists
+      setTimeout(function() {
+        console.log('Checking interface...', window.interface);
+        console.log('Checking toggleSidebar...', window.interface?.toggleSidebar);
+      }, 2000);
+    </script>
+    
+    <script>
+      // Debug Status Bar tab
+      document.addEventListener('DOMContentLoaded', function() {
+        // Listen for drawer open
+        const drawer = document.getElementById('left2-drawer');
+        if (drawer) {
+          drawer.addEventListener('sl-after-show', function() {
+            console.log('[StatusBar Debug] Settings drawer shown');
+            const tabGroup = drawer.querySelector('sl-tab-group');
+            if (tabGroup) {
+              const tabs = tabGroup.querySelectorAll('sl-tab');
+              const panels = tabGroup.querySelectorAll('sl-tab-panel');
+              console.log('[StatusBar Debug] Tabs:', tabs.length, 'Panels:', panels.length);
+              
+              // Try to manually show the statusbar tab if needed
+              const statusTab = Array.from(tabs).find(tab => tab.getAttribute('panel') === 'statusbar');
+              const statusPanel = Array.from(panels).find(panel => panel.getAttribute('name') === 'statusbar');
+              
+              if (statusTab && statusPanel) {
+                console.log('[StatusBar Debug] Status Bar tab and panel found');
+                // Make sure tab is visible
+                statusTab.style.display = 'block';
+              } else {
+                console.error('[StatusBar Debug] Status Bar tab or panel not found');
+              }
+            }
+          });
+        }
+      });
+    </script>
+    
+    <script>
+      // Integration for the dynamic button
+      document.addEventListener("DOMContentLoaded", function () {
+        // Wait for the map to be ready
+        function initializeDynamicButton() {
+          if (
+            window.interface &&
+            window.interface.map &&
+            App.UI.DynamicButton
+          ) {
+            // Initialize the dynamic button module
+            App.UI.DynamicButton.initialize(window.interface.map);
+
+            // Create and add the control to the map
+            const dynamicControl = App.UI.DynamicButton.createControl();
+            window.interface.map.addControl(dynamicControl, "top-left");
+
+            // Initialize offline maps module
+            if (App.Map.Offline) {
+              App.Map.Offline.initialize(window.interface.map);
+              console.log("Offline maps module initialized");
+            }
+
+            // Connect label toggle handlers
+            App.UI.DynamicButton.onAction("toggleLengthLabels", (enabled) => {
+              if (App.Map.LabelsEnhanced) {
+                App.Map.LabelsEnhanced.setLengthLabelsEnabled(enabled);
+              }
+            });
+
+            App.UI.DynamicButton.onAction("toggleSlopeAngleLabels", (enabled) => {
+              if (App.Map.LabelsEnhanced) {
+                App.Map.LabelsEnhanced.setSlopeAngleLabelsEnabled(enabled);
+              }
+            });
+
+            App.UI.DynamicButton.onAction("toggleSlopePercentLabels", (enabled) => {
+              if (App.Map.LabelsEnhanced) {
+                App.Map.LabelsEnhanced.setSlopePercentLabelsEnabled(enabled);
+              }
+            });
+
+            // Register action handlers
+            App.UI.DynamicButton.onAction("startNavigation", () => {
+              console.log("Starting navigation mode");
+              App.UI.DynamicButton.setMode("navigation");
+
+              if (App.Features.StakeOut) {
+                App.Features.StakeOut.startNavigation();
+              }
+            });
+
+            App.UI.DynamicButton.onAction("stopNavigation", () => {
+              console.log("Stopping navigation");
+              App.UI.DynamicButton.setMode("default");
+
+              if (App.Features.StakeOut) {
+                App.Features.StakeOut.stopNavigation();
+              }
+            });
+
+            App.UI.DynamicButton.onAction("resetTarget", () => {
+              console.log("Resetting target");
+              if (App.Features.StakeOut) {
+                App.Features.StakeOut.clearTargetFeature();
+              }
+            });
+
+            // Measurement handlers are now handled by measure-dynamic-integration.js
+            /*
+            App.UI.DynamicButton.onAction("toggleMeasure", () => {
+              console.log("Toggling measure mode");
+              App.UI.DynamicButton.setMode("measure");
+
+              if (App.Map.Navigation) {
+                App.Map.Navigation.setPositionEnabled(true);
+                App.Map.Navigation.updateLocationMarker("cursor-green.png");
+              }
+            });
+
+            App.UI.DynamicButton.onAction("stopMeasure", () => {
+              console.log("Stopping measure mode");
+              App.UI.DynamicButton.setMode("default");
+
+              if (App.Map.Navigation) {
+                App.Map.Navigation.setPositionEnabled(false);
+              }
+            });
+
+            App.UI.DynamicButton.onAction("clearMeasurements", () => {
+              console.log("Clearing measurements");
+              // Add your clear measurements logic here
+            });
+            */
+
+            App.UI.DynamicButton.onAction("toggleInspect", () => {
+              console.log("Toggling inspect mode");
+              // Add your inspect mode logic here
+            });
+
+            // Listen for mode changes from other parts of the app
+            if (App.Core.Events) {
+              App.Core.Events.on("stakeout:started", () => {
+                App.UI.DynamicButton.setMode("navigation");
+              });
+
+              App.Core.Events.on("stakeout:stopped", () => {
+                App.UI.DynamicButton.setMode("default");
+              });
+
+              App.Core.Events.on("measure:started", () => {
+                App.UI.DynamicButton.setMode("measure");
+              });
+
+              App.Core.Events.on("measure:stopped", () => {
+                App.UI.DynamicButton.setMode("default");
+              });
+            }
+
+            console.log("Dynamic button integration complete");
+          } else {
+            // Retry if components aren't ready yet
+            setTimeout(initializeDynamicButton, 100);
+          }
+        }
+
+        // Start initialization
+        setTimeout(initializeDynamicButton, 500);
+      });
+    </script>
+    
+    <script>
+      // Command Line Tool button handler
+      document.addEventListener("DOMContentLoaded", function () {
+        // Wait for elements to be ready
+        setTimeout(function() {
+          const commandLineButton = document.getElementById("toggleCommandLine");
+          if (commandLineButton) {
+            commandLineButton.addEventListener("click", function() {
+              console.log("Command Line button clicked");
+              
+              // Check if command line already exists
+              if (window.mapConsole) {
+                if (window.mapConsole.isVisible && window.mapConsole.isVisible()) {
+                  window.mapConsole.hide();
+                } else {
+                  window.mapConsole.show();
+                }
+              } else {
+                // Initialize command line
+                console.log("Initializing command line...");
+                const commandLine = new EnhancedCommandLine();
+                const mapConsole = commandLine.initialize();
+                if (mapConsole && mapConsole.show) {
+                  mapConsole.show();
+                }
+              }
+            });
+          } else {
+            console.warn("Command Line Tool button not found");
+          }
+        }, 1000);
+      });
+    </script>
+    
+    <!-- Fix scripts for measurement button positioning -->
+    
+    <!-- Debug script for basemap width -->
+    <script src="debug-basemap-width.js"></script>
+    
+    <!-- Temporary test script for debugging glyphs -->
+    <script src="test-glyphs.js"></script>
+    
+    <!-- Tab activation fix -->
+    
+    
+    <!-- Debug helper for basemap width -->
+    <script src="debug-basemap-width.js"></script>
+    
+    
+    <!-- Fix basemap controls width after initialization -->
+    <script>
+      // Monitor for basemap controls creation and fix width
+      (function() {
+        let checkInterval;
+        let checkCount = 0;
+        
+        function fixBasemapControlsWidth() {
+          const basemapControls = document.getElementById('basemap-controls');
+          if (!basemapControls) return false;
+          
+          // Check if table exists (controls are initialized)
+          const table = basemapControls.querySelector('table');
+          if (!table) return false;
+          
+          // Remove any width constraints
+          const elements = [
+            basemapControls,
+            basemapControls.parentElement, // .controls
+            basemapControls.closest('sl-tab-panel'),
+            basemapControls.querySelector('div'), // scroll container
+            table
+          ];
+          
+          elements.forEach(el => {
+            if (el) {
+              // Remove any inline styles that might be constraining width
+              el.style.removeProperty('width');
+              el.style.removeProperty('max-width');
+              el.style.removeProperty('min-width');
+              
+              // Force full width
+              el.style.setProperty('width', '100%', 'important');
+              el.style.setProperty('max-width', 'none', 'important');
+              el.style.setProperty('min-width', '100%', 'important');
+              el.style.setProperty('box-sizing', 'border-box', 'important');
+              
+              // Remove horizontal padding/margin
+              el.style.setProperty('padding-left', '0', 'important');
+              el.style.setProperty('padding-right', '0', 'important');
+              el.style.setProperty('margin-left', '0', 'important');
+              el.style.setProperty('margin-right', '0', 'important');
+            }
+          });
+          
+          console.log('Fixed basemap controls width');
+          return true;
+        }
+        
+        // Check periodically for basemap controls
+        checkInterval = setInterval(function() {
+          if (fixBasemapControlsWidth() || checkCount++ > 50) {
+            clearInterval(checkInterval);
+          }
+        }, 100);
+        
+        // Also listen for tab changes
+        document.addEventListener('sl-tab-show', function(e) {
+          if (e.detail.name === 'basemaps') {
+            setTimeout(fixBasemapControlsWidth, 50);
+            // Initialize basemap controls if needed
+            setTimeout(() => {
+              if (typeof createBasemapControls === 'function' && !document.querySelector('#basemap-controls table')) {
+                console.log('Initializing basemap controls on tab show');
+                createBasemapControls();
+              }
+            }, 100);
+          }
+        });
+        
+        // Listen for drawer open
+        document.addEventListener('sl-show', function(e) {
+          if (e.target.id === 'left1-drawer') {
+            setTimeout(fixBasemapControlsWidth, 50);
+          }
+        });
+      })();
+    </script>
+    
+    <!-- FORCE BASEMAP WIDTH FIX - FINAL AGGRESSIVE ATTEMPT -->
+    <script>
+      (function() {
+        // Aggressive width fix - run after everything loads
+        function forceBasemapWidth() {
+          const basemap = document.getElementById('basemap-controls');
+          if (!basemap) return;
+          
+          // Get all parent elements up to the drawer
+          const parents = [];
+          let el = basemap;
+          while (el && el.id !== 'left1-drawer') {
+            parents.push(el);
+            el = el.parentElement;
+          }
+          if (el) parents.push(el); // Include the drawer itself
+          
+          // Force 100% width on everything
+          parents.forEach(parent => {
+            parent.style.cssText += 'width: 100% !important; max-width: none !important; min-width: 100% !important; padding: 0 !important; margin: 0 !important;';
+          });
+          
+          // Force the table and its container
+          const scrollDiv = basemap.querySelector('div');
+          if (scrollDiv) {
+            scrollDiv.style.cssText += 'width: 100% !important; max-width: none !important; padding: 0 !important; margin: 0 !important;';
+          }
+          
+          const table = basemap.querySelector('table');
+          if (table) {
+            table.style.cssText += 'width: 100% !important; min-width: 100% !important; table-layout: fixed !important;';
+          }
+          
+          // Log what we found
+          console.log('Basemap width fix applied. Container width:', basemap.offsetWidth, 'Parent width:', basemap.parentElement?.offsetWidth);
+        }
+        
+        // Run on various events
+        document.addEventListener('DOMContentLoaded', () => setTimeout(forceBasemapWidth, 500));
+        document.addEventListener('sl-show', forceBasemapWidth);
+        document.addEventListener('sl-tab-show', forceBasemapWidth);
+        
+        // Also run periodically for the first few seconds
+        let attempts = 0;
+        const interval = setInterval(() => {
+          forceBasemapWidth();
+          attempts++;
+          if (attempts > 10) clearInterval(interval);
+        }, 500);
+        
+        // Also run when basemap controls are created
+        if (window.createBasemapControls) {
+          const original = window.createBasemapControls;
+          window.createBasemapControls = function() {
+            original();
+            setTimeout(forceBasemapWidth, 100);
+          };
+        }
+      })();
+    </script>
+    
+    <!-- Debug panel for feature diagnostics -->
+    <script src="src/debug-panel.js"></script>
+    
+    <!-- PDF Overlay Integration Script -->
+    <script>
+      console.log('🗺️ PDF Overlay support initialized');
+      
+      // Initialize PDF Overlays module when DOM is loaded
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log('📊 Initializing PDF Overlay Manager');
+        
+        // Wait for map to be ready
+        function waitForMap() {
+          if (typeof App !== 'undefined' && 
+              App.Map && 
+              App.Map.Init && 
+              App.Map.Init.getMap &&
+              App.Map.Init.getMap()) {
+            console.log('✅ Map is ready, initializing PDF overlays');
+            App.Map.PdfOverlays.initialize();
+          } else {
+            console.log('⏳ Waiting for map to be ready...');
+            setTimeout(waitForMap, 100);
+          }
+        }
+        
+        waitForMap();
+      });
+      
+      // Legacy compatibility - simple delegation to new module
+      const PdfOverlayManager = {
+        init() {
+          console.log('📊 Legacy PdfOverlayManager - delegating to App.Map.PdfOverlays');
+          // All functionality is now handled by App.Map.PdfOverlays
+        },
+        
+        handleMessage(event) {
+          if (App.Map && App.Map.PdfOverlays) {
+            App.Map.PdfOverlays.handleMessage(event);
+          }
+        },
+        
+        loadOverlays(overlayData) {
+          if (App.Map && App.Map.PdfOverlays) {
+            App.Map.PdfOverlays.loadOverlays(overlayData);
+          }
+        }
+      };
+      
+      // Initialize when DOM is loaded
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => PdfOverlayManager.init());
+      } else {
+        PdfOverlayManager.init();
+      }
+        
+        async waitForMap() {
+          return new Promise((resolve) => {
+            const checkMap = () => {
+              if (typeof App !== 'undefined' && 
+                  App.Map && 
+                  App.Map.Init && 
+                  App.Map.Init.getMap &&
+                  App.Map.Init.getMap()) {
+                console.log('✅ Map is ready for PDF overlays');
+                resolve();
+              } else {
+                console.log('⏳ Waiting for map to be ready...');
+                setTimeout(checkMap, 100);
+              }
+            };
+            checkMap();
+          });
+        },
+        
+        async addOverlay(overlay) {
+          try {
+            console.log('➕ Adding PDF overlay:', overlay.name);
+            
+            const map = App.Map.Init.getMap();
+            if (!map) {
+              throw new Error('Map not available');
+            }
+            
+            // Create source ID
+            const sourceId = `pdf-overlay-${overlay.id}`;
+            const layerId = `pdf-overlay-layer-${overlay.id}`;
+            
+            // Add raster source
+            map.addSource(sourceId, {
+              type: 'raster',
+              tiles: [overlay.tileUrl.replace(/\{/g, '{').replace(/\}/g, '}')],
+              tileSize: 256,
+              attribution: `PDF Overlay: ${overlay.name}`
+            });
+            
+            // Add raster layer
+            map.addLayer({
+              id: layerId,
+              type: 'raster',
+              source: sourceId,
+              paint: {
+                'raster-opacity': overlay.opacity || 0.8
+              },
+              layout: {
+                'visibility': overlay.visible ? 'visible' : 'none'
+              }
+            });
+            
+            // Store overlay reference
+            this.overlays.set(overlay.id, {
+              ...overlay,
+              sourceId,
+              layerId
+            });
+            
+            // Zoom to overlay bounds if it's the first one
+            if (this.overlays.size === 1 && overlay.bounds) {
+              const bounds = [
+                [overlay.bounds.west, overlay.bounds.south],
+                [overlay.bounds.east, overlay.bounds.north]
+              ];
+              map.fitBounds(bounds, { padding: 20 });
+            }
+            
+            console.log(`✅ PDF overlay "${overlay.name}" added successfully`);
+            
+          } catch (error) {
+            console.error(`❌ Failed to add PDF overlay "${overlay.name}":`, error);
+          }
+        },
+        
+        toggleOverlay(overlayId, visible) {
+          const overlay = this.overlays.get(overlayId);
+          if (overlay) {
+            const map = App.Map.Init.getMap();
+            map.setLayoutProperty(overlay.layerId, 'visibility', visible ? 'visible' : 'none');
+            overlay.visible = visible;
+          }
+        },
+        
+        setOverlayOpacity(overlayId, opacity) {
+          const overlay = this.overlays.get(overlayId);
+          if (overlay) {
+            const map = App.Map.Init.getMap();
+            map.setPaintProperty(overlay.layerId, 'raster-opacity', opacity);
+            overlay.opacity = opacity;
+          }
+        },
+        
+        updateUI(overlayData) {
+          const loading = document.getElementById('pdf-overlays-loading');
+          const list = document.getElementById('pdf-overlays-list');
+          const empty = document.getElementById('pdf-overlays-empty');
+          
+          if (!list) return;
+          
+          // Hide loading
+          if (loading) loading.style.display = 'none';
+          
+          if (!overlayData || overlayData.length === 0) {
+            list.style.display = 'none';
+            if (empty) empty.style.display = 'block';
+          } else {
+            list.style.display = 'block';
+            if (empty) empty.style.display = 'none';
+          }
+        },
+        
+        updateOverlayList() {
+          const list = document.getElementById('pdf-overlays-list');
+          if (!list) return;
+          
+          list.innerHTML = '';
+          
+          this.overlays.forEach((overlay, id) => {
+            const overlayElement = this.createOverlayControl(overlay);
+            list.appendChild(overlayElement);
+          });
+          
+          // Setup action buttons
+          this.setupActionButtons();
+        },
+        
+        createOverlayControl(overlay) {
+          const div = document.createElement('div');
+          div.className = 'pdf-overlay-item';
+          div.style.cssText = 'margin-bottom: 12px; padding: 12px; border: 1px solid #e0e0e0; border-radius: 8px; background: #f8f9fa;';
+          
+          div.innerHTML = `
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+              <span style="font-weight: 500; font-size: 0.9em; color: #333;">${overlay.name}</span>
+              <sl-switch id="overlay-toggle-${overlay.id}" ${overlay.visible ? 'checked' : ''}></sl-switch>
+            </div>
+            
+            <div style="margin-bottom: 8px;">
+              <label style="font-size: 0.8em; color: #666; display: block; margin-bottom: 4px;">Opacity</label>
+              <sl-range 
+                id="overlay-opacity-${overlay.id}" 
+                min="0" 
+                max="1" 
+                step="0.1" 
+                value="${overlay.opacity || 0.8}"
+                style="width: 100%;"
+              ></sl-range>
+            </div>
+            
+            <div style="display: flex; gap: 8px;">
+              <sl-button size="small" variant="neutral" onclick="PdfOverlayManager.zoomToOverlay('${overlay.id}')">
+                <sl-icon slot="prefix" name="zoom-in"></sl-icon>
+                Zoom
+              </sl-button>
+              <sl-button size="small" variant="neutral" onclick="PdfOverlayManager.removeOverlay('${overlay.id}')">
+                <sl-icon slot="prefix" name="trash-2"></sl-icon>
+                Remove
+              </sl-button>
+            </div>
+          `;
+          
+          // Setup event listeners
+          setTimeout(() => {
+            const toggle = div.querySelector(`#overlay-toggle-${overlay.id}`);
+            const opacitySlider = div.querySelector(`#overlay-opacity-${overlay.id}`);
+            
+            if (toggle) {
+              toggle.addEventListener('sl-change', (e) => {
+                this.toggleOverlay(overlay.id, e.target.checked);
+              });
+            }
+            
+            if (opacitySlider) {
+              opacitySlider.addEventListener('sl-change', (e) => {
+                this.setOverlayOpacity(overlay.id, parseFloat(e.target.value));
+              });
+            }
+          }, 100);
+          
+          return div;
+        },
+        
+        setupActionButtons() {
+          const refreshBtn = document.getElementById('refresh-pdf-overlays');
+          const zoomAllBtn = document.getElementById('zoom-to-all-overlays');
+          
+          if (refreshBtn) {
+            refreshBtn.onclick = () => this.refreshOverlays();
+          }
+          
+          if (zoomAllBtn) {
+            zoomAllBtn.onclick = () => this.zoomToAllOverlays();
+          }
+        },
+        
+        zoomToOverlay(overlayId) {
+          const overlay = this.overlays.get(overlayId);
+          if (overlay && overlay.bounds) {
+            const map = App.Map.Init.getMap();
+            const bounds = [
+              [overlay.bounds.west, overlay.bounds.south],
+              [overlay.bounds.east, overlay.bounds.north]
+            ];
+            map.fitBounds(bounds, { padding: 20 });
+          }
+        },
+        
+        zoomToAllOverlays() {
+          if (this.overlays.size === 0) return;
+          
+          const map = App.Map.Init.getMap();
+          const bounds = new maplibregl.LngLatBounds();
+          
+          this.overlays.forEach(overlay => {
+            if (overlay.bounds) {
+              bounds.extend([overlay.bounds.west, overlay.bounds.south]);
+              bounds.extend([overlay.bounds.east, overlay.bounds.north]);
+            }
+          });
+          
+          if (!bounds.isEmpty()) {
+            map.fitBounds(bounds, { padding: 20 });
+          }
+        },
+        
+        removeOverlay(overlayId) {
+          const overlay = this.overlays.get(overlayId);
+          if (overlay) {
+            const map = App.Map.Init.getMap();
+            
+            // Remove layer and source
+            if (map.getLayer(overlay.layerId)) {
+              map.removeLayer(overlay.layerId);
+            }
+            if (map.getSource(overlay.sourceId)) {
+              map.removeSource(overlay.sourceId);
+            }
+            
+            // Remove from overlay map
+            this.overlays.delete(overlayId);
+            
+            // Update UI
+            this.updateOverlayList();
+            
+            console.log(`🗑️ Removed PDF overlay: ${overlay.name}`);
+          }
+        },
+        
+        refreshOverlays() {
+          // Request parent to reload overlays
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({
+              type: 'REFRESH_PDF_OVERLAYS'
+            }, '*');
+          }
+        }
+      };
+      
+      // Initialize when DOM is loaded
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => PdfOverlayManager.init());
+      } else {
+        PdfOverlayManager.init();
+      }
+      
+      // Make available globally for debugging
+      window.PdfOverlayManager = PdfOverlayManager;
+    </script>
+    
+    <!-- Add this script tag at the end of your HTML, after all other scripts -->
+  </body>
+</html>

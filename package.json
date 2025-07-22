@@ -1,0 +1,25 @@
+{
+  "name": "html-css",
+  "version": "1.0.0",
+  "description": "A template for HTML and CSS",
+  "scripts": {
+    "start": "node index.js",
+    "analyze-css": "node css-analyzer.js"
+  },
+  "keywords": [
+    "html",
+    "css"
+  ],
+  "author": "Michael Pegam",
+  "license": "MIT",
+  "dependencies": {
+    "@eslint/js": "^9.26.0",
+    "express": "^4.18.2",
+    "npm": "10.9.0",
+    "ws": "8.18.0"
+  },
+  "devDependencies": {
+    "postcss": "^8.4.31",
+    "glob": "^10.3.10"
+  }
+}

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Basemap Layers</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #333;
+        }
+        .info {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+        code {
+            background: #e9ecef;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Basemap Layers UI Test</h1>
+        
+        <div class="info">
+            <h2>Test Results</h2>
+            <div id="test-results"></div>
+        </div>
+
+        <div class="info">
+            <h2>Instructions</h2>
+            <ol>
+                <li>Open the main application at <a href="http://localhost:3000" target="_blank">http://localhost:3000</a></li>
+                <li>Click the layers icon (globe) in the sidebar to open the drawer</li>
+                <li>Look for the new "Basemap Layers" tab (stack icon)</li>
+                <li>Click on the tab to see the basemap layers list</li>
+                <li>Test the following features:
+                    <ul>
+                        <li>Expand/collapse categories with chevron icons</li>
+                        <li>Toggle layer visibility with checkboxes</li>
+                        <li>Click gear icon to adjust layer opacity</li>
+                        <li>Use search to filter layers</li>
+                        <li>Use master visibility checkbox to hide/show all layers</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+
+        <div class="info">
+            <h2>Module Status Check</h2>
+            <div id="module-status"></div>
+        </div>
+    </div>
+
+    <script>
+        // Check if modules are loaded
+        function checkModules() {
+            const results = document.getElementById('test-results');
+            const status = document.getElementById('module-status');
+            
+            const modules = [
+                { path: 'App.Map.Basemap', name: 'Basemap Module' },
+                { path: 'App.Map.Basemap.UI', name: 'Basemap UI Module' },
+                { path: 'App.Map.Basemap.getBasemapLayers', name: 'getBasemapLayers method' },
+                { path: 'App.Map.Basemap.setLayerVisibility', name: 'setLayerVisibility method' },
+                { path: 'App.Map.Basemap.setLayerOpacity', name: 'setLayerOpacity method' }
+            ];
+
+            let html = '';
+            modules.forEach(module => {
+                const parts = module.path.split('.');
+                let obj = window;
+                let exists = true;
+                
+                for (let part of parts) {
+                    if (obj && obj[part]) {
+                        obj = obj[part];
+                    } else {
+                        exists = false;
+                        break;
+                    }
+                }
+
+                const statusClass = exists ? 'success' : 'error';
+                const statusText = exists ? '✓ Loaded' : '✗ Not Found';
+                html += `<div class="status ${statusClass}"><code>${module.path}</code> - ${module.name}: ${statusText}</div>`;
+            });
+
+            status.innerHTML = html;
+
+            // Summary
+            results.innerHTML = `
+                <p>This test page verifies that the basemap layers UI components are properly integrated.</p>
+                <p>The basemap layers feature allows you to:</p>
+                <ul>
+                    <li>View all layers in the current basemap</li>
+                    <li>Toggle individual layer visibility</li>
+                    <li>Adjust layer opacity/transparency</li>
+                    <li>Search and filter layers by name</li>
+                    <li>Collapse/expand layer categories</li>
+                </ul>
+            `;
+        }
+
+        // Check on page load
+        window.addEventListener('load', () => {
+            // Check if running in iframe (from main app)
+            if (window.parent !== window) {
+                checkModules();
+            } else {
+                document.getElementById('test-results').innerHTML = 
+                    '<div class="status warning">This page should be accessed through the main application to check module loading.</div>';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,364 @@
+/* Button size and color theme settings */
+
+/* Global CSS variables for theming */
+:root {
+  --primary-color: rgba(70, 130, 180, 0.7); /* Steel blue - default and only theme */
+}
+
+/* Button size variations */
+.button-size-small .sidebar-toggle,
+.button-size-small .maplibregl-ctrl button,
+.button-size-small .dynamic-button-primary,
+.button-size-small .dynamic-button-secondary,
+.button-size-small .dynamic-button-sub {
+  width: 32px !important;
+  height: 32px !important;
+}
+
+.button-size-medium .sidebar-toggle,
+.button-size-medium .maplibregl-ctrl button,
+.button-size-medium .dynamic-button-primary,
+.button-size-medium .dynamic-button-secondary,
+.button-size-medium .dynamic-button-sub {
+  width: 40px !important;
+  height: 40px !important;
+}
+
+.button-size-large .sidebar-toggle,
+.button-size-large .maplibregl-ctrl button,
+.button-size-large .dynamic-button-primary,
+.button-size-large .dynamic-button-secondary,
+.button-size-large .dynamic-button-sub {
+  width: 50px !important;
+  height: 50px !important;
+}
+
+.button-size-extra-large .sidebar-toggle,
+.button-size-extra-large .maplibregl-ctrl button,
+.button-size-extra-large .dynamic-button-primary,
+.button-size-extra-large .dynamic-button-secondary,
+.button-size-extra-large .dynamic-button-sub {
+  width: 60px !important;
+  height: 60px !important;
+}
+
+/* Adjust icon sizes within buttons for different button sizes */
+.button-size-small .sidebar-toggle svg,
+.button-size-small .sidebar-toggle i,
+.button-size-small .maplibregl-ctrl button svg,
+.button-size-small .dynamic-button-primary svg,
+.button-size-small .dynamic-button-secondary svg,
+.button-size-small .dynamic-button-sub svg,
+.button-size-small .maplibregl-ctrl-icon:before {
+  width: 18px !important;
+  height: 18px !important;
+  font-size: 18px !important;
+  max-width: 18px !important;
+  max-height: 18px !important;
+}
+
+.button-size-medium .sidebar-toggle svg,
+.button-size-medium .sidebar-toggle i,
+.button-size-medium .maplibregl-ctrl button svg,
+.button-size-medium .dynamic-button-primary svg,
+.button-size-medium .dynamic-button-secondary svg,
+.button-size-medium .dynamic-button-sub svg,
+.button-size-medium .maplibregl-ctrl-icon:before {
+  width: 20px !important;
+  height: 20px !important;
+  font-size: 20px !important;
+  max-width: 20px !important;
+  max-height: 20px !important;
+}
+
+.button-size-large .sidebar-toggle svg,
+.button-size-large .sidebar-toggle i,
+.button-size-large .maplibregl-ctrl button svg,
+.button-size-large .dynamic-button-primary svg,
+.button-size-large .dynamic-button-secondary svg,
+.button-size-large .dynamic-button-sub svg,
+.button-size-large .maplibregl-ctrl-icon:before {
+  width: 24px !important;
+  height: 24px !important;
+  font-size: 24px !important;
+  max-width: 24px !important;
+  max-height: 24px !important;
+}
+
+.button-size-extra-large .sidebar-toggle svg,
+.button-size-extra-large .sidebar-toggle i,
+.button-size-extra-large .maplibregl-ctrl button svg,
+.button-size-extra-large .dynamic-button-primary svg,
+.button-size-extra-large .dynamic-button-secondary svg,
+.button-size-extra-large .dynamic-button-sub svg,
+.button-size-extra-large .maplibregl-ctrl-icon:before {
+  width: 30px !important;
+  height: 30px !important;
+  font-size: 30px !important;
+  max-width: 30px !important;
+  max-height: 30px !important;
+}
+
+/* Apply the primary color to active/selected elements */
+.controls button,
+.maplibregl-ctrl button:not(:disabled).active,
+.selected-basemap,
+sl-switch[checked]::part(thumb) {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+/* For text colors on active elements */
+.maplibregl-ctrl button:not(:disabled).active,
+.maplibregl-ctrl-geolocate-active .maplibregl-ctrl-icon:before {
+  color: var(--primary-color) !important;
+}
+
+/* For borders and accents */
+.selected-basemap {
+  border-left-color: var(--primary-color) !important;
+}
+
+/* Default button color and hover effects */
+.controls button {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.controls button:hover {
+  background-color: var(--primary-color);
+  opacity: 0.9;
+}
+
+/* TerraDraw button size variations */
+.button-size-small .maplibregl-terradraw-add-control,
+.button-size-small .maplibregl-terradraw-add-point-button,
+.button-size-small .maplibregl-terradraw-add-linestring-button,
+.button-size-small .maplibregl-terradraw-add-polygon-button,
+.button-size-small .maplibregl-terradraw-add-rectangle-button,
+.button-size-small .maplibregl-terradraw-add-angled-rectangle-button,
+.button-size-small .maplibregl-terradraw-add-circle-button,
+.button-size-small .maplibregl-terradraw-add-sector-button,
+.button-size-small .maplibregl-terradraw-add-sensor-button,
+.button-size-small .maplibregl-terradraw-add-freehand-button,
+.button-size-small .maplibregl-terradraw-add-select-button,
+.button-size-small .maplibregl-terradraw-delete-selection-button,
+.button-size-small .maplibregl-terradraw-delete-button,
+.button-size-small .maplibregl-terradraw-download-button {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+    max-width: 32px !important;
+    max-height: 32px !important;
+}
+
+.button-size-medium .maplibregl-terradraw-add-control,
+.button-size-medium .maplibregl-terradraw-add-point-button,
+.button-size-medium .maplibregl-terradraw-add-linestring-button,
+.button-size-medium .maplibregl-terradraw-add-polygon-button,
+.button-size-medium .maplibregl-terradraw-add-rectangle-button,
+.button-size-medium .maplibregl-terradraw-add-angled-rectangle-button,
+.button-size-medium .maplibregl-terradraw-add-circle-button,
+.button-size-medium .maplibregl-terradraw-add-sector-button,
+.button-size-medium .maplibregl-terradraw-add-sensor-button,
+.button-size-medium .maplibregl-terradraw-add-freehand-button,
+.button-size-medium .maplibregl-terradraw-add-select-button,
+.button-size-medium .maplibregl-terradraw-delete-selection-button,
+.button-size-medium .maplibregl-terradraw-delete-button,
+.button-size-medium .maplibregl-terradraw-download-button {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+    max-width: 40px !important;
+    max-height: 40px !important;
+}
+
+.button-size-large .maplibregl-terradraw-add-control,
+.button-size-large .maplibregl-terradraw-add-point-button,
+.button-size-large .maplibregl-terradraw-add-linestring-button,
+.button-size-large .maplibregl-terradraw-add-polygon-button,
+.button-size-large .maplibregl-terradraw-add-rectangle-button,
+.button-size-large .maplibregl-terradraw-add-angled-rectangle-button,
+.button-size-large .maplibregl-terradraw-add-circle-button,
+.button-size-large .maplibregl-terradraw-add-sector-button,
+.button-size-large .maplibregl-terradraw-add-sensor-button,
+.button-size-large .maplibregl-terradraw-add-freehand-button,
+.button-size-large .maplibregl-terradraw-add-select-button,
+.button-size-large .maplibregl-terradraw-delete-selection-button,
+.button-size-large .maplibregl-terradraw-delete-button,
+.button-size-large .maplibregl-terradraw-download-button {
+    width: 50px !important;
+    height: 50px !important;
+    min-width: 50px !important;
+    min-height: 50px !important;
+    max-width: 50px !important;
+    max-height: 50px !important;
+}
+
+.button-size-extra-large .maplibregl-terradraw-add-control,
+.button-size-extra-large .maplibregl-terradraw-add-point-button,
+.button-size-extra-large .maplibregl-terradraw-add-linestring-button,
+.button-size-extra-large .maplibregl-terradraw-add-polygon-button,
+.button-size-extra-large .maplibregl-terradraw-add-rectangle-button,
+.button-size-extra-large .maplibregl-terradraw-add-angled-rectangle-button,
+.button-size-extra-large .maplibregl-terradraw-add-circle-button,
+.button-size-extra-large .maplibregl-terradraw-add-sector-button,
+.button-size-extra-large .maplibregl-terradraw-add-sensor-button,
+.button-size-extra-large .maplibregl-terradraw-add-freehand-button,
+.button-size-extra-large .maplibregl-terradraw-add-select-button,
+.button-size-extra-large .maplibregl-terradraw-delete-selection-button,
+.button-size-extra-large .maplibregl-terradraw-delete-button,
+.button-size-extra-large .maplibregl-terradraw-download-button {
+    width: 60px !important;
+    height: 60px !important;
+    min-width: 60px !important;
+    min-height: 60px !important;
+    max-width: 60px !important;
+    max-height: 60px !important;
+}
+
+/* Common TerraDraw button styling */
+.maplibregl-terradraw-add-control {
+    font-size: 16px !important;
+    padding: 0 !important;
+    margin: 2px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 15% !important;
+    background-color: rgba(255, 255, 255, 0.4) !important;
+    border: none !important;
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.1) !important;
+    transition: all 0.3s ease !important;
+}
+
+/* Also target buttons in the control group that contains terradraw buttons */
+.maplibregl-ctrl-group button.maplibregl-terradraw-add-control {
+    font-size: 16px !important;
+}
+
+/* Hover state */
+.maplibregl-terradraw-add-control:hover {
+    background-color: rgba(245, 245, 245, 0.9) !important;
+    transform: scale(1.05) !important;
+}
+
+/* Active/selected state */
+.maplibregl-terradraw-add-control.active,
+.maplibregl-terradraw-add-control.selected,
+.maplibregl-terradraw-add-control[aria-pressed="true"] {
+    background-color: rgba(70, 130, 180, 0.8) !important;
+    color: white !important;
+    box-shadow: 0 0 0 2px rgba(70, 130, 180, 1) !important;
+}
+
+/* Icon sizing for TerraDraw buttons - adjust based on button size */
+.button-size-small .maplibregl-terradraw-add-control svg,
+.button-size-small .maplibregl-terradraw-add-control img,
+.button-size-small .maplibregl-terradraw-add-control::before,
+.button-size-small .maplibregl-terradraw-add-control::after {
+    width: 18px !important;
+    height: 18px !important;
+    font-size: 18px !important;
+}
+
+.button-size-medium .maplibregl-terradraw-add-control svg,
+.button-size-medium .maplibregl-terradraw-add-control img,
+.button-size-medium .maplibregl-terradraw-add-control::before,
+.button-size-medium .maplibregl-terradraw-add-control::after {
+    width: 20px !important;
+    height: 20px !important;
+    font-size: 20px !important;
+}
+
+.button-size-large .maplibregl-terradraw-add-control svg,
+.button-size-large .maplibregl-terradraw-add-control img,
+.button-size-large .maplibregl-terradraw-add-control::before,
+.button-size-large .maplibregl-terradraw-add-control::after {
+    width: 24px !important;
+    height: 24px !important;
+    font-size: 24px !important;
+}
+
+.button-size-extra-large .maplibregl-terradraw-add-control svg,
+.button-size-extra-large .maplibregl-terradraw-add-control img,
+.button-size-extra-large .maplibregl-terradraw-add-control::before,
+.button-size-extra-large .maplibregl-terradraw-add-control::after {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 30px !important;
+}
+
+/* Icon visibility */
+.maplibregl-terradraw-add-control svg,
+.maplibregl-terradraw-add-control img,
+.maplibregl-terradraw-add-control::before,
+.maplibregl-terradraw-add-control::after {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Preserve any background images */
+.maplibregl-terradraw-add-control {
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+}
+
+/* Background image sizing based on button size */
+.button-size-small .maplibregl-terradraw-add-control {
+    background-size: 18px 18px !important;
+}
+
+.button-size-medium .maplibregl-terradraw-add-control {
+    background-size: 20px 20px !important;
+}
+
+.button-size-large .maplibregl-terradraw-add-control {
+    background-size: 24px 24px !important;
+}
+
+.button-size-extra-large .maplibregl-terradraw-add-control {
+    background-size: 30px 30px !important;
+}
+
+/* If icons are using font icons */
+.maplibregl-terradraw-add-control:before,
+.maplibregl-terradraw-add-control:after {
+    line-height: 1 !important;
+}
+
+/* Fix the control group container to arrange buttons vertically */
+.maplibregl-ctrl-group:has(.maplibregl-terradraw-add-control) {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 5px !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+
+/* Specific button types inherit from main class */
+.maplibregl-terradraw-add-point-button,
+.maplibregl-terradraw-add-linestring-button,
+.maplibregl-terradraw-add-polygon-button,
+.maplibregl-terradraw-add-rectangle-button,
+.maplibregl-terradraw-add-angled-rectangle-button,
+.maplibregl-terradraw-add-circle-button,
+.maplibregl-terradraw-add-sector-button,
+.maplibregl-terradraw-add-sensor-button,
+.maplibregl-terradraw-add-freehand-button,
+.maplibregl-terradraw-add-select-button,
+.maplibregl-terradraw-delete-selection-button,
+.maplibregl-terradraw-delete-button,
+.maplibregl-terradraw-download-button {
+    font-size: 16px !important;
+}
+
+/* Mobile responsiveness for TerraDraw buttons */
+@media (max-width: 768px) {
+    .maplibregl-ctrl-group:has(.maplibregl-terradraw-add-control) {
+        gap: 3px !important;
+    }
+}

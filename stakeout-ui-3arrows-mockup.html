@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stakeout UI - Three Arrows Mockup</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f0f0f0;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .mockup-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .mockup {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .device-frame {
+            position: relative;
+            background: #222;
+            padding: 20px;
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .device-screen {
+            flex: 1;
+            background: linear-gradient(to bottom, #87CEEB, #98D8E8);
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        /* Map elements mockup */
+        .map-elements {
+            position: absolute;
+            inset: 0;
+            opacity: 0.3;
+        }
+        
+        .map-road {
+            position: absolute;
+            height: 4px;
+            background: #666;
+            top: 40%;
+            left: 10%;
+            right: 20%;
+            transform: rotate(-15deg);
+        }
+        
+        .map-building {
+            position: absolute;
+            background: #999;
+            width: 60px;
+            height: 40px;
+            top: 30%;
+            left: 60%;
+        }
+        
+        .mockup-title {
+            padding: 20px;
+            background: #f8f9fa;
+            font-weight: 600;
+            text-align: center;
+            color: #333;
+        }
+        
+        /* New compact widget with 3 arrows */
+        .stakeout-widget-3arrows {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px 20px 0 0;
+            color: white;
+            overflow: hidden;
+        }
+        
+        .widget-handle {
+            height: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: grab;
+        }
+        
+        .handle-bar {
+            width: 40px;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+        }
+        
+        .widget-content {
+            padding: 10px 15px 15px;
+        }
+        
+        /* Total distance */
+        .total-distance {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .distance-label {
+            opacity: 0.7;
+            font-size: 18px;
+            margin-right: 8px;
+        }
+        
+        .distance-value {
+            color: #4682b4;
+            font-size: 28px;
+            text-shadow: 0 0 10px rgba(70, 130, 180, 0.5);
+        }
+        
+        .distance-unit {
+            opacity: 0.8;
+            font-size: 18px;
+            margin-left: 4px;
+        }
+        
+        /* Three arrows grid */
+        .arrows-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .arrow-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .arrow-svg {
+            width: 50px;
+            height: 50px;
+        }
+        
+        .arrow-path {
+            fill: #4682b4;
+            stroke: white;
+            stroke-width: 1.5;
+            filter: drop-shadow(0 0 4px rgba(70, 130, 180, 0.5));
+        }
+        
+        /* Different arrow colors based on distance */
+        .arrow-close { fill: #00ff00; }
+        .arrow-medium { fill: #ffff00; }
+        .arrow-far { fill: #4682b4; }
+        
+        .arrow-info {
+            font-size: 14px;
+            display: flex;
+            align-items: baseline;
+            gap: 5px;
+        }
+        
+        .arrow-label {
+            opacity: 0.7;
+            font-weight: 600;
+        }
+        
+        .arrow-value {
+            color: #4682b4;
+            font-weight: 500;
+        }
+        
+        /* Different form factors */
+        .landscape .device-frame {
+            min-height: 400px;
+        }
+        
+        .landscape .stakeout-widget-3arrows {
+            height: 120px;
+        }
+        
+        .landscape .widget-content {
+            padding: 5px 15px 10px;
+        }
+        
+        .landscape .total-distance {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+        
+        .landscape .distance-value {
+            font-size: 24px;
+        }
+        
+        .landscape .arrow-svg {
+            width: 35px;
+            height: 35px;
+        }
+        
+        .landscape .arrow-info {
+            font-size: 12px;
+        }
+        
+        /* Expanded state */
+        .expanded .stakeout-widget-3arrows {
+            height: 320px;
+        }
+        
+        .mode-toggle-section {
+            padding: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 20px;
+        }
+        
+        .mode-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .mode-button {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .mode-button.active {
+            background: rgba(70, 130, 180, 0.3);
+            border-color: #4682b4;
+        }
+        
+        /* Feature highlights */
+        .features {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 40px;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .feature {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .feature h3 {
+            margin: 0 0 10px 0;
+            color: #4682b4;
+        }
+        
+        .feature p {
+            margin: 0;
+            color: #666;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧭 Stakeout UI with Three Directional Arrows</h1>
+        
+        <div class="mockup-grid">
+            <!-- Portrait Mode -->
+            <div class="mockup">
+                <div class="mockup-title">📱 Portrait Mode (Default)</div>
+                <div class="device-frame">
+                    <div class="device-screen">
+                        <div class="map-elements">
+                            <div class="map-road"></div>
+                            <div class="map-building"></div>
+                        </div>
+                        
+                        <div class="stakeout-widget-3arrows" style="height: 160px;">
+                            <div class="widget-handle">
+                                <div class="handle-bar"></div>
+                            </div>
+                            <div class="widget-content">
+                                <div class="total-distance">
+                                    <span class="distance-label">Total:</span>
+                                    <span class="distance-value">15.34</span>
+                                    <span class="distance-unit">m</span>
+                                </div>
+                                
+                                <div class="arrows-grid">
+                                    <!-- X Arrow (East) -->
+                                    <div class="arrow-item">
+                                        <svg class="arrow-svg" viewBox="0 0 50 50">
+                                            <g transform="translate(25, 25) rotate(90)">
+                                                <path class="arrow-path arrow-medium" d="M 0,-18 L 8,-8 L 4,-8 L 4,10 L -4,10 L -4,-8 L -8,-8 Z"/>
+                                            </g>
+                                        </svg>
+                                        <div class="arrow-info">
+                                            <span class="arrow-label">X:</span>
+                                            <span class="arrow-value">12.5m</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Y Arrow (North) -->
+                                    <div class="arrow-item">
+                                        <svg class="arrow-svg" viewBox="0 0 50 50">
+                                            <g transform="translate(25, 25)">
+                                                <path class="arrow-path arrow-medium" d="M 0,-18 L 8,-8 L 4,-8 L 4,10 L -4,10 L -4,-8 L -8,-8 Z"/>
+                                            </g>
+                                        </svg>
+                                        <div class="arrow-info">
+                                            <span class="arrow-label">Y:</span>
+                                            <span class="arrow-value">8.9m</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Z Arrow (Up) -->
+                                    <div class="arrow-item">
+                                        <svg class="arrow-svg" viewBox="0 0 50 50">
+                                            <g transform="translate(25, 25)">
+                                                <path class="arrow-path arrow-close" d="M 0,-18 L 8,-8 L 4,-8 L 4,10 L -4,10 L -4,-8 L -8,-8 Z"/>
+                                            </g>
+                                        </svg>
+                                        <div class="arrow-info">
+                                            <span class="arrow-label">Z:</span>
+                                            <span class="arrow-value">0.3m</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Landscape Mode -->
+            <div class="mockup">
+                <div class="mockup-title">📱 Landscape Mode (Compact)</div>
+                <div class="device-frame landscape">
+                    <div class="device-screen">
+                        <div class="map-elements">
+                            <div class="map-road"></div>
+                            <div class="map-building"></div>
+                        </div>
+                        
+                        <div class="stakeout-widget-3arrows landscape">
+                            <div class="widget-handle">
+                                <div class="handle-bar"></div>
+                            </div>
+                            <div class="widget-content">
+                                <div class="total-distance">
+                                    <span class="distance-label">Total:</span>
+                                    <span class="distance-value">15.34</span>
+                                    <span class="distance-unit">m</span>
+                                </div>
+                                
+                                <div class="arrows-grid">
+                                    <div class="arrow-item">
+                                        <svg class="arrow-svg" viewBox="0 0 50 50">
+                                            <g transform="translate(25, 25) rotate(-90)">
+                                                <path class="arrow-path arrow-far" d="M 0,-18 L 8,-8 L 4,-8 L 4,10 L -4,10 L -4,-8 L -8,-8 Z"/>
+                                            </g>
+                                        </svg>
+                                        <div class="arrow-info">
+                                            <span class="arrow-label">X:</span>
+                                            <span class="arrow-value">12.5m</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="arrow-item">
+                                        <svg class="arrow-svg" viewBox="0 0 50 50">
+                                            <g transform="translate(25, 25) rotate(180)">
+                                                <path class="arrow-path arrow-medium" d="M 0,-18 L 8,-8 L 4,-8 L 4,10 L -4,10 L -4,-8 L -8,-8 Z"/>
+                                            </g>
+                                        </svg>
+                                        <div class="arrow-info">
+                                            <span class="arrow-label">Y:</span>
+                                            <span class="arrow-value">8.9m</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="arrow-item">
+                                        <svg class="arrow-svg" viewBox="0 0 50 50">
+                                            <g transform="translate(25, 25) rotate(180)">
+                                                <path class="arrow-path" style="fill: #666;" d="M 0,-18 L 8,-8 L 4,-8 L 4,10 L -4,10 L -4,-8 L -8,-8 Z"/>
+                                            </g>
+                                        </svg>
+                                        <div class="arrow-info">
+                                            <span class="arrow-label">Z:</span>
+                                            <span class="arrow-value">--</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Expanded State -->
+            <div class="mockup">
+                <div class="mockup-title">⬆️ Expanded State (Mode Toggle)</div>
+                <div class="device-frame expanded">
+                    <div class="device-screen">
+                        <div class="map-elements">
+                            <div class="map-road"></div>
+                            <div class="map-building"></div>
+                        </div>
+                        
+                        <div class="stakeout-widget-3arrows expanded">
+                            <div class="widget-handle">
+                                <div class="handle-bar"></div>
+                            </div>
+                            <div class="widget-content">
+                                <div class="total-distance">
+                                    <span class="distance-label">Total:</span>
+                                    <span class="distance-value">2.45</span>
+                                    <span class="distance-unit">m</span>
+                                </div>
+                                
+                                <div class="arrows-grid">
+                                    <div class="arrow-item">
+                                        <svg class="arrow-svg" viewBox="0 0 50 50">
+                                            <g transform="translate(25, 25) rotate(90)">
+                                                <path class="arrow-path arrow-close" d="M 0,-18 L 8,-8 L 4,-8 L 4,10 L -4,10 L -4,-8 L -8,-8 Z"/>
+                                            </g>
+                                        </svg>
+                                        <div class="arrow-info">
+                                            <span class="arrow-label">X:</span>
+                                            <span class="arrow-value">45cm</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="arrow-item">
+                                        <svg class="arrow-svg" viewBox="0 0 50 50">
+                                            <g transform="translate(25, 25)">
+                                                <path class="arrow-path arrow-medium" d="M 0,-18 L 8,-8 L 4,-8 L 4,10 L -4,10 L -4,-8 L -8,-8 Z"/>
+                                            </g>
+                                        </svg>
+                                        <div class="arrow-info">
+                                            <span class="arrow-label">Y:</span>
+                                            <span class="arrow-value">2.1m</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="arrow-item">
+                                        <svg class="arrow-svg" viewBox="0 0 50 50">
+                                            <g transform="translate(25, 25)">
+                                                <path class="arrow-path arrow-close" d="M 0,-18 L 8,-8 L 4,-8 L 4,10 L -4,10 L -4,-8 L -8,-8 Z"/>
+                                            </g>
+                                        </svg>
+                                        <div class="arrow-info">
+                                            <span class="arrow-label">Z:</span>
+                                            <span class="arrow-value">15cm</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mode-toggle-section">
+                                    <div style="font-size: 12px; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px;">Navigation Mode</div>
+                                    <div class="mode-buttons">
+                                        <button class="mode-button">
+                                            <svg width="20" height="20" viewBox="0 0 20 20">
+                                                <line x1="2" y1="10" x2="18" y2="10" stroke="currentColor" stroke-width="2"/>
+                                                <circle cx="10" cy="10" r="2" fill="currentColor"/>
+                                            </svg>
+                                            <span>Segments</span>
+                                        </button>
+                                        <button class="mode-button active">
+                                            <svg width="20" height="20" viewBox="0 0 20 20">
+                                                <circle cx="5" cy="5" r="3" fill="currentColor"/>
+                                                <circle cx="15" cy="5" r="3" fill="currentColor"/>
+                                                <circle cx="15" cy="15" r="3" fill="currentColor"/>
+                                                <circle cx="5" cy="15" r="3" fill="currentColor"/>
+                                            </svg>
+                                            <span>Nodes</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="features">
+            <h2>✨ Key Features</h2>
+            <div class="feature-grid">
+                <div class="feature">
+                    <h3>🎯 Three Directional Arrows</h3>
+                    <p>Separate arrows for X (East/West), Y (North/South), and Z (Up/Down) provide precise 3D navigation guidance.</p>
+                </div>
+                <div class="feature">
+                    <h3>🌈 Distance-Based Colors</h3>
+                    <p>Arrows change color based on distance: green (< 10cm), light green (< 50cm), yellow (< 1m), orange (< 2m), blue (> 2m).</p>
+                </div>
+                <div class="feature">
+                    <h3>📏 Smart Unit Display</h3>
+                    <p>Automatically switches between cm, m, and km based on distance for optimal readability.</p>
+                </div>
+                <div class="feature">
+                    <h3>📱 Responsive Design</h3>
+                    <p>Adapts perfectly to portrait and landscape orientations with optimized layouts for each.</p>
+                </div>
+                <div class="feature">
+                    <h3>👆 Swipe to Expand</h3>
+                    <p>Swipe up or tap the handle to access navigation mode toggle and additional information.</p>
+                </div>
+                <div class="feature">
+                    <h3>🔄 Mode Switching</h3>
+                    <p>Easy toggle between Segments (nearest edge) and Nodes (nearest vertex) navigation modes.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

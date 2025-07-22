@@ -1,0 +1,323 @@
+/* Basemap Layers UI Styles */
+
+/* Container styles */
+#basemap-layers-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Header styles */
+.bl-header {
+  background: var(--geolantis-blue, #4682b4);
+  color: white;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--sl-color-neutral-200);
+}
+
+.bl-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bl-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bl-header-title {
+  font-size: 18px;
+  font-weight: 500;
+  font-family: "Roboto", sans-serif;
+}
+
+/* Master controls */
+.bl-master-controls {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  width: 100px; /* Fixed width to align with other controls */
+  justify-content: flex-end;
+}
+
+.bl-master-control {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.bl-control-label {
+  font-size: 11px;
+  color: white;
+  user-select: none;
+}
+
+/* Search container */
+.bl-search-container {
+  padding: 8px;
+  background: white;
+  border-bottom: 1px solid var(--sl-color-neutral-200);
+}
+
+.bl-search-container sl-input {
+  width: 100%;
+}
+
+/* Layers container */
+.bl-layers-container {
+  flex: 1;
+  overflow-y: auto;
+  background: white;
+}
+
+/* Category styles */
+.bl-category {
+  border-bottom: 1px solid var(--sl-color-neutral-200);
+}
+
+.bl-category-header {
+  background: var(--sl-color-neutral-50);
+  padding: 6px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  min-height: 36px;
+}
+
+.bl-category-header:hover {
+  background: var(--sl-color-neutral-100);
+}
+
+.bl-category-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bl-category-name {
+  font-weight: 500;
+  font-size: 15px;
+  font-family: "Roboto", sans-serif;
+}
+
+/* Chevron animation */
+.bl-chevron {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s ease;
+}
+
+.bl-category:not(.expanded) .bl-chevron {
+  transform: rotate(-90deg);
+}
+
+/* Category controls */
+.bl-category-controls {
+  display: flex;
+  align-items: center;
+  gap: 18px; /* Match spacing with feature layers */
+  width: 100px; /* Fixed width to align controls */
+  justify-content: flex-end;
+}
+
+/* Layer list */
+.bl-layer-list {
+  display: none;
+  overflow: hidden;
+}
+
+.bl-layer-list.expanded {
+  display: block;
+}
+
+/* Layer item styles */
+.bl-layer-item {
+  padding: 4px 16px 4px 24px; /* Reduced left padding to move icons left */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  transition: background 0.2s;
+  min-height: 32px;
+}
+
+.bl-layer-item:hover {
+  background: var(--sl-color-neutral-50);
+}
+
+.bl-layer-content {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Increased gap for better spacing */
+  flex: 1;
+  min-width: 0;
+}
+
+.bl-layer-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.bl-layer-name {
+  font-size: 14px;
+  color: var(--sl-color-neutral-900);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: "Roboto", sans-serif;
+  text-align: left; /* Ensure left alignment */
+}
+
+.bl-layer-zoom {
+  font-size: 11px;
+  color: var(--sl-color-neutral-600);
+}
+
+/* Layer controls */
+.bl-layer-controls {
+  display: flex;
+  align-items: center;
+  gap: 18px; /* Match spacing with feature layers */
+  flex-shrink: 0;
+  width: 100px; /* Fixed width to align with other controls */
+  justify-content: flex-end;
+}
+
+/* Checkbox styling */
+.bl-layer-visibility::part(control),
+.bl-category-visibility::part(control),
+.bl-master-visibility::part(control) {
+  width: 18px;
+  height: 18px;
+  background-color: white !important;
+  border: 1px solid var(--sl-color-neutral-400) !important;
+}
+
+.bl-layer-visibility[checked]::part(control),
+.bl-category-visibility[checked]::part(control),
+.bl-master-visibility[checked]::part(control) {
+  background-color: white !important;
+  border-color: var(--geolantis-blue, #4682b4) !important;
+}
+
+/* Settings button */
+.bl-layer-settings::part(base) {
+  height: 28px;
+  width: 28px;
+  align-items: center;
+  justify-content: center;
+  color: var(--sl-color-neutral-600);
+}
+
+.bl-layer-settings::part(base):hover {
+  color: var(--geolantis-blue);
+}
+
+/* Settings dialog */
+.bl-settings-dialog {
+  --width: 400px;
+}
+
+.bl-settings-content {
+  padding: 16px;
+}
+
+.bl-setting-group {
+  margin-bottom: 24px;
+}
+
+.bl-setting-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: var(--sl-color-neutral-700);
+}
+
+.bl-opacity-slider {
+  width: 100%;
+}
+
+.bl-layer-details {
+  background: var(--sl-color-neutral-50);
+  padding: 12px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.bl-layer-details p {
+  margin: 4px 0;
+}
+
+.bl-layer-details strong {
+  color: var(--sl-color-neutral-700);
+}
+
+/* Expand/collapse button styling */
+.bl-expand-collapse-btn::part(base) {
+  color: white;
+  width: 28px;
+  height: 28px;
+}
+
+.bl-expand-collapse-btn::part(base):hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Custom checkbox checkmark for basemap layers */
+.bl-layer-visibility[checked] svg,
+.bl-category-visibility[checked] svg,
+.bl-master-visibility[checked] svg {
+  display: none !important;
+}
+
+.bl-layer-visibility[checked]::part(control)::after,
+.bl-category-visibility[checked]::part(control)::after,
+.bl-master-visibility[checked]::part(control)::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 6px;
+  height: 10px;
+  border: solid var(--geolantis-blue, #4682b4);
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+  opacity: 1;
+}
+
+/* Layer icon styles */
+.bl-layer-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bl-icon-fill {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+.bl-icon-circle {
+  box-sizing: border-box;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .bl-layer-item {
+    padding-left: 20px; /* Adjusted for new padding */
+  }
+  
+  .bl-layer-name {
+    font-size: 13px;
+  }
+}

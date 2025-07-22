@@ -1,0 +1,143 @@
+.bookmarks-panel {
+    padding: 0.5rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.bookmarks-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0 0.5rem;
+}
+
+.bookmarks-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--sl-color-neutral-800);
+}
+
+#bookmarks-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 0.5rem;
+}
+
+.empty-state {
+    text-align: center;
+    color: var(--sl-color-neutral-500);
+    padding: 2rem 1rem;
+    font-size: 0.875rem;
+}
+
+.bookmark-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    background: var(--sl-color-neutral-50);
+    border: 1px solid var(--sl-color-neutral-200);
+    border-radius: var(--sl-border-radius-medium);
+    cursor: move;
+    transition: all 0.2s ease;
+}
+
+.bookmark-item:hover {
+    background: var(--sl-color-neutral-100);
+    border-color: var(--sl-color-neutral-300);
+}
+
+.bookmark-item.dragging {
+    opacity: 0.5;
+    transform: scale(0.95);
+}
+
+.bookmark-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding-right: 0.5rem;
+}
+
+.bookmark-name {
+    font-size: 0.875rem;
+    color: var(--sl-color-neutral-800);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.bookmark-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.bookmark-actions sl-icon-button {
+    font-size: 0.875rem;
+}
+
+.bookmark-actions sl-icon-button::part(base) {
+    padding: 0.25rem;
+}
+
+.drag-handle {
+    cursor: grab;
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .bookmarks-title {
+        color: var(--sl-color-neutral-200);
+    }
+    
+    .bookmark-item {
+        background: var(--sl-color-neutral-800);
+        border-color: var(--sl-color-neutral-700);
+    }
+    
+    .bookmark-item:hover {
+        background: var(--sl-color-neutral-700);
+        border-color: var(--sl-color-neutral-600);
+    }
+    
+    .bookmark-name {
+        color: var(--sl-color-neutral-200);
+    }
+}
+
+/* Bookmark icon styling */
+sl-tab[panel="bookmarks"] svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    fill: none;
+}
+
+/* Match the active tab color from other tabs */
+sl-tab[panel="bookmarks"][active] svg {
+    stroke: var(--sl-color-primary-600);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .bookmarks-panel {
+        padding: 0.25rem;
+    }
+    
+    .bookmark-item {
+        padding: 0.5rem;
+    }
+    
+    .bookmark-actions {
+        gap: 0;
+    }
+}

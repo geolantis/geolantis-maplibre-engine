@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Language Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 4px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        button { padding: 10px 20px; margin: 5px; }
+        .test-result { margin: 10px 0; padding: 10px; background: #f8f9fa; border-left: 4px solid #007bff; }
+    </style>
+</head>
+<body>
+    <h1>MapLibre Language Quick Test</h1>
+    
+    <div id="status" class="status info">Loading...</div>
+    
+    <h2>Language Detection Results</h2>
+    <div id="results"></div>
+    
+    <h2>Manual Tests</h2>
+    <button onclick="testGerman()">Force German</button>
+    <button onclick="testEnglish()">Force English</button>
+    <button onclick="testDetection()">Re-test Detection</button>
+    <button onclick="showDebugInfo()">Show Debug Info</button>
+    
+    <h2>Translation Test</h2>
+    <div class="test-result">
+        <strong>ui.tabs.layers:</strong> <span id="test-translation" data-i18n="ui.tabs.layers">Layers</span>
+    </div>
+    
+    <h2>Console Output</h2>
+    <div id="console-output" style="background: #000; color: #0f0; padding: 10px; font-family: monospace; max-height: 300px; overflow-y: auto;"></div>
+
+    <!-- Include the i18n manager -->
+    <script src="src/i18n/i18n-manager.js"></script>
+    
+    <script>
+        // Capture console logs
+        const originalLog = console.log;
+        const originalWarn = console.warn;
+        const originalError = console.error;
+        
+        function addToConsole(level, message) {
+            const output = document.getElementById('console-output');
+            const time = new Date().toLocaleTimeString();
+            output.innerHTML += `<div style="color: ${level === 'error' ? '#f00' : level === 'warn' ? '#ff0' : '#0f0'}">[${time}] ${level.toUpperCase()}: ${message}</div>`;
+            output.scrollTop = output.scrollHeight;
+        }
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addToConsole('log', args.join(' '));
+        };
+        
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            addToConsole('warn', args.join(' '));
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addToConsole('error', args.join(' '));
+        };
+        
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Quick Language Test - Starting...');
+            
+            // Test what language the browser detects
+            const browserLang = navigator.language || navigator.userLanguage;
+            console.log('Browser detected language: ' + browserLang);
+            
+            // Test Android bridge availability
+            if (window.bridge) {
+                console.log('Android bridge available');
+                if (typeof window.bridge.setLanguage === 'function') {
+                    console.log('setLanguage method available on bridge');
+                } else {
+                    console.warn('setLanguage method NOT available on bridge');
+                }
+            } else {
+                console.warn('Android bridge NOT available');
+            }
+            
+            // Initialize i18n and test
+            if (App && App.I18n) {
+                App.I18n.init().then(() => {
+                    console.log('I18n initialized successfully');
+                    runInitialTests();
+                }).catch(error => {
+                    console.error('I18n initialization failed: ' + error.message);
+                    document.getElementById('status').className = 'status error';
+                    document.getElementById('status').textContent = 'I18n initialization failed: ' + error.message;
+                });
+            } else {
+                console.error('App.I18n not available');
+                document.getElementById('status').className = 'status error';
+                document.getElementById('status').textContent = 'App.I18n not available - check if i18n-manager.js is loaded';
+            }
+        });
+        
+        function runInitialTests() {
+            const results = document.getElementById('results');
+            const currentLang = App.I18n.getLanguage();
+            const testTranslation = App.I18n.t('ui.tabs.layers');
+            
+            results.innerHTML = `
+                <div class="test-result">
+                    <strong>Current Language:</strong> ${currentLang}
+                </div>
+                <div class="test-result">
+                    <strong>Browser Language:</strong> ${navigator.language || 'unknown'}
+                </div>
+                <div class="test-result">
+                    <strong>Test Translation (ui.tabs.layers):</strong> "${testTranslation}"
+                </div>
+                <div class="test-result">
+                    <strong>Expected German:</strong> "Ebenen"
+                </div>
+                <div class="test-result">
+                    <strong>Status:</strong> ${testTranslation === 'Ebenen' ? '✅ German Active' : testTranslation === 'Layers' ? '❌ English Active' : '⚠️ Unknown State'}
+                </div>
+            `;
+            
+            document.getElementById('status').className = 'status ' + (currentLang === 'de' ? 'success' : 'error');
+            document.getElementById('status').textContent = `Current language: ${currentLang} ${currentLang === 'de' ? '(German detected!)' : '(Not German - investigating...)'}`;
+            
+            console.log('Initial test results:', {
+                currentLanguage: currentLang,
+                testTranslation: testTranslation,
+                isGerman: currentLang === 'de'
+            });
+        }
+        
+        function testGerman() {
+            console.log('Testing German language...');
+            App.I18n.setLanguage('de').then(() => {
+                console.log('German language set successfully');
+                runInitialTests();
+            }).catch(error => {
+                console.error('Failed to set German: ' + error.message);
+            });
+        }
+        
+        function testEnglish() {
+            console.log('Testing English language...');
+            App.I18n.setLanguage('en').then(() => {
+                console.log('English language set successfully');
+                runInitialTests();
+            }).catch(error => {
+                console.error('Failed to set English: ' + error.message);
+            });
+        }
+        
+        function testDetection() {
+            console.log('Re-testing language detection...');
+            const detectedLang = App.I18n.detectLanguage();
+            console.log('Detected language: ' + detectedLang);
+            App.I18n.setLanguage(detectedLang).then(() => {
+                runInitialTests();
+            });
+        }
+        
+        function showDebugInfo() {
+            if (App.I18n.getDebugInfo) {
+                const debugInfo = App.I18n.getDebugInfo();
+                console.log('Debug Info:', debugInfo);
+                alert('Debug info logged to console');
+            } else {
+                console.log('Debug info not available - using basic info');
+                console.log('Available languages:', App.I18n.getAvailableLanguages());
+                console.log('Current language:', App.I18n.getLanguage());
+                console.log('Loaded languages:', App.I18n.loadedLanguages || 'not available');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+/* Custom styles for Shoelace integration */
+
+:root {
+  /* Map color variables to Shoelace variables */
+  --sl-color-primary-500: #4682b4; /* Match your steelblue color */
+  --sl-color-primary-600: #3a6d94; /* Darker version for hover/active states */
+  --sl-input-height-medium: 33.5px; /* Match your existing input height */
+  --sl-border-radius-medium: 4px;
+  --sl-font-size-medium: 14px;
+  --sl-font-family: "Roboto", sans-serif;
+}
+
+/* Sidebar styling - make Shoelace components fit your current sidebar style */
+.sidebar .controls sl-switch::part(base) {
+  margin: 0px 0;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start; /* Align content to the left */
+}
+
+.sidebar .controls sl-switch::part(label) {
+  font-size: var(--sl-font-size-medium);
+  color: #333;
+  text-align: left;
+  padding-left: 0px;
+}
+
+.sidebar .controls sl-switch::part(control) {
+  order: -1; /* Place switch control before the label */
+}
+
+/* Make all overlay buttons have outline style and consistent width */
+.sidebar .controls sl-button::part(base) {
+  width: calc(100% - 10px); /* Fixed width with some margin on sides */
+  margin: 0px 0px; /* Add horizontal padding via margin */
+  justify-content: flex-start;
+  text-align: left;
+  background-color: transparent; /* Remove background for outline style */
+  border: 1px solid #4682b4; /* Border color matching our theme */
+  color: #4682b4; /* Text color matching our theme */
+  min-height: 36px; /* Consistent height */
+  padding-left: 10px; /* More left padding inside button */
+  padding-right: 10px; /* Right padding inside button */
+}
+
+.sidebar .controls sl-button::part(base):hover {
+  background-color: rgba(70, 130, 180, 0.1); /* Light background on hover */
+  border-color: #3a6d94; /* Darker border on hover */
+}
+
+.sidebar .controls sl-button::part(label) {
+  flex-grow: 1;
+  text-align: left;
+}
+
+/* Search styling */
+#search_wrapper {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+#map_search_input {
+  flex: 1;
+  min-width: 200px;
+}
+
+#map_search_input::part(base) {
+  height: 22px;
+}
+
+#search_button,
+#search_button_mapExtend {
+  margin-left: 5px;
+}
+
+#search_button::part(base),
+#search_button_mapExtend::part(base) {
+  height: 36px;
+  width: 36px;
+}
+
+/* Fix for range slider to match theme */
+sl-range::part(base) {
+  width: 100%;
+}
+
+/* Custom styling for search results */
+#map_search_results a {
+  display: block;
+  padding: 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  transition: background-color 0.2s;
+}
+
+#map_search_results a:hover {
+  background-color: #efefef;
+  color: #404040;
+}
+
+/* Status footer styling adjustments */
+.status-footer sl-button::part(base) {
+  padding: 6px;
+  font-size: 0.8rem;
+}
+
+/* Make sl-switch match your previous styling for toggle switches */
+sl-switch::part(thumb) {
+  background-color: white;
+}
+
+sl-switch::part(control) {
+  background-color: #ccc;
+}
+
+sl-switch[checked]::part(control) {
+  background-color: #4682b4;
+}
+
+/* Ensure the toggle switch labels are aligned properly */
+.sidebar .controls sl-switch {
+  display: flex;
+  align-items: center;
+  text-align: left;
+  width: 100%;
+  padding-left: 20px; /* Add more left padding for toggle switches */
+}
+
+/* Add more padding to the control part of the switch */
+.sidebar .controls sl-switch::part(control) {
+  margin-right: 5px; /* Add spacing between the switch and label */
+}
+
+/* Specifically target the left4 sidebar (Overlays) to ensure all buttons have the same style */
+#left4 .controls sl-button::part(base) {
+  background-color: transparent;
+  border: 1px solid #4682b4;
+  color: #4682b4;
+  width: calc(100% - 20px); /* Fixed width for consistency */
+  margin: 5px 5px; /* Consistent margin for all buttons */
+}
+
+#left4 .controls sl-button::part(base):hover {
+  background-color: rgba(70, 130, 180, 0.1);
+}
+
+/* Ensure consistent text alignment inside buttons */
+#left4 .controls sl-button::part(label) {
+  text-align: left;
+  padding-left: 0px;
+}
+
+/*
+  Force
+  Shoelace
+  controls
+  inside
+  sidebars
+  to
+  80%
+  of
+  the
+  sidebar
+  width
+  */
+.sidebar-content sl-switch,
+.sidebar-content sl-button,
+.sidebar-content sl-input,
+.sidebar-content sl-range,
+.sidebar-content sl-label,
+.sidebar-content sl-tooltip::part(base),
+.sidebar-content sl-divider {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box;
+  margin: 0; /* No auto margin - use full width */
+}

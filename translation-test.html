@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Translation Test</title>
+    <script src="src/i18n/i18n-manager.js"></script>
+</head>
+<body>
+    <h1>Translation Test</h1>
+    
+    <div>
+        <h2>Test Elements</h2>
+        <p data-i18n="ui.tabs.layers">ui.tabs.layers</p>
+        <p data-i18n="ui.settings.mapSettings">ui.settings.mapSettings</p>
+        <p data-i18n="kataster.toggle">kataster.toggle</p>
+        <p data-i18n="kataster.toggleBEV">kataster.toggleBEV</p>
+        <p data-i18n="kataster.toggleGray">kataster.toggleGray</p>
+    </div>
+    
+    <div>
+        <h2>Controls</h2>
+        <button onclick="testTranslations()">Test Translations</button>
+        <button onclick="switchLanguage('en')">English</button>
+        <button onclick="switchLanguage('de')">Deutsch</button>
+    </div>
+    
+    <div>
+        <h2>Debug Info</h2>
+        <pre id="debug-info"></pre>
+    </div>
+    
+    <script>
+        function testTranslations() {
+            console.log('Testing translations...');
+            
+            // Test direct translation
+            const testKeys = ['ui.tabs.layers', 'ui.settings.mapSettings', 'kataster.toggle', 'kataster.toggleBEV', 'kataster.toggleGray'];
+            testKeys.forEach(key => {
+                const translation = App.I18n.t(key);
+                console.log(`${key}: ${translation}`);
+            });
+            
+            // Update page translations
+            App.I18n.updatePageTranslations();
+            
+            // Show debug info
+            document.getElementById('debug-info').textContent = JSON.stringify(App.I18n.getDebugInfo(), null, 2);
+        }
+        
+        function switchLanguage(lang) {
+            console.log('Switching to language:', lang);
+            App.I18n.setLanguage(lang).then(() => {
+                console.log('Language switched successfully');
+                testTranslations();
+            });
+        }
+        
+        // Auto-test when loaded
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                testTranslations();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJ Implementation Comparison Test</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .coords { 
+            margin: 10px 0; 
+            padding: 10px; 
+            background: #f0f0f0; 
+            font-family: monospace;
+        }
+        .error { color: red; }
+        .success { color: green; }
+        .warning { color: orange; }
+        table { 
+            border-collapse: collapse; 
+            margin-top: 20px; 
+            width: 100%;
+        }
+        th, td { 
+            border: 1px solid #ddd; 
+            padding: 8px; 
+            text-align: left; 
+        }
+        th { background-color: #f2f2f2; }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .status.loading { background-color: #fffbdd; }
+        .status.success { background-color: #d4edda; }
+        .status.error { background-color: #f8d7da; }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <h1>PROJ Implementation Comparison Test</h1>
+    
+    <!-- App namespace setup -->
+    <script>
+        window.App = window.App || {};
+        App.Utils = App.Utils || {};
+    </script>
+    
+    <!-- Test controls -->
+    <div class="test-section">
+        <h2>Test Controls</h2>
+        <button id="testStandard">Test Standard Proj4</button>
+        <button id="testWasmFixed">Test WASM (Fixed)</button>
+        <button id="testWasmOriginal">Test WASM (Original)</button>
+        <button id="testAll">Run All Tests</button>
+    </div>
+    
+    <!-- Standard Proj4 Test -->
+    <div class="test-section">
+        <h2>Standard Proj4 Implementation</h2>
+        <div id="standardStatus" class="status">Not tested yet</div>
+        <div id="standardResults"></div>
+    </div>
+    
+    <!-- WASM Fixed Test -->
+    <div class="test-section">
+        <h2>WASM Implementation (Fixed)</h2>
+        <div id="wasmFixedStatus" class="status">Not tested yet</div>
+        <div id="wasmFixedResults"></div>
+    </div>
+    
+    <!-- WASM Original Test -->
+    <div class="test-section">
+        <h2>WASM Implementation (Original)</h2>
+        <div id="wasmOriginalStatus" class="status">Not tested yet</div>
+        <div id="wasmOriginalResults"></div>
+    </div>
+
+    <!-- Load implementations -->
+    <script src="src/proj-standard-module.js"></script>
+    <script src="src/proj-wasm-module-fixed.js"></script>
+    <script src="src/proj-wasm-module.js"></script>
+
+    <script>
+        // Test coordinates
+        const testCoords = [
+            {lon: 16.3851265467528, lat: 48.3670569140436, alt: 276.601110598072},
+            {lon: 16.3882452710851, lat: 48.3703033384363, alt: 278.235350987874},
+            {lon: 16.3805708728417, lat: 48.3657608829373, alt: 222.40167967882}
+        ];
+
+        const expectedResults = [
+            {y: 3927.2, x: 358754.45, z: 232.58},
+            {y: 4158.02, x: 359115.61, z: 234.22},
+            {y: 3589.72, x: 358610.17, z: 178.38}
+        ];
+
+        function updateStatus(elementId, message, type = 'loading') {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = `status ${type}`;
+        }
+
+        function displayResults(elementId, results, timeTaken) {
+            let html = `<p>Time taken: ${timeTaken}ms</p>`;
+            html += '<table>';
+            html += '<tr><th>Point</th><th>Input (WGS84)</th><th>Expected</th><th>Result</th><th>Difference</th></tr>';
+            
+            results.forEach((r, i) => {
+                const diffClass = (r.diff.x < 1 && r.diff.y < 1 && r.diff.z < 1) ? 'success' : 'error';
+                
+                html += `<tr>
+                    <td>${i + 1}</td>
+                    <td>Lon: ${r.input.lon.toFixed(6)}<br>
+                        Lat: ${r.input.lat.toFixed(6)}<br>
+                        Alt: ${r.input.alt.toFixed(3)}</td>
+                    <td>X: ${r.expected.x}<br>
+                        Y: ${r.expected.y}<br>
+                        Z: ${r.expected.z}</td>
+                    <td>X: ${r.result.x.toFixed(3)}<br>
+                        Y: ${r.result.y.toFixed(3)}<br>
+                        Z: ${r.result.z.toFixed(3)}</td>
+                    <td class="${diffClass}">
+                        ΔX: ${r.diff.x.toFixed(3)}m<br>
+                        ΔY: ${r.diff.y.toFixed(3)}m<br>
+                        ΔZ: ${r.diff.z.toFixed(3)}m</td>
+                </tr>`;
+            });
+            
+            html += '</table>';
+            document.getElementById(elementId).innerHTML = html;
+        }
+
+        async function testImplementation(module, statusId, resultsId, moduleName) {
+            const startTime = Date.now();
+            
+            try {
+                updateStatus(statusId, `Initializing ${moduleName}...`, 'loading');
+                await module.initialize();
+                
+                updateStatus(statusId, `Testing transformations...`, 'loading');
+                const results = [];
+                
+                for (let i = 0; i < testCoords.length; i++) {
+                    const input = testCoords[i];
+                    const expected = expectedResults[i];
+                    
+                    const result = await module.transformToAustriaGIS(input.lon, input.lat, input.alt);
+                    
+                    const diff = {
+                        x: Math.abs(result.x - expected.x),
+                        y: Math.abs(result.y - expected.y),
+                        z: Math.abs(result.z - expected.z)
+                    };
+                    
+                    results.push({ input, expected, result, diff });
+                }
+                
+                const timeTaken = Date.now() - startTime;
+                updateStatus(statusId, `✓ ${moduleName} test completed successfully`, 'success');
+                displayResults(resultsId, results, timeTaken);
+                
+            } catch (error) {
+                updateStatus(statusId, `✗ ${moduleName} test failed: ${error.message}`, 'error');
+                document.getElementById(resultsId).innerHTML = `<pre class="error">${error.stack}</pre>`;
+            }
+        }
+
+        // Button handlers
+        document.getElementById('testStandard').addEventListener('click', () => {
+            testImplementation(App.Utils.Proj, 'standardStatus', 'standardResults', 'Standard Proj4');
+        });
+
+        document.getElementById('testWasmFixed').addEventListener('click', () => {
+            // Temporarily rename the module to avoid conflicts
+            const originalWASM = App.Utils.ProjWASM;
+            App.Utils.ProjWASM = App.Utils.ProjWASMFixed || App.Utils.ProjWASM;
+            
+            testImplementation(App.Utils.ProjWASM, 'wasmFixedStatus', 'wasmFixedResults', 'WASM Fixed')
+                .finally(() => {
+                    App.Utils.ProjWASM = originalWASM;
+                });
+        });
+
+        document.getElementById('testWasmOriginal').addEventListener('click', () => {
+            testImplementation(App.Utils.ProjWASM, 'wasmOriginalStatus', 'wasmOriginalResults', 'WASM Original');
+        });
+
+        document.getElementById('testAll').addEventListener('click', async () => {
+            document.getElementById('testAll').disabled = true;
+            
+            await testImplementation(App.Utils.Proj, 'standardStatus', 'standardResults', 'Standard Proj4');
+            
+            // Test WASM Fixed
+            const originalWASM = App.Utils.ProjWASM;
+            App.Utils.ProjWASM = App.Utils.ProjWASMFixed || App.Utils.ProjWASM;
+            await testImplementation(App.Utils.ProjWASM, 'wasmFixedStatus', 'wasmFixedResults', 'WASM Fixed');
+            App.Utils.ProjWASM = originalWASM;
+            
+            await testImplementation(App.Utils.ProjWASM, 'wasmOriginalStatus', 'wasmOriginalResults', 'WASM Original');
+            
+            document.getElementById('testAll').disabled = false;
+        });
+    </script>
+</body>
+</html>

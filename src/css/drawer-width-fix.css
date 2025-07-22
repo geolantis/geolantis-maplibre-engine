@@ -1,0 +1,152 @@
+/* ===== drawer-width-fix.css ===== */
+/* Ensures drawer widths respect the inline --size property */
+
+/* ============================================
+   DESKTOP DRAWER WIDTH FIX
+   ============================================ */
+
+/* For tablet view - use responsive variables */
+@media (min-width: 769px) and (max-width: 1024px) {
+  /* Left drawers should use tablet responsive width */
+  sl-drawer[id^="left"][style*="--size"]::part(panel) {
+    width: var(--size) !important;
+  }
+  
+  /* Right drawers should use tablet responsive width */
+  sl-drawer[id^="right"][style*="--size"]::part(panel) {
+    width: var(--size) !important;
+  }
+  
+  /* Fallback for drawers without inline styles - use tablet responsive variables */
+  sl-drawer[id^="left"]:not([style*="--size"])::part(panel) {
+    width: var(--sidebar-width-tablet, min(350px, 40vw)) !important;
+  }
+  
+  sl-drawer[id^="right"]:not([style*="--size"])::part(panel) {
+    width: var(--sidebar-width-tablet, min(350px, 40vw)) !important;
+  }
+}
+
+/* For desktop view - use larger responsive variables */
+@media (min-width: 1025px) {
+  /* Left drawers should use their inline --size property */
+  sl-drawer[id^="left"][style*="--size"]::part(panel) {
+    width: var(--size) !important;
+  }
+  
+  /* Right drawers should use their inline --size property */
+  sl-drawer[id^="right"][style*="--size"]::part(panel) {
+    width: var(--size) !important;
+  }
+  
+  /* Fallback for drawers without inline styles - use desktop fixed values */
+  sl-drawer[id^="left"]:not([style*="--size"])::part(panel) {
+    width: 350px !important;
+  }
+  
+  sl-drawer[id^="right"]:not([style*="--size"])::part(panel) {
+    width: 400px !important;
+  }
+}
+
+/* ============================================
+   ENSURE SHOELACE DEFAULT BEHAVIOR
+   ============================================ */
+
+/* Make sure Shoelace's internal width calculation works */
+sl-drawer[placement="start"]::part(panel),
+sl-drawer[placement="end"]::part(panel) {
+  /* Remove any max-width constraints that might limit the drawer */
+  max-width: none !important;
+}
+
+/* Specifically target each drawer to ensure proper width - TABLET */
+@media (min-width: 769px) and (max-width: 1024px) {
+  #left1-drawer::part(panel),
+  #left2-drawer::part(panel),
+  #left3-drawer::part(panel),
+  #left4-drawer::part(panel),
+  #left4a-drawer::part(panel) {
+    /* On tablet, use responsive variables */
+    width: var(--size, var(--sidebar-width-tablet, min(350px, 40vw))) !important;
+  }
+
+  #right1-drawer::part(panel),
+  #right2-drawer::part(panel) {
+    /* On tablet, use responsive variables */
+    width: var(--size, var(--sidebar-width-tablet, min(350px, 40vw))) !important;
+  }
+}
+
+/* Specifically target each drawer to ensure proper width - DESKTOP */
+@media (min-width: 1025px) {
+  #left1-drawer::part(panel),
+  #left2-drawer::part(panel),
+  #left3-drawer::part(panel),
+  #left4-drawer::part(panel),
+  #left4a-drawer::part(panel) {
+    /* On desktop, use the --size custom property with fixed fallback */
+    width: var(--size, 350px) !important;
+  }
+
+  #right1-drawer::part(panel),
+  #right2-drawer::part(panel) {
+    /* On desktop, use the --size custom property with fixed fallback */
+    width: var(--size, 400px) !important;
+  }
+}
+
+/* ============================================
+   MOBILE OVERRIDES REMAIN INTACT
+   ============================================ */
+
+/* Mobile styles should still transform to bottom sheets */
+@media (max-width: 768px) {
+  /* Override ALL drawer panels for mobile */
+  sl-drawer::part(panel),
+  sl-drawer[placement="start"]::part(panel),
+  sl-drawer[placement="end"]::part(panel),
+  #left1-drawer::part(panel),
+  #left2-drawer::part(panel),
+  #left3-drawer::part(panel),
+  #left4-drawer::part(panel),
+  #left4a-drawer::part(panel),
+  #right1-drawer::part(panel),
+  #right2-drawer::part(panel) {
+    /* Mobile bottom sheet styles */
+    width: 90vw !important;
+    max-width: 90vw !important;
+    height: 75vh !important;
+    max-height: 75vh !important;
+    /* Center the drawer */
+    position: fixed !important;
+    bottom: 0 !important;
+    top: auto !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    /* Visual styling */
+    border-radius: 1rem 1rem 0 0 !important;
+    box-shadow: 0 -0.25rem 1rem rgba(0, 0, 0, 0.4) !important;
+    z-index: 20001 !important;
+  }
+}
+
+/* ============================================
+   DEBUG HELPER
+   ============================================ */
+
+/* Uncomment to debug drawer sizes */
+/*
+sl-drawer::part(panel)::after {
+  content: "Width: " attr(style);
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: red;
+  color: white;
+  padding: 5px;
+  font-size: 12px;
+  z-index: 99999;
+}
+*/

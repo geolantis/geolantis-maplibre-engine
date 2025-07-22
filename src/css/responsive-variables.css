@@ -1,0 +1,77 @@
+/* Responsive CSS Variables System */
+:root {
+  /* Base font size for rem calculations */
+  font-size: 16px;
+  
+  /* Responsive spacing using clamp() - reduced for better iPad fit */
+  --spacing-xs: clamp(0.125rem, 0.5vw, 0.25rem);
+  --spacing-sm: clamp(0.25rem, 0.8vw, 0.5rem);
+  --spacing-md: clamp(0.5rem, 1.2vw, 0.75rem);
+  --spacing-lg: clamp(0.75rem, 1.5vw, 1rem);
+  --spacing-xl: clamp(1rem, 2vw, 1.5rem);
+  
+  /* Fluid typography - reduced for compact display */
+  --font-xs: clamp(0.625rem, 1.2vw, 0.75rem);
+  --font-sm: clamp(0.75rem, 1.5vw, 0.875rem);
+  --font-base: clamp(0.875rem, 2vw, 1rem);
+  --font-md: clamp(1rem, 2.5vw, 1.125rem);
+  --font-lg: clamp(1.125rem, 3vw, 1.25rem);
+  --font-xl: clamp(1.25rem, 3.5vw, 1.5rem);
+  --font-2xl: clamp(1.5rem, 4vw, 2rem);
+  
+  /* Responsive sidebar widths - optimized for iPad */
+  --sidebar-width-mobile: 85vw;
+  --sidebar-width-tablet: min(350px, 40vw);
+  --sidebar-width-desktop: min(350px, 25vw);
+  --sidebar-width: var(--sidebar-width-desktop);
+  
+  /* Responsive button sizes - smaller for compact UI */
+  --button-size-sm: clamp(1.5rem, 4vw, 2rem);
+  --button-size-md: clamp(2rem, 5vw, 2.5rem);
+  --button-size-lg: clamp(2.5rem, 6vw, 3rem);
+  
+  /* Container widths */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+  
+  /* Breakpoints for media queries */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+}
+
+/* iPad and tablet adjustments */
+@media (max-width: 1024px) {
+  :root {
+    --sidebar-width: var(--sidebar-width-tablet);
+    /* Further reduce font sizes for iPad */
+    font-size: 14px;
+  }
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  :root {
+    --sidebar-width: var(--sidebar-width-mobile);
+    /* Slightly smaller base font for mobile */
+    font-size: 16px;
+  }
+}
+
+/* Large phone adjustments */
+@media (max-width: 480px) {
+  :root {
+    /* Even larger fonts for small devices */
+    font-size: 20px;
+  }
+}
+
+/* Container query support for component-level responsiveness */
+@container (max-width: 400px) {
+  .responsive-component {
+    --sidebar-width: 100%;
+  }
+}

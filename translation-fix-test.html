@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Translation Fix Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f0f8ff; }
+        .test-section { background: white; padding: 20px; margin: 15px 0; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .status { padding: 12px; margin: 10px 0; border-radius: 6px; font-weight: bold; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .warning { background: #fff3cd; color: #856404; }
+        button { padding: 12px 24px; margin: 8px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .translation-test { margin: 15px 0; padding: 20px; background: #f8f9fa; border-left: 5px solid #007bff; }
+        .translation-item { margin: 8px 0; padding: 8px; background: white; border-radius: 4px; }
+        .before-after { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 10px 0; }
+        .before, .after { padding: 10px; border-radius: 4px; }
+        .before { background: #ffe6e6; }
+        .after { background: #e6ffe6; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Translation Fix Test</h1>
+    <p>This page tests if the translation key display issue is fixed.</p>
+    
+    <div class="test-section">
+        <h2>🔍 Current Status</h2>
+        <div id="current-status">Checking...</div>
+        <button class="btn-primary" onclick="checkTranslationStatus()">🔄 Check Status</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>🌐 Test Language Switch</h2>
+        <p>Test if translations work correctly:</p>
+        <button class="btn-success" onclick="setLanguageAndTest('de')">🇩🇪 Set German & Test</button>
+        <button class="btn-success" onclick="setLanguageAndTest('en')">🇬🇧 Set English & Test</button>
+        <div id="language-test-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>📝 Translation Examples</h2>
+        <div class="before-after">
+            <div class="before">
+                <h4>❌ WRONG (Keys Showing)</h4>
+                <div>ui.tabs.layers</div>
+                <div>ui.settings.mapSettings</div>
+                <div>ui.settings.threeDBuilding</div>
+            </div>
+            <div class="after">
+                <h4>✅ CORRECT (Translations Showing)</h4>
+                <div id="example-layers">Layers</div>
+                <div id="example-settings">Map Settings</div>
+                <div id="example-3d">3D Building</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>🧪 Live Translation Test</h2>
+        <div class="translation-test">
+            <div class="translation-item">
+                <strong>ui.tabs.layers:</strong> <span id="test-layers" data-i18n="ui.tabs.layers">Layers</span>
+            </div>
+            <div class="translation-item">
+                <strong>ui.settings.mapSettings:</strong> <span id="test-map-settings" data-i18n="ui.settings.mapSettings">Map Settings</span>
+            </div>
+            <div class="translation-item">
+                <strong>ui.settings.threeDBuilding:</strong> <span id="test-3d-building" data-i18n="ui.settings.threeDBuilding">3D Building</span>
+            </div>
+            <div class="translation-item">
+                <strong>ui.settings.resetBasemap:</strong> <span id="test-reset" data-i18n="ui.settings.resetBasemap">Reset to Default Basemap</span>
+            </div>
+        </div>
+        <button class="btn-primary" onclick="updateTranslationTest()">🔄 Update Translations</button>
+    </div>
+
+    <!-- Include required scripts -->
+    <script src="src/i18n/i18n-manager.js"></script>
+    <script src="android-language-setter.js"></script>
+    <script src="fix-translation-display.js"></script>
+    
+    <script>
+        function updateStatus(id, message, type = 'success') {
+            document.getElementById(id).innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+        
+        function checkTranslationStatus() {
+            console.log('Checking translation status...');
+            
+            let status = '';
+            let statusType = 'success';
+            
+            // Check if translation system is available
+            if (window.App && window.App.I18n) {
+                status += '✅ App.I18n is available<br>';
+                
+                const currentLang = window.App.I18n.getLanguage();
+                status += `📍 Current Language: ${currentLang}<br>`;
+                
+                // Test some key translations
+                const testKeys = [
+                    'ui.tabs.layers',
+                    'ui.settings.mapSettings', 
+                    'ui.settings.threeDBuilding'
+                ];
+                
+                let hasIssues = false;
+                testKeys.forEach(key => {
+                    const translation = window.App.I18n.t(key);
+                    if (translation === key) {
+                        status += `❌ ${key}: No translation (showing key)<br>`;
+                        hasIssues = true;
+                    } else {
+                        status += `✅ ${key}: "${translation}"<br>`;
+                    }
+                });
+                
+                if (hasIssues) {
+                    statusType = 'warning';
+                    status += '<br>⚠️ Some translations are showing keys instead of text';
+                } else {
+                    status += '<br>🎉 All translations working correctly!';
+                }
+                
+            } else {
+                status += '❌ App.I18n NOT available<br>';
+                statusType = 'error';
+            }
+            
+            updateStatus('current-status', status, statusType);
+        }
+        
+        function setLanguageAndTest(lang) {
+            console.log('Setting language to:', lang);
+            updateStatus('language-test-result', `Setting language to ${lang}...`, 'warning');
+            
+            if (window.setAppLanguage) {
+                window.setAppLanguage(lang).then(() => {
+                    setTimeout(() => {
+                        // Check if translations updated
+                        const layersText = document.getElementById('test-layers').textContent;
+                        const settingsText = document.getElementById('test-map-settings').textContent;
+                        
+                        let result = `Language set to ${lang}<br>`;
+                        result += `Layers: "${layersText}"<br>`;
+                        result += `Settings: "${settingsText}"<br>`;
+                        
+                        if (layersText.includes('ui.') || settingsText.includes('ui.')) {
+                            result += '❌ Still showing translation keys!';
+                            updateStatus('language-test-result', result, 'error');
+                        } else {
+                            result += '✅ Translations working correctly!';
+                            updateStatus('language-test-result', result, 'success');
+                        }
+                        
+                        updateExamples();
+                    }, 500);
+                });
+            } else {
+                updateStatus('language-test-result', '❌ setAppLanguage function not available', 'error');
+            }
+        }
+        
+        function updateExamples() {
+            if (window.App && window.App.I18n) {
+                document.getElementById('example-layers').textContent = window.App.I18n.t('ui.tabs.layers');
+                document.getElementById('example-settings').textContent = window.App.I18n.t('ui.settings.mapSettings');
+                document.getElementById('example-3d').textContent = window.App.I18n.t('ui.settings.threeDBuilding');
+            }
+        }
+        
+        function updateTranslationTest() {
+            if (window.App && window.App.I18n && window.App.I18n.updatePageTranslations) {
+                window.App.I18n.updatePageTranslations();
+                console.log('Page translations updated');
+            }
+            
+            // Also manually update our test elements
+            updateExamples();
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Translation Fix Test page loaded');
+            
+            setTimeout(() => {
+                checkTranslationStatus();
+                updateExamples();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

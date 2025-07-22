@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Test</title>
+    <!-- Shoelace styles and utils -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.13.1/cdn/themes/light.css" />
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.13.1/cdn/shoelace-autoloader.js"></script>
+    
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-container { max-width: 600px; margin: 0 auto; }
+        .auth-section { margin-bottom: 20px; }
+        .auth-control-group { margin-bottom: 15px; }
+        .token-input-container { display: flex; align-items: center; }
+        .auth-button-group { display: flex; gap: 10px; margin-top: 15px; }
+        .auth-status { margin-top: 15px; padding: 10px; border-radius: 4px; }
+        .status-display { display: flex; align-items: center; gap: 8px; }
+        .info-text { font-size: 14px; color: #666; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Login Authentication Test</h1>
+        
+        <!-- Login Section -->
+        <div class="auth-section">
+            <h4>Login</h4>
+            
+            <div class="auth-control-group">
+                <label for="auth-username-input">Username</label>
+                <sl-input 
+                    id="auth-username-input" 
+                    type="text" 
+                    placeholder="Enter your username..."
+                    clearable
+                    size="medium">
+                </sl-input>
+            </div>
+            
+            <div class="auth-control-group">
+                <label for="auth-password-input">Password</label>
+                <div class="token-input-container">
+                    <sl-input 
+                        id="auth-password-input" 
+                        type="password" 
+                        placeholder="Enter your password..."
+                        clearable
+                        size="medium"
+                        style="flex: 1;">
+                    </sl-input>
+                    <sl-button 
+                        id="toggle-password-visibility" 
+                        variant="outline" 
+                        size="medium" 
+                        style="margin-left: 8px;">
+                        <sl-icon name="eye"></sl-icon>
+                    </sl-button>
+                </div>
+            </div>
+            
+            <div class="auth-button-group">
+                <sl-button 
+                    id="login-btn" 
+                    variant="primary" 
+                    size="medium"
+                    disabled>
+                    <sl-icon slot="prefix" name="log-in"></sl-icon>
+                    Login
+                </sl-button>
+                <sl-button 
+                    id="logout-btn" 
+                    variant="outline" 
+                    size="medium"
+                    style="display: none;">
+                    <sl-icon slot="prefix" name="log-out"></sl-icon>
+                    Logout
+                </sl-button>
+            </div>
+        </div>
+        
+        <!-- Status Section -->
+        <div id="auth-status-container" class="auth-status" style="display: none;">
+            <div class="status-display">
+                <sl-icon id="auth-status-icon" name="info-circle"></sl-icon>
+                <span id="auth-status-text">Ready to authenticate</span>
+            </div>
+            <div id="auth-last-tested" class="last-tested"></div>
+        </div>
+        
+        <div class="info-text">
+            <p><strong>Test Instructions:</strong></p>
+            <ul>
+                <li>Enter valid credentials to test login</li>
+                <li>Check browser console for debug output</li>
+                <li>Test with backend running at localhost:8000</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Initialize App namespace -->
+    <script>
+        window.App = { UI: {} };
+    </script>
+    
+    <!-- Load authentication module -->
+    <script src="src/ui/app.ui.auth-settings.js"></script>
+    
+    <script>
+        // Initialize auth settings when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Initializing auth settings test...');
+            
+            // Initialize the module
+            App.UI.AuthSettings.initialize();
+            
+            // Add test methods to window for manual testing
+            window.testLogin = function(username, password) {
+                App.UI.AuthSettings.login(username || 'test', password || 'test');
+            };
+            
+            window.testLogout = function() {
+                App.UI.AuthSettings.logout();
+            };
+            
+            window.getLoginStatus = function() {
+                console.log('Is logged in:', App.UI.AuthSettings.isLoggedIn());
+                console.log('Username:', App.UI.AuthSettings.getCurrentUsername());
+                console.log('Token:', App.UI.AuthSettings.getToken());
+            };
+            
+            console.log('Test functions available:');
+            console.log('- testLogin(username, password)');
+            console.log('- testLogout()');
+            console.log('- getLoginStatus()');
+        });
+    </script>
+</body>
+</html>

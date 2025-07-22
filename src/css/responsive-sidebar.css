@@ -1,0 +1,148 @@
+/* Define the sidebar width as CSS variables */
+:root {
+  --sidebar-width: 400px;
+  --right-sidebar-width: 400px;
+}
+
+/* Base sidebar styling with width variables */
+.sidebar {
+  position: absolute;
+  top: 30px;
+  bottom: 32px;
+  background: rgba(255, 255, 255, 0.9);
+  z-index: 10;
+  transition: transform 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  height: calc(100% - 66px);
+}
+
+.left1,
+.left2,
+.left3,
+.left4 {
+  left: 0;
+  width: var(--sidebar-width);
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+
+.right1,
+.right2 {
+  right: 0;
+  width: var(--right-sidebar-width);
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+}
+
+.left1.collapsed,
+.left2.collapsed,
+.left3.collapsed,
+.left4.collapsed {
+  transform: translateX(calc(-1 * var(--sidebar-width)));
+}
+
+.right1.collapsed,
+.right2.collapsed {
+  transform: translateX(var(--right-sidebar-width));
+}
+
+/* Position toggles based on sidebar state */
+.left1:not(.collapsed) ~ .sidebar-toggle-group .sidebar-toggle.left1,
+.left2:not(.collapsed) ~ .sidebar-toggle-group .sidebar-toggle.left2,
+.left3:not(.collapsed) ~ .sidebar-toggle-group .sidebar-toggle.left3,
+.left4:not(.collapsed) ~ .sidebar-toggle-group .sidebar-toggle.left4 {
+  transform: translateX(var(--sidebar-width));
+}
+
+.right1:not(.collapsed) ~ .sidebar-toggle-group-right .sidebar-toggle.right1,
+.right2:not(.collapsed) ~ .sidebar-toggle-group-right .sidebar-toggle.right2 {
+  transform: translateX(calc(-1 * var(--right-sidebar-width)));
+}
+
+/* Responsive sidebar modifications */
+@media (max-width: 768px) {
+  :root {
+    --sidebar-width: 85vw;
+    --right-sidebar-width: 90vw;
+  }
+
+  /* Adjust sidebar width for smaller screens */
+  .left1,
+  .left2,
+  .left3,
+  .left4 {
+    width: var(--sidebar-width);
+    max-width: 350px;
+  }
+
+  /* Adjust right sidebars (which are wider) */
+  .right1,
+  .right2 {
+    width: var(--right-sidebar-width);
+    max-width: 400px;
+  }
+
+  /* Make sure sidebar toggle buttons are always visible and not pushed off-screen */
+  .sidebar-toggle-group,
+  .sidebar-toggle-group-right {
+    position: fixed !important; /* Change to fixed position on small screens */
+    z-index: 20002 !important; /* Above sidebars and drawers */
+  }
+
+  /* Position left toggle buttons */
+  .sidebar-toggle-group {
+    left: 10px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+  }
+
+  /* Position right toggle buttons */
+  .sidebar-toggle-group-right {
+    right: 10px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+  }
+
+  /* Ensure the collapsed transformation doesn't push things off-screen */
+  .left1.collapsed,
+  .left2.collapsed,
+  .left3.collapsed,
+  .left4.collapsed {
+    transform: translateX(-100%);
+  }
+
+  .right1.collapsed,
+  .right2.collapsed {
+    transform: translateX(100%);
+  }
+  
+  /* Prevent toggle buttons from moving when sidebars open */
+  .sidebar-toggle-group .sidebar-toggle,
+  .sidebar-toggle-group-right .sidebar-toggle {
+    transform: none !important;
+    position: relative !important;
+  }
+}
+
+/* Add a fixed close button for each sidebar on mobile */
+@media (max-width: 768px) {
+  .sidebar:not(.collapsed)::before {
+    content: "×"; /* Close (X) symbol */
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    cursor: pointer;
+    z-index: 15;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  }
+}

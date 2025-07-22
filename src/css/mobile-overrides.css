@@ -1,0 +1,342 @@
+/* ===== mobile-overrides.css ===== */
+
+/* Import responsive variables */
+@import 'responsive-variables.css';
+
+/* Large tablet / small desktop */
+@media (max-width: 1024px) {
+  :root {
+    --sidebar-width: var(--sidebar-width-tablet);
+  }
+  
+  /* Adjust button sizes for tablets */
+  .sidebar-toggle {
+    width: var(--button-size-md);
+    height: var(--button-size-md);
+  }
+  
+  /* Reduce sidebar width for tablets */
+  sl-drawer[placement="start"]::part(panel),
+  sl-drawer[placement="end"]::part(panel) {
+    width: var(--sidebar-width-tablet) !important;
+  }
+  
+  /* Enhanced status footer for tablets - larger font sizes for better readability */
+  .status-footer {
+    font-size: 20px;
+  }
+  
+  .status-footer .accuracy {
+    font-size: 20px;
+    padding: 4px 8px;
+    min-width: 60px;
+  }
+  
+  .status-footer .device-name {
+    font-size: 18px;
+  }
+  
+  .status-footer .gnss-status {
+    font-size: 18px;
+  }
+  
+  .status-footer .gnss-value {
+    font-size: 16px;
+  }
+  
+  /* Ultra-thin status footer tablet enhancements */
+  .status-element {
+    font-size: 16px;
+  }
+  
+  .height-ultra .status-element {
+    font-size: 14px;
+  }
+}
+
+/* Standard mobile breakpoint */
+@media (max-width: 768px) {
+  /* Make all drawers behave like bottom sheets with improved sizing */
+  sl-drawer[placement="start"],
+  sl-drawer[placement="end"] {
+    --size: 75vh; /* Reduced from 90vh for better mobile experience */
+  }
+
+  sl-drawer[placement="start"]::part(panel),
+  sl-drawer[placement="end"]::part(panel) {
+    width: 90vw !important; /* Consistent width for all drawers */
+    max-width: 90vw !important;
+    height: 75vh !important; /* Explicit height control */
+    max-height: 75vh !important;
+    border-radius: 1rem 1rem 0 0; /* Larger radius for modern look */
+    bottom: 0 !important;
+    top: auto !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    box-shadow: 0 -0.25rem 1rem rgba(0, 0, 0, 0.4) !important;
+    /* Ensure proper positioning */
+    position: fixed !important;
+    z-index: 20001 !important;
+  }
+
+  /* Remove specific right drawer adjustments as they're now consistent */
+  sl-drawer#right1-drawer::part(panel),
+  sl-drawer#right2-drawer::part(panel) {
+    /* Inherit from parent rules above */
+  }
+
+  /* Make footer stronger for outdoor readability */
+  #footer-bar {
+    font-size: var(--font-base, 1rem);
+    font-weight: 600;
+    color: black;
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+  
+  /* Enhanced status footer for mobile tablets */
+  .status-footer {
+    font-size: 16px;
+  }
+  
+  .status-footer .accuracy {
+    font-size: 16px;
+    padding: 3px 6px;
+  }
+  
+  .status-footer .device-name {
+    font-size: 16px;
+  }
+  
+  .status-footer .gnss-status {
+    font-size: 16px;
+  }
+
+  /* Move sidebar toggles to fixed position */
+  .sidebar-toggle-group,
+  .sidebar-toggle-group-right {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 15;
+  }
+
+  .sidebar-toggle-group {
+    left: var(--spacing-md, 0.75rem);
+  }
+
+  .sidebar-toggle-group-right {
+    right: var(--spacing-md, 0.75rem);
+  }
+
+  /* FAB Main Button */
+  #fab-main {
+    position: fixed;
+    bottom: 5rem;
+    right: var(--spacing-lg, 1rem);
+    z-index: 20;
+    width: var(--button-size-lg, 3.5rem);
+    height: var(--button-size-lg, 3.5rem);
+    border-radius: 50%;
+    background-color: #4682b4;
+    color: white;
+    font-size: var(--font-lg, 1.25rem);
+    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* FAB Hover Effect */
+  #fab-main:hover {
+    background-color: #3a6d94;
+  }
+}
+
+/* Small phone breakpoint */
+@media (max-width: 480px) {
+  /* Even larger base font for small screens */
+  :root {
+    font-size: 18px;
+  }
+  
+  /* Optimized drawer sizing for small phones */
+  sl-drawer[placement="start"],
+  sl-drawer[placement="end"] {
+    --size: 85vh; /* Slightly larger on very small screens */
+  }
+  
+  sl-drawer[placement="start"]::part(panel),
+  sl-drawer[placement="end"]::part(panel) {
+    width: 95vw !important; /* Almost full width but with small margins */
+    max-width: 95vw !important;
+    height: 85vh !important;
+    max-height: 85vh !important;
+    border-radius: 1.25rem 1.25rem 0 0; /* Even more rounded for small screens */
+    /* Add padding consideration for home indicator on iOS */
+    padding-bottom: env(safe-area-inset-bottom, 0) !important;
+  }
+  
+  /* Larger touch targets for small screens */
+  .sidebar-toggle {
+    width: var(--button-size-lg);
+    height: var(--button-size-lg);
+  }
+  
+  /* Adjust FAB position for very small screens */
+  #fab-main {
+    bottom: 4rem;
+    right: var(--spacing-md, 0.75rem);
+  }
+}
+
+/* Landscape orientation adjustments */
+@media (orientation: landscape) and (max-height: 600px) {
+  /* Reduce drawer height in landscape */
+  sl-drawer[placement="start"],
+  sl-drawer[placement="end"] {
+    --size: 70vh; /* Reduced for landscape */
+  }
+  
+  sl-drawer[placement="start"]::part(panel),
+  sl-drawer[placement="end"]::part(panel) {
+    height: 70vh !important;
+    max-height: 70vh !important;
+    /* Ensure proper positioning in landscape */
+    bottom: 0 !important;
+    top: auto !important;
+  }
+  
+  /* Move toggles lower to avoid obstruction */
+  .sidebar-toggle-group,
+  .sidebar-toggle-group-right {
+    top: 60%;
+  }
+  
+  /* Adjust FAB for landscape */
+  #fab-main {
+    bottom: var(--spacing-lg, 1rem);
+  }
+}
+
+/* Portrait orientation specific adjustments for mobile */
+@media (orientation: portrait) and (max-width: 768px) {
+  sl-drawer[placement="start"]::part(panel),
+  sl-drawer[placement="end"]::part(panel) {
+    /* Ensure consistent bottom sheet behavior in portrait */
+    bottom: 0 !important;
+    top: auto !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+}
+
+/* Samsung Galaxy specific adjustments */
+@media (max-width: 412px) and (max-height: 915px) {
+  /* Targeting common Samsung Galaxy dimensions */
+  sl-drawer[placement="start"]::part(panel),
+  sl-drawer[placement="end"]::part(panel) {
+    height: 80vh !important;
+    max-height: 80vh !important;
+    /* Account for Samsung's UI elements */
+    margin-bottom: 0.5rem !important;
+  }
+  
+  /* Ensure better content visibility on Galaxy devices */
+  sl-drawer .sidebar-content {
+    padding: 1rem 0.75rem 1.5rem 0.75rem !important;
+  }
+}
+
+/* High DPI mobile displays (common on Samsung devices) */
+@media (max-width: 768px) and (-webkit-min-device-pixel-ratio: 2) {
+  sl-drawer::part(panel) {
+    /* Sharper borders on high DPI */
+    border: 0.5px solid rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  /* Improve text readability */
+  sl-drawer .sidebar-content {
+    font-size: 1rem !important;
+    line-height: 1.5 !important;
+  }
+}
+
+/* Additional improvements for drawer close behavior on mobile */
+@media (max-width: 768px) {
+  /* Improve drawer content layout for mobile bottom sheets */
+  sl-drawer::part(body) {
+    padding: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    overflow: hidden !important;
+  }
+  
+  /* Add mobile-friendly drag handle for bottom sheets */
+  sl-drawer::part(panel)::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0.5rem !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 2.5rem !important;
+    height: 0.25rem !important;
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    border-radius: 0.125rem !important;
+    z-index: 1 !important;
+  }
+  
+  /* Adjust sidebar content for mobile */
+  sl-drawer .sidebar-content {
+    padding: 1.5rem 1rem 1rem 1rem !important; /* Top padding for drag handle */
+    height: 100% !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important; /* Smooth scrolling on iOS */
+    max-height: calc(100% - 2rem) !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* Add touch-friendly close button area */
+  sl-drawer::part(panel) {
+    /* Add a subtle border to define the bottom sheet */
+    border-top: 2px solid rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  /* Improve overlay tap-to-close on mobile */
+  sl-drawer::part(overlay) {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    backdrop-filter: blur(2px) !important;
+    -webkit-backdrop-filter: blur(2px) !important;
+  }
+  
+  /* Ensure form elements are touch-friendly */
+  sl-drawer sl-input,
+  sl-drawer sl-button,
+  sl-drawer sl-checkbox,
+  sl-drawer sl-radio {
+    --sl-input-height-medium: 2.75rem !important;
+    --sl-button-font-size-medium: 1rem !important;
+  }
+  
+  /* Make tab navigation more touch-friendly */
+  sl-drawer sl-tab {
+    --sl-spacing-medium: 1rem !important;
+    min-height: 2.75rem !important;
+  }
+  
+  /* Better scrollbar styling for mobile */
+  sl-drawer .sidebar-content::-webkit-scrollbar {
+    width: 4px !important;
+  }
+  
+  sl-drawer .sidebar-content::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    border-radius: 2px !important;
+  }
+  
+  sl-drawer .sidebar-content::-webkit-scrollbar-track {
+    background-color: transparent !important;
+  }
+}

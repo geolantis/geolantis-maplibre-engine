@@ -1,0 +1,1974 @@
+html,
+body,
+#map {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+:root {
+  /* Import responsive variables */
+  --left-sidebar-width: var(--sidebar-width, min(400px, 30vw));
+  --right-sidebar-width: var(--sidebar-width, min(400px, 30vw));
+}
+
+body,
+h3,
+p,
+label,
+button {
+  font-family: "Roboto", sans-serif; /* Apply Roboto font globally */
+  font-weight: 400; /* Default font weight */
+}
+
+h3 {
+  font-weight: 700; /* Bold font weight for headings */
+}
+
+label,
+button {
+  font-weight: 500; /* Slightly bolder for labels and buttons */
+}
+
+/* Optional - You can adjust other typography settings here, like font-size, line-height */
+body {
+  font-size: var(--font-base, 1rem); /* Responsive base font size */
+  line-height: 1.6; /* Good line height for readability */
+}
+
+.sidebar-content {
+  font-size: var(--font-sm, 0.875rem); /* Responsive smaller font for sidebar content */
+}
+
+button {
+  padding: var(--spacing-sm, 0.5rem) var(--spacing-md, 0.75rem); /* Responsive padding */
+  border-radius: 4px; /* Rounded corners for buttons */
+  font-size: var(--font-base, 1rem); /* Responsive font size */
+}
+
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.sidebar {
+  position: absolute;
+  top: 30px; /* Add 28px padding from the top */
+  bottom: 32px; /* Add 28px padding from the bottom */
+  width: 400px;
+  background: rgba(255, 255, 255, 0.9);
+  z-index: 10;
+  transition: transform 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  height: calc(
+    100% - 66px
+  ); /* Adjust height to account for top and bottom padding */
+}
+
+.left1,
+.left2,
+.left3,
+.left4 {
+  left: 0;
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+.right1,
+.right2 {
+  right: 0;
+  width: 400px;
+  border-top-left-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+}
+
+/* Right2 Sidebar: 90% height with transparent interactions */
+#right2 {
+  background-color: rgba(238, 238, 238, 0.7);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  padding: 0;
+  border-top-left-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+}
+
+#gnss-status {
+  background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-satellite"><path d="M13 7 9 3 5 7l4 4"/><path d="m17 11 4 4-4 4-4-4"/><path d="m8 12 4 4 6-6-4-4Z"/><path d="m16 8 3-3"/><path d="M9 21a6 6 0 0 0-6-6"/></svg>');
+  background-repeat: no-repeat;
+  background-size: 1.5rem;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+#accuracy-icon {
+  background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-locate-fixed"><line x1="2" x2="5" y1="12" y2="12"/><line x1="19" x2="22" y1="12" y2="12"/><line x1="12" x2="12" y1="2" y2="5"/><line x1="12" x2="12" y1="19" y2="22"/><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="3"/></svg>');
+  background-repeat: no-repeat;
+  background-size: 1.5rem;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* Status Footer Styles */
+status-footer {
+  font-family: "Roboto", sans-serif;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* Keep consistent with status-footer-position.css, below drawers (20000+) */
+  display: block;
+  height: auto; /* Ensure height is calculated properly */
+}
+
+#footer-bar {
+  background-color: rgba(255, 255, 255, 0.25);
+  padding: var(--spacing-xs, 0.25rem) var(--spacing-sm, 0.5rem);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-size: var(--font-xs, 0.75rem);
+  box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s;
+}
+
+#footer-bar:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+#footer-expanded {
+  display: none;
+  position: absolute;
+  bottom: 2rem;
+  left: 0;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  padding: var(--spacing-md, 0.75rem);
+  box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.2);
+  font-size: var(--font-sm, 0.875rem);
+}
+
+.expanded-row {
+  padding: var(--spacing-xs, 0.25rem) var(--spacing-md, 0.75rem);
+  display: flex;
+  justify-content: space-between;
+  max-width: min(400px, 90vw);
+  margin: 0 auto;
+}
+
+#gnss-accuracy {
+  display: flex;
+  align-items: center;
+}
+
+#accuracy-indicator {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  margin-left: var(--spacing-md, 0.75rem);
+  background-color: #4caf50; /* Default green */
+  transition: background-color 0.3s;
+}
+
+/* Arrow container: 90% height */
+#arrow-container {
+  width: 100%;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  /* Remove the background and border */
+  background-color: transparent;
+  border: none;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: var(--spacing-md, 0.75rem);
+  pointer-events: none;
+  margin: 5% 0; /* Add vertical margin to center within the new sidebar dimensions */
+}
+
+/* Individual arrow element styling */
+#arrow-container div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1; /* Allow each arrow section to grow */
+  max-height: 30%; /* Limit the height of each arrow block */
+  margin: var(--spacing-sm, 0.5rem) 0; /* Adjust margins to avoid cutting */
+  pointer-events: none; /* Ensure arrows do not block pointer events */
+  /* Remove the border-radius */
+  background-color: transparent;
+  border: none;
+}
+
+/* Ensure the SVG arrows are centered and responsive */
+#arrow-container svg {
+  width: 90%; /* Increase width for larger arrows */
+  height: auto; /* Maintain aspect ratio */
+  max-height: 90%; /* Ensure the SVG does not exceed the container height */
+  pointer-events: none; /* Ensure SVG doesn't affect pointer events */
+  /* Remove the border-radius */
+}
+
+/* Arrow text styling (distance display) */
+#arrow-container div > div:last-child {
+  font-size: var(--font-lg, 1.25rem); /* Slightly larger font size to match larger arrows */
+  margin-top: var(--spacing-xs, 0.25rem); /* Adjust margin for better spacing */
+  color: white;
+  text-shadow: 0 0 0.625rem rgba(255, 255, 255, 0.8),
+    0 0 0.3125rem rgba(0, 0, 0, 0.8); /* Enhanced halo effect */
+  pointer-events: none; /* Ensure text does not block pointer events */
+}
+
+/* Right2 Sidebar: transparent container */
+#right2 {
+  background-color: rgba(
+    238,
+    238,
+    238,
+    0.4
+  ); /* Dark semi-transparent background */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  padding: 0;
+  border-top-left-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+}
+
+/* Sidebar content */
+.sidebar-content {
+  width: 100%;
+  height: 100%;
+  padding: var(--spacing-sm, 0.5rem);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+  border-radius: inherit; /* Inherit border radius from parent */
+}
+
+/* Move toggle buttons when drawers are open */
+sl-drawer#left1-drawer[open] ~ .sidebar-toggle-group .sidebar-toggle {
+  left: var(--left-sidebar-width);
+}
+
+sl-drawer#left2-drawer[open] ~ .sidebar-toggle-group .sidebar-toggle {
+  left: var(--left-sidebar-width);
+}
+
+sl-drawer#left3-drawer[open] ~ .sidebar-toggle-group .sidebar-toggle {
+  left: var(--left-sidebar-width);
+}
+
+sl-drawer#left4-drawer[open] ~ .sidebar-toggle-group .sidebar-toggle {
+  left: var(--left-sidebar-width);
+}
+
+sl-drawer#right1-drawer[open] ~ .sidebar-toggle-group-right .sidebar-toggle {
+  right: var(--right-sidebar-width);
+}
+
+sl-drawer#right2-drawer[open] ~ .sidebar-toggle-group-right .sidebar-toggle {
+  right: var(--right-sidebar-width);
+}
+
+/* Drawer widths are now set via inline --size property on each drawer */
+/* Removed conflicting width rules to allow inline styles to work properly */
+
+/* Sidebar Toggle Button Group */
+.sidebar-toggle-group {
+  position: absolute;
+  left: 10px; /* Adjust as per your layout */
+  top: 50%; /* Vertically center the toggle group */
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column; /* Stack buttons vertically */
+  gap: 7px; /* Space between the buttons */
+  z-index: 12; /* Ensure toggle buttons are always on top */
+  transition: left 0.3s ease, right 0.3s ease;
+}
+
+/* Right Sidebar Toggle Group (New) */
+.sidebar-toggle-group-right {
+  position: absolute;
+  right: 10px; /* Adjust as per your layout */
+  top: 50%; /* Vertically center the toggle group */
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column; /* Stack buttons vertically */
+  gap: 7px; /* Space between the buttons */
+  z-index: 12; /* Ensure toggle buttons are always on top */
+  transition: right 0.3s ease;
+}
+
+.sidebar-toggle {
+  width: 2.3em;
+  height: 2.3em;
+  background-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 25%;
+  transition: background-color 0.3s;
+}
+/* Right Sidebar Toggle */
+.sidebar-toggle.right1 {
+  position: relative;
+  width: 2.3em;
+  height: 2.3em;
+  background-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 25%;
+  transition: background-color 0.3s;
+  z-index: 12; /* Ensure it is on top of other elements */
+}
+
+/* Sidebar Toggle Button for Right 2 */
+.sidebar-toggle.right2 {
+  position: relative;
+  width: 2.3em;
+  height: 2.3em;
+  background-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 25%;
+  transition: background-color 0.3s;
+  z-index: 12; /* Ensure it is on top of other elements */
+}
+
+.sidebar-toggle:hover {
+  background-color: rgba(200, 200, 200, 0.9);
+}
+
+.sidebar-toggle svg .arrow {
+  transition: transform 0.3s ease;
+}
+
+.sidebar:not(.collapsed) ~ .sidebar-toggle svg .arrow {
+  transform: rotate(180deg); /* Rotate the arrow when expanded */
+}
+
+.maplibregl-ctrl {
+  z-index: 5;
+}
+
+.maplibregl-ctrl-top-right {
+  top: 10px;
+  right: 10px;
+}
+
+.controls {
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.controls label {
+  margin: 2px 0;
+  padding: 3px;
+  font-size: 12px;
+  line-height: 1.1;
+  width: 100%;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  text-align: left;
+  display: flex;
+  align-items: center;
+}
+
+.controls button {
+  margin: 2px 0;
+  padding: 4px;
+  width: 100%;
+  font-size: 13px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.controls button {
+  background-color: rgba(70, 130, 180, 0.7);
+  color: white;
+}
+
+.controls button:hover {
+  background-color: rgba(70, 130, 180, 0.9);
+}
+
+#feature-info {
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+#feature-info h3 {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+#feature-details p {
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+#geojson-data {
+  background-color: #f4f4f4;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  width: 100%;
+  overflow: auto;
+}
+
+.maplibregl-ctrl button {
+  width: 4rem;
+  height: 4rem;
+  font-size: 2rem;
+}
+.maplibregl-ctrl-attrib-button {
+}
+
+.maplibregl-ctrl button .maplibregl-ctrl-icon:before {
+  font-size: 1.5rem;
+}
+
+.maplibregl-ctrl-group button {
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+}
+
+.maplibregl-ctrl-group {
+  --ml-c-bg-1: 255 255 255 / 40%; /* 50% transparency */
+  /* rgba(255, 255, 255, 0.9) */
+}
+
+.maplibregl-ctrl button {
+  background-color: rgb(var(--ml-c-bg-1)); /* Use the updated variable */
+}
+
+/* Increase transparency on hover */
+.maplibregl-ctrl button:hover {
+  background-color: rgb(
+    var(--ml-c-bg-1) / 70%
+  ); /* Less transparency on hover */
+}
+
+.maplibregl-ctrl-top-right {
+  right: 10px; /* Move 40px from the right */
+}
+
+.maplibregl-ctrl-bottom-right {
+  bottom: 45px !important; /* Same level as other bottom controls */
+  right: 10px !important;
+  position: absolute !important;
+}
+
+/* Make zoom control buttons same size as navigation buttons */
+.maplibregl-ctrl-bottom-right .maplibregl-ctrl-zoom-in,
+.maplibregl-ctrl-bottom-right .maplibregl-ctrl-zoom-out {
+  width: 28px !important;
+  height: 28px !important;
+  font-size: 14px !important;
+  line-height: 28px !important;
+  padding: 0 !important;
+}
+
+/* Ensure zoom button text is centered */
+.maplibregl-ctrl-bottom-right .maplibregl-ctrl-zoom-in span,
+.maplibregl-ctrl-bottom-right .maplibregl-ctrl-zoom-out span {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+/* Ensure zoom control doesn't have conflicting margins */
+.maplibregl-ctrl-bottom-right .maplibregl-ctrl {
+  margin: 0 !important;
+}
+
+/* Toggle Switch Style */
+.switch {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.switch input {
+  display: none;
+}
+
+.switch .slider {
+  position: relative;
+  width: 50px;
+  height: 24px;
+  background-color: #ccc;
+  border-radius: 34px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.switch .slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+
+.switch input:checked + .slider {
+  background-color: #4682b4;
+}
+
+.switch input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.switch span {
+  margin-left: 10px;
+  font-size: 14px;
+  color: #333;
+}
+
+input[type="range"] {
+  width: 100%;
+  margin: 10px 0;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.maplibregl-measurement-label {
+  font-family: Arial, sans-serif !important;
+  font-size: 22px !important;
+  color: #ff0000 !important;
+  text-halo-color: #000000 !important;
+  text-halo-width: 5px !important;
+}
+
+/* Custom styling for controls on the bottom-left */
+.maplibregl-ctrl-bottom-left {
+  bottom: 45px !important; /* Same level as scale control */
+  left: 5px !important; /* Force the left margin */
+  position: absolute !important;
+  z-index: 5 !important; /* Ensure it's visible above map elements */
+}
+
+/* Make Center Map and Custom Action buttons same size as zoom buttons */
+.maplibregl-ctrl-bottom-left .maplibregl-ctrl-icon {
+  width: 28px !important;
+  height: 28px !important;
+  padding: 0 !important;
+  font-size: 14px !important;
+  line-height: 28px !important;
+}
+
+.maplibregl-ctrl-bottom-left .maplibregl-ctrl-icon svg {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+/* Custom styling specifically for the scale control */
+.maplibregl-ctrl-scale {
+  background-color: rgba(255, 255, 255, 0.75) !important; /* Semi-transparent white background */
+  border: 2px solid #333 !important; /* Keep the original border style */
+  border-top: none !important; /* Remove top border as per original */
+  box-sizing: border-box !important;
+  color: #333 !important;
+  font-size: 10px !important;
+  padding: 0 5px !important; /* Original padding */
+}
+
+/* Position the scale control inline with navigation buttons */
+.maplibregl-ctrl-bottom-left .maplibregl-ctrl-scale {
+  position: absolute !important;
+  bottom: 10px !important; /* Same margin as navigation buttons */
+  left: 68px !important; /* Position to the right of the 2-button navigation control (28px * 2 + margins) */
+  margin: 0 !important; /* Remove default margins */
+}
+
+.mapboxgl-ctrl-geocoder {
+  top: 60px; /* Adjust this value to move it further down */
+}
+
+#mainwrapper {
+  /* Container of all content */
+  width: 100%;
+  height: 99vh;
+}
+
+#mainwrapper header {
+  /*Header */
+  width: 100%;
+  float: right;
+  border-bottom: medium solid #ffdc00;
+  background-color: #ffffff;
+}
+
+#mainwrapper header #logo {
+  /* Company Logo text */
+  float: left;
+  margin-left: 20px;
+  padding-top: 00px;
+  padding-bottom: 22px;
+  transform: scale(0.6);
+}
+
+/* Custom Logo Control Styles */
+.custom-logo-control {
+  position: absolute !important;
+  top: 0px; /* Moved up by 20px from original position */
+  left: 10px !important;
+  z-index: 900 !important; /* Lower than status band (1001) */
+  background: none !important;
+  box-shadow: none !important;
+}
+
+.custom-logo-control img {
+  display: block;
+  max-width: 150px;
+  height: auto;
+}
+
+/* Status band related fixes */
+#status-band {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  z-index: 1001 !important;
+  transform: none !important;
+}
+
+#mainwrapper header #control_panel_button {
+  /*Nav bar containing links in header */
+  padding-top: 30px;
+  padding-bottom: 20px;
+  width: 20px;
+  height: 100%;
+  float: left;
+  margin-left: 20px;
+}
+
+#mainwrapper #content_wrapper {
+  width: 100%;
+  height: 100%;
+  padding-left: 2%;
+  padding-right: 2%;
+  display: inline-flex;
+}
+
+#mainwrapper #content_wrapper #control_panel {
+  /* control_panel*/
+  width: 21%;
+  min-width: 300px;
+  height: 100%;
+  float: left;
+  position: relative;
+  border-right: medium solid #ffdc00;
+  z-index: 10;
+  background-color: #ffffff;
+}
+
+#mainwrapper
+  #content_wrapper
+  #control_panel
+  .control_panel_dropdownwrapper_openArea {
+  /* control_panel*/
+  width: 500px;
+  height: 100%;
+  float: left;
+  position: relative;
+  left: -30px;
+  top: -20px;
+  background-color: #ffffff;
+}
+
+#mainwrapper #content_wrapper #control_panel .control_panel_iconwrapper {
+  /* control_panel*/
+  position: relative;
+  margin: 15px;
+  float: left;
+  margin-right: -30000px;
+}
+
+#mainwrapper #content_wrapper #control_panel .control_panel_iconwrapper > img {
+  /* control_panel*/
+  height: 5em;
+  display: inline-block;
+  /*styling*/
+  border: 0.5px solid gray;
+  margin: 5px;
+  border-radius: 15px;
+}
+
+#mainwrapper
+  #content_wrapper
+  #control_panel
+  .control_panel_iconwrapper
+  > figure {
+  /* control_panel*/
+  height: 5em;
+  display: inline-block;
+  /*styling*/
+  margin: 5px;
+  text-align: center;
+  vertical-align: top;
+}
+
+#mainwrapper
+  #content_wrapper
+  #control_panel
+  .control_panel_iconwrapper
+  > figure
+  > figcaption {
+  /* control_panel*/
+  max-width: 6em;
+  text-align: center;
+}
+
+#mainwrapper
+  #content_wrapper
+  #control_panel
+  .control_panel_iconwrapper
+  > figure
+  > img {
+  /* control_panel*/
+  height: 5em;
+  display: inline-block;
+  /*styling*/
+  border: 0.5px solid gray;
+  margin: 5px;
+  border-radius: 15px;
+}
+
+#mainwrapper #content_wrapper #search_wrapper > #search_button_mapExtend {
+  /* Container map */
+  position: absolute;
+  float: left;
+  top: 40px;
+  left: 268px;
+  border: 1px solid #000000;
+  width: 30px;
+  height: 33.5px;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  background-color: #f7f7f7;
+}
+
+#mainwrapper #content_wrapper #search_wrapper .search_button_icon {
+  width: 25px;
+  position: relative;
+  transform: translateY(-50%);
+  top: 50%;
+  left: 2px;
+}
+
+#mainwrapper #content_wrapper #search_wrapper #map_search_results {
+  /* Container map */
+  float: left;
+  position: relative;
+  top: 5px;
+}
+
+#mainwrapper #content_wrapper #search_wrapper #map_search_results > a {
+  /* Container map */
+  font-size: 11px;
+  color: #404040;
+  display: block;
+  margin-left: 100px;
+  margin: 0;
+  padding: 0;
+  width: 248px;
+  padding: 10px;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  text-align: left;
+  overflow: hidden;
+}
+
+a {
+  color: inherit; /* Inherit the color from the parent element */
+  text-decoration: none; /* Remove underline */
+  font-weight: inherit; /* Inherit font-weight from parent */
+}
+
+#mainwrapper
+  #content_wrapper
+  #search_wrapper
+  #map_search_results
+  > a:last-child {
+  border: none;
+}
+
+#mainwrapper #content_wrapper #search_wrapper #map_search_results > a:hover {
+  background-color: #efefef;
+  color: #404040;
+}
+
+#mainwrapper #content_wrapper #search_wrapper #map_search_results > a.active {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+#mainwrapper
+  #content_wrapper
+  #search_wrapper
+  #map_search_results
+  > a.active:hover {
+  background: #efefef;
+}
+
+#mainwrapper #content_wrapper #search_wrapper #map_search_results > a > img {
+  float: left;
+}
+
+#mainwrapper #content_wrapper #search_wrapper #map_search_results > a > div {
+  float: left;
+  margin-left: 8px;
+}
+
+#status-band {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.25);
+  padding: 4px 4px;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  font-family: Arial, sans-serif;
+  font-size: 10px;
+  color: #000;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  margin: 0; /* Explicitly set margin to zero */
+  box-sizing: border-box; /* Ensure padding doesn't add to width */
+}
+
+#project-name {
+  font-weight: bold;
+}
+
+#status-info {
+  font-style: italic;
+}
+
+/* Add this to your styles.css file */
+
+#dxf-controls {
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  width: 300px;
+}
+
+#dxf-controls label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+#dxf-controls select,
+#dxf-controls input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.dxf-control-button {
+  background-color: #4285f4;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 5px;
+  transition: background-color 0.3s;
+}
+
+.dxf-control-button:hover {
+  background-color: #3367d6;
+}
+
+#dxf-clear-button {
+  background-color: #f44336;
+}
+
+#dxf-clear-button:hover {
+  background-color: #d32f2f;
+}
+
+#dxf-options {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
+/* Styles for Feature Snapping functionality */
+
+/* Snap indicator styling */
+.snap-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  pointer-events: none; /* Make sure it doesn't interfere with clicking */
+  transition: opacity 0.2s ease-in-out;
+}
+
+/* Pulse animation for the snap indicator */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.snap-indicator.active {
+  animation: pulse 1s infinite;
+}
+
+/* Toggle button styling */
+#snap-toggle-button {
+  transition: background-color 0.3s ease;
+}
+
+#snap-toggle-button:hover {
+  opacity: 0.9;
+}
+
+#snap-toggle-button:active {
+  transform: translateY(1px);
+}
+
+/* Status message styling */
+#snap-status-message {
+  font-family: "Roboto", sans-serif;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Feature info panel styling */
+#feature-info-panel {
+  font-family: "Roboto", sans-serif;
+  line-height: 1.5;
+  max-height: 70vh;
+  transition: opacity 0.3s ease;
+}
+
+#feature-info-panel h3 {
+  margin-top: 0;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+  color: #333;
+}
+
+#feature-info-panel h4 {
+  margin: 12px 0 8px 0;
+  color: #555;
+}
+
+#feature-info-panel table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#feature-info-panel td {
+  padding: 4px;
+  border-bottom: 1px solid #eee;
+  word-break: break-word;
+}
+
+#feature-info-panel td:first-child {
+  font-weight: bold;
+  width: 40%;
+}
+
+#feature-info-panel button {
+  transition: background-color 0.2s ease;
+}
+
+#feature-info-panel button:hover {
+  opacity: 0.9;
+}
+
+/* Style for empty property values */
+.empty-value {
+  color: #999;
+  font-style: italic;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  #feature-info-panel {
+    width: 80%;
+    left: 10%;
+    right: 10%;
+  }
+
+  #snap-toggle-button {
+    top: 70px; /* Move down to avoid overlap with other controls */
+  }
+}
+
+/* Add top padding to map controls in the top-right corner */
+.maplibregl-ctrl-top-right {
+  top: 90px !important; /* Added one button size margin (40px) to original 50px */
+}
+
+/* Apply the same padding to the top-left controls if needed */
+.maplibregl-ctrl-top-left {
+  top: 70px !important; /* Moved up by 20px */
+}
+
+/* Ensure the controls have consistent spacing */
+.maplibregl-ctrl-group {
+  margin: 10px !important;
+}
+
+/* Style for the basemap radio group */
+.basemap-radio-group {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+/* Add a bit more spacing between radio options */
+.basemap-radio-group sl-radio {
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* Style for the radio labels */
+.basemap-radio-group sl-radio::part(label) {
+  font-size: 14px;
+  padding-left: 6px;
+}
+
+/* Add flag emoji spacing if used */
+.basemap-radio-group sl-radio .flag-emoji {
+  margin-right: 6px;
+}
+
+/* Style for the checked state */
+.basemap-radio-group sl-radio[checked]::part(base) {
+  background-color: rgba(70, 130, 180, 0.1);
+  border-radius: 4px;
+}
+
+/* Custom coloring for the radio button when checked */
+.basemap-radio-group sl-radio[checked]::part(control) {
+  border-color: var(--sl-color-primary-500);
+  background-color: var(--sl-color-primary-500);
+}
+
+/* For larger touch targets on mobile */
+@media (max-width: 768px) {
+  .basemap-radio-group sl-radio {
+    margin-bottom: 12px;
+    padding: 0px 0;
+  }
+
+  .basemap-radio-group sl-radio::part(control) {
+    --sl-toggle-size: 18px;
+  }
+}
+
+/* Enhanced CSS for basemap controls */
+
+/* Button styling */
+.basemap-button {
+  width: 100%;
+}
+
+.basemap-button::part(base) {
+  width: 100%;
+  justify-content: flex-start;
+  text-align: left;
+  padding: 0px 1px;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.9);
+  transition: all 0.2s ease;
+}
+
+.basemap-button[variant="default"]::part(base):hover {
+  background-color: rgba(240, 240, 240, 0.95);
+  transform: translateY(-1px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.basemap-button[variant="primary"]::part(base) {
+  background-color: #4682b4;
+  color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.basemap-button[variant="primary"]::part(base):hover {
+  background-color: #3a6d94;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Flag emoji styling (if used) */
+.basemap-flag {
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+/* For classic radio button styling (fallback) */
+#basemap-controls label {
+  display: block;
+  margin-bottom: 4px;
+  padding: 1px 1px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+#basemap-controls label:hover {
+  background-color: rgba(240, 240, 240, 0.9);
+}
+
+#basemap-controls input[type="radio"] {
+  margin-right: 8px;
+}
+
+#basemap-controls input[type="radio"]:checked + span {
+  font-weight: 900;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .basemap-button::part(base) {
+    padding: 10px 15px; /* Larger touch target on mobile */
+  }
+
+  #basemap-controls label {
+    padding: 10px 12px;
+  }
+}
+
+/* Adjust basemap control paddings */
+#basemap-controls {
+}
+
+/* Make radio buttons have more padding */
+#basemap-controls .basemap-radio {
+  margin: 0 0 10px 0 !important;
+  --sl-input-border-radius-medium: 4px;
+}
+
+#basemap-controls .basemap-radio::part(base) {
+  margin: 0 5px !important;
+}
+
+/* Make standard radio labels have more padding */
+#basemap-controls label.basemap-label {
+  padding: 0px 0px !important;
+  margin: 0 5px 10px 5px !important;
+  width: calc(100% - 10px) !important;
+}
+
+.zoom-only-control {
+  position: absolute !important;
+  bottom: 45px !important; /* Same level as other bottom controls */
+}
+
+/* Make zoom control buttons 50% smaller */
+.zoom-only-control  .maplibregl-ctrl-zoom-in button {
+  width: 20px !important; /* Default is around 40px */
+  height: 20px !important; /* Default is around 40px */
+  padding: 0 !important; /* Remove padding */
+}
+
+/* Scale the icons inside the buttons */
+.zoom-only-control .maplibregl-ctrl-icon {
+  background-size: 70% !important;
+  transform: scale(0.5) !important;
+}
+
+/* Optional: Adjust the control container size */
+.zoom-only-control.maplibregl-ctrl-group {
+  width: auto !important;
+  height: auto !important;
+}
+
+/* Drawer styles to match current sidebar appearance */
+sl-drawer::part(panel) {
+  top: 30px;
+  bottom: 32px;
+  height: calc(100% - 66px);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Drawer widths - use the --size property from inline styles */
+sl-drawer[id^="left"]::part(panel) {
+  width: var(--size, 350px); /* Use --size property, fallback to 350px */
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+
+sl-drawer[id^="right"]::part(panel) {
+  width: var(--size, 400px); /* Use --size property, fallback to 400px */
+  border-top-left-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+}
+
+/* Special styling for right2 drawer */
+sl-drawer#right2-drawer::part(panel) {
+  background-color: rgba(238, 238, 238, 0.7);
+}
+
+/* Preserve your existing content styling */
+sl-drawer .sidebar-content {
+  width: 100%;
+  height: 100%;
+  padding: 15px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+}
+
+/* Remove animation for instant open/close */
+sl-drawer::part(panel) {
+  transition: none !important;
+}
+
+/* Fix drawer content sizing */
+sl-drawer::part(base) {
+  position: absolute;
+  top: 30px;
+  bottom: 32px;
+  height: calc(100% - 66px);
+}
+
+sl-drawer::part(panel) {
+  height: 100%;
+  overflow: hidden;
+}
+
+sl-drawer::part(body) {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+/* Make sure the sidebar content fills the drawer properly */
+sl-drawer .sidebar-content {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  padding: 15px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+/* Special handling for left1 sidebar with basemap controls */
+sl-drawer#left1-drawer .sidebar-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* Fix for rounded-rect content areas */
+sl-drawer .sidebar-content.rounded-rect {
+  border-radius: 8px;
+  background: rgba(248, 248, 248, 0.9);
+  padding: 10px;
+  margin: 10px 0;
+}
+
+/* Fix for search wrapper */
+#search_wrapper {
+  width: 100%;
+  position: relative;
+}
+
+/* Fix for map settings controls */
+sl-drawer#left2-drawer .controls {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Fix the right2 arrow container to fit properly */
+sl-drawer#right2-drawer .sidebar-content {
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#arrow-container {
+  width: 100%;
+  height: 90%;
+  margin: 5% 0;
+}
+
+/* Fix for right-side drawer animation */
+sl-drawer[placement="end"]::part(panel) {
+  right: 0;
+  left: auto;
+}
+
+/* Ensure right drawers have correct width */
+
+/* Remove default Shoelace drawer transitions if they're causing issues */
+
+/* Or if you want smooth transitions, make sure they're correct */
+sl-drawer[placement="end"]::part(panel) {
+  transition: transform 0.3s ease !important;
+}
+
+sl-drawer[placement="end"]:not([open])::part(panel) {
+  transform: translateX(100%);
+}
+
+sl-drawer[placement="end"][open]::part(panel) {
+  transform: translateX(0);
+}
+
+/* Reset Shoelace drawer defaults that might interfere */
+sl-drawer::part(panel) {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 66px);
+  top: 30px;
+  bottom: 32px;
+}
+
+sl-drawer::part(body) {
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Make sidebar-content fill the drawer properly */
+sl-drawer .sidebar-content {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  padding: 5px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Fix for nested sidebar-content elements (some drawers have nested divs) */
+sl-drawer .sidebar-content .sidebar-content {
+  flex: 1;
+  padding: 0;
+}
+
+/* Specific fixes for each drawer */
+
+/* Left1 - Baselayers */
+sl-drawer#left1-drawer .sidebar-content,
+sl-drawer#left2-drawer .sidebar-content {
+  height: 100%;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Full width container */
+}
+
+sl-drawer#left1-drawer .controls,
+sl-drawer#left2-drawer .controls {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+sl-drawer#left1-drawer #basemap-controls {
+  width: 100%;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Left2 - Map Settings */
+
+sl-drawer#left2-drawer sl-switch {
+  width: 100%;
+}
+
+/* Left3 - Search */
+sl-drawer#left3-drawer #search_wrapper {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+sl-drawer#left3-drawer #map_search_results {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Left4 - Feature Layers */
+sl-drawer#left4-drawer .search-container {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+sl-drawer#left4-drawer .categories-container {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Right1 - Info */
+sl-drawer#right1-drawer .sidebar-content {
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* Right2 - Arrow container */
+sl-drawer#right2-drawer .sidebar-content {
+  height: 100%;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+sl-drawer#right2-drawer #arrow-container {
+  width: 100%;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  background-color: transparent;
+  border: none;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 10px;
+  pointer-events: none;
+  margin: 5% 0;
+}
+
+/* Fix for rounded-rect containers */
+.sidebar-content.rounded-rect {
+  border-radius: 8px;
+  padding: 10px;
+  margin: 10px 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Ensure proper spacing for headers */
+sl-drawer h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* Fix for controls that need full width */
+sl-drawer .controls > * {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Fix for search input in left3 */
+sl-drawer#left3-drawer sl-input {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+/* Fix for layer controls in left4 */
+sl-drawer#left4-drawer .lc-layer-controls-header {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+/* Ensure scrolling works properly */
+sl-drawer .sidebar-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+sl-drawer .sidebar-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+sl-drawer .sidebar-content::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+sl-drawer .sidebar-content::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Base drawer structure */
+
+sl-drawer::part(body) {
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main sidebar content */
+sl-drawer .sidebar-content {
+  width: 100%;
+  height: 100%;
+  padding: 15px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+/* Rounded rect container */
+sl-drawer .rounded-rect {
+  flex: 1;
+  border-radius: 8px;
+  background: rgba(248, 248, 248, 0.9);
+  padding: 10px;
+  margin: 10px 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Controls container */
+sl-drawer .controls {
+  flex: 1;
+  width: 100%;
+  overflow-y: auto;
+}
+
+/* Header styling */
+sl-drawer h3 {
+  margin: 0 0 15px 0;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* If you're using flex-center class */
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+/* Feature Layers drawer specific fixes */
+sl-drawer#left4-drawer .sidebar-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden; /* Prevent outer scrolling */
+}
+
+/* Header should not scroll */
+sl-drawer#left4-drawer h3 {
+  flex-shrink: 0;
+  margin: 0 0 15px 0;
+}
+
+/* Search container should not scroll */
+sl-drawer#left4-drawer .search-container {
+  flex-shrink: 0;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+/* Layer controls header should not scroll */
+sl-drawer#left4-drawer .lc-layer-controls-header {
+  flex-shrink: 0;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+/* Master controls layout */
+sl-drawer#left4-drawer .lc-layer-controls-master {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+}
+
+sl-drawer#left4-drawer .lc-master-control {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Categories container should scroll */
+sl-drawer#left4-drawer .categories-container {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0; /* Important for flex children to scroll properly */
+}
+
+/* Ensure proper input styling */
+sl-drawer#left4-drawer sl-input {
+  width: 100%;
+}
+
+/* Style the checkboxes and labels */
+sl-drawer#left4-drawer .lc-control-label {
+  font-size: 14px;
+  color: #333;
+}
+
+/* Add some spacing to the categories container */
+sl-drawer#left4-drawer #featureLayersContainer {
+  padding: 0 5px;
+}
+
+/* If categories have their own containers, ensure they display properly */
+sl-drawer#left4-drawer .category-item {
+  margin-bottom: 10px;
+}
+
+/* General drawer body fix */
+
+/* Ensure drawer panel takes full height */
+
+/* Reset default padding on the drawer body */
+sl-drawer#left4-drawer::part(body) {
+  padding: 0;
+}
+
+/* Adjust main sidebar content padding */
+sl-drawer#left4-drawer .sidebar-content {
+  padding: 15px 10px; /* Reduced horizontal padding */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Header styling with proper spacing */
+sl-drawer#left4-drawer h3 {
+  margin: 0 0 10px 0; /* Reduced bottom margin */
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* Search container with proper spacing */
+sl-drawer#left4-drawer .search-container {
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+/* Layer controls header with adjusted layout */
+sl-drawer#left4-drawer .lc-layer-controls-header {
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+/* Master controls alignment */
+sl-drawer#left4-drawer .lc-layer-controls-master {
+  display: flex;
+  justify-content: flex-start; /* Align to the left */
+  gap: 20px; /* Space between controls */
+  padding: 0;
+}
+
+/* Individual control styling */
+
+/* Categories container - remove extra padding */
+sl-drawer#left4-drawer .categories-container {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  padding: 0; /* Remove default padding */
+}
+
+/* Individual category items */
+sl-drawer#left4-drawer .lc-category {
+  margin-bottom: 8px;
+}
+
+/* Layer items within categories */
+sl-drawer#left4-drawer .lc-layer-item {
+  padding: 5px 0; /* Vertical padding only */
+}
+
+/* Remove any extra margins from checkboxes */
+sl-drawer#left4-drawer sl-checkbox {
+  margin: 0;
+}
+
+/* Adjust the control labels */
+sl-drawer#left4-drawer .lc-control-label {
+  font-size: 13px;
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* Fix for the search input */
+sl-drawer#left4-drawer sl-input {
+  width: 100%;
+  --sl-input-spacing-medium: 8px; /* Reduce internal padding */
+}
+
+/* Icon buttons (the gear icons) */
+sl-drawer#left4-drawer .lc-layer-controls sl-icon-button {
+  --sl-spacing-medium: 0;
+}
+
+/* Collapse all button styling */
+sl-drawer#left4-drawer .lc-collapse-all-btn {
+  padding: 4px 8px;
+  font-size: 13px;
+}
+
+/* More aggressive padding reduction */
+sl-drawer#left4-drawer .sidebar-content {
+  padding: 10px 5px;
+}
+
+/* Tighter spacing between elements */
+sl-drawer#left4-drawer h3 {
+  margin: 0 0 8px 0;
+}
+
+sl-drawer#left4-drawer .search-container {
+  margin-bottom: 8px;
+}
+
+sl-drawer#left4-drawer .lc-layer-controls-header {
+  margin-bottom: 8px;
+}
+
+/* Reduce category spacing */
+sl-drawer#left4-drawer .lc-category {
+  margin-bottom: 5px;
+}
+
+/* Make layer items more compact */
+sl-drawer#left4-drawer .lc-layer-item {
+  padding: 3px 0;
+}
+
+/* Styles for collapsible sections in left1 drawer */
+#left1-drawer sl-details {
+  margin-bottom: 1rem;
+}
+
+#left1-drawer sl-details::part(base),
+#left2-drawer sl-details::part(base) {
+  border: none;
+  background: transparent;
+}
+
+#left1-drawer sl-details::part(summary),
+#left2-drawer sl-details::part(summary) {
+  background-color: rgba(70, 130, 180, 0.05);
+  color: #333;
+
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-size: 15px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+#left1-drawer sl-details::part(summary):hover {
+  background-color: rgba(70, 130, 180, 0.15);
+}
+
+#left1-drawer sl-details[open]::part(summary) {
+  background-color: rgba(70, 130, 180, 0.1);
+}
+
+#left1-drawer sl-details::part(content),
+#left2-drawer sl-details::part(content) {
+  padding: 10px 0;
+}
+
+/* Styling for overlay controls container */
+.overlaycontrols {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0px;
+}
+
+/* Match the style from left4-drawer overlay controls */
+.overlaycontrols sl-button {
+  width: 100%;
+}
+
+.overlaycontrols sl-button::part(base) {
+  width: 100%;
+  justify-content: flex-start;
+  text-align: left;
+
+  background-color: rgba(70, 130, 180, 0.1);
+  color: #4682b4;
+  border: 1px solid rgba(70, 130, 180, 0.3);
+}
+
+.overlaycontrols sl-button::part(base):hover {
+  background-color: rgba(70, 130, 180, 0.2);
+}
+
+.overlaycontrols sl-button[variant="primary"]::part(base) {
+  background-color: #4682b4;
+  color: white;
+  border-color: #4682b4;
+}
+
+.overlaycontrols sl-button[variant="primary"]::part(base):hover {
+  background-color: #3a6d94;
+}
+
+/* Adjust divider styling */
+#left1-drawer sl-divider,
+#left2-drawer sl-divider {
+  --width: 1px;
+  --color: rgba(0, 0, 0, 0.1);
+  margin: 0.5rem 0;
+}
+
+/* Remove excess spacing from sidebar content */
+#left1-drawer .sidebar-content,
+#left2-drawer .sidebar-content {
+  padding: 15px;
+  /* Hide scrollbar but maintain scrolling */
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+#left1-drawer .sidebar-content::-webkit-scrollbar,
+#left2-drawer .sidebar-content::-webkit-scrollbar {
+  display: none;
+}
+
+/* Consistent header styling */
+#left1-drawer h3,
+#left2-drawer h3 {
+  margin: 0 0 15px 0;
+  font-size: 18px;
+  font-weight: 500;
+  color: #4682b4;
+}
+
+/* Hide scrollbar for both left1 and left4 drawers */
+#left1-drawer .sidebar-content,
+#left2-drawer .sidebar-content,
+#left4-drawer .sidebar-content {
+  /* Hide scrollbar but maintain scrolling */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+#left1-drawer .sidebar-content::-webkit-scrollbar,
+#left2-drawer .sidebar-content::-webkit-scrollbar,
+#left4-drawer .sidebar-content::-webkit-scrollbar {
+  display: none;
+}
+
+/* Also hide scrollbar for the categories container in left4 */
+#left4-drawer .categories-container {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+#left4-drawer .categories-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Mobile drawer adjustments (phones) */
+@media (max-width: 768px) {
+  sl-drawer[placement="start"],
+  sl-drawer[placement="end"] {
+    --size: 90vh;
+  }
+
+  sl-drawer[placement="end"]::part(panel),
+  sl-drawer[placement="start"]::part(panel) {
+    width: 85vw !important;
+    height: auto !important;
+    border-radius: 12px 12px 0 0;
+    bottom: 0;
+    top: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  sl-drawer#right1-drawer::part(panel),
+  sl-drawer#right2-drawer::part(panel) {
+    width: 90vw !important;
+  }
+
+  /* Footer readability on mobile outdoors */
+  #footer-bar {
+    font-size: 14px;
+    font-weight: 600;
+    color: black;
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+}

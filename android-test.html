@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Android Language Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f0f8ff; }
+        .test-box { background: white; padding: 20px; margin: 15px 0; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .status { padding: 12px; margin: 10px 0; border-radius: 6px; font-weight: bold; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        button { padding: 12px 24px; margin: 8px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-warning { background: #ffc107; color: #212529; }
+        .translation-demo { margin: 15px 0; padding: 20px; background: #f8f9fa; border-left: 5px solid #007bff; }
+        .translation-item { margin: 8px 0; padding: 8px; background: white; border-radius: 4px; }
+        pre { background: #2d3748; color: #e2e8f0; padding: 15px; border-radius: 6px; overflow-x: auto; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <h1>🤖 Android Language Control Test</h1>
+    <p>This page tests the Android-driven language setting system.</p>
+    
+    <div class="test-box">
+        <h2>🔍 System Status</h2>
+        <div id="system-status">Checking...</div>
+        <button class="btn-primary" onclick="checkStatus()">🔄 Refresh Status</button>
+    </div>
+    
+    <div class="test-box">
+        <h2>🌐 Language Controls</h2>
+        <p>These buttons simulate what your Android app should call:</p>
+        <button class="btn-success" onclick="setLanguage('de')">🇩🇪 Set German</button>
+        <button class="btn-success" onclick="setLanguage('en')">🇬🇧 Set English</button>
+        <button class="btn-success" onclick="setLanguage('es')">🇪🇸 Set Spanish</button>
+        <button class="btn-success" onclick="setLanguage('fr')">🇫🇷 Set French</button>
+        <div id="language-result"></div>
+    </div>
+    
+    <div class="test-box">
+        <h2>📝 Live Translation Demo</h2>
+        <div class="translation-demo">
+            <div class="translation-item">
+                <strong>Tabs → Layers:</strong> <span id="demo-layers" data-i18n="ui.tabs.layers">Layers</span>
+            </div>
+            <div class="translation-item">
+                <strong>Tabs → Settings:</strong> <span id="demo-settings" data-i18n="ui.tabs.settings">Settings</span>
+            </div>
+            <div class="translation-item">
+                <strong>Bookmarks → Empty:</strong> <span id="demo-bookmarks">No bookmarks saved yet</span>
+            </div>
+            <div class="translation-item">
+                <strong>Context → Delete:</strong> <span id="demo-delete">Delete</span>
+            </div>
+        </div>
+        <button class="btn-warning" onclick="updateDemo()">🔄 Update Demo</button>
+    </div>
+    
+    <div class="test-box">
+        <h2>📱 Android Integration Code</h2>
+        <p>Copy this code to your Android Activity:</p>
+        <pre id="android-code">// Add this to your Activity class
+
+private void setMapLanguage(String languageCode) {
+    String jsCode = String.format("setAppLanguage('%s')", languageCode);
+    webView.evaluateJavascript(jsCode, new ValueCallback&lt;String&gt;() {
+        @Override
+        public void onReceiveValue(String value) {
+            Log.d("Language", "Set language result: " + value);
+        }
+    });
+}
+
+// Call this after WebView loads (e.g., in onPageFinished)
+@Override
+public void onPageFinished(WebView view, String url) {
+    super.onPageFinished(view, url);
+    if (url.contains("engine_ml/index.html")) {
+        // Get device language and set it
+        String deviceLang = Locale.getDefault().getLanguage();
+        
+        // Wait a bit for scripts to load, then set language
+        new Handler().postDelayed(() -> {
+            setMapLanguage(deviceLang);
+        }, 2000);
+    }
+}</pre>
+        <button class="btn-primary" onclick="copyCode()">📋 Copy Code</button>
+    </div>
+    
+    <div class="test-box">
+        <h2>🛠️ Debug Console</h2>
+        <div id="debug-console" style="background: #000; color: #0f0; padding: 10px; font-family: monospace; height: 200px; overflow-y: auto; border-radius: 4px;"></div>
+        <button class="btn-primary" onclick="clearConsole()">🗑️ Clear Console</button>
+    </div>
+
+    <!-- Include required scripts -->
+    <script src="src/i18n/i18n-manager.js"></script>
+    <script src="android-language-setter.js"></script>
+    
+    <script>
+        // Console capture for debugging
+        const originalLog = console.log;
+        const originalWarn = console.warn;
+        const originalError = console.error;
+        
+        function addToDebugConsole(level, message) {
+            const console = document.getElementById('debug-console');
+            const time = new Date().toLocaleTimeString();
+            const color = level === 'error' ? '#ff6b6b' : level === 'warn' ? '#ffd93d' : '#51cf66';
+            console.innerHTML += `<div style="color: ${color}">[${time}] ${level.toUpperCase()}: ${message}</div>`;
+            console.scrollTop = console.scrollHeight;
+        }
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addToDebugConsole('log', args.join(' '));
+        };
+        
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            addToDebugConsole('warn', args.join(' '));
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addToDebugConsole('error', args.join(' '));
+        };
+        
+        function updateStatus(id, message, type = 'info') {
+            document.getElementById(id).innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+        
+        function checkStatus() {
+            console.log('Checking system status...');
+            
+            let status = '';
+            let statusType = 'success';
+            
+            // Check AndroidLanguage availability
+            if (window.AndroidLanguage) {
+                status += '✅ AndroidLanguage system available<br>';
+                
+                const systemStatus = window.AndroidLanguage.getStatus();
+                status += `📊 System Status:<br>`;
+                status += `&nbsp;&nbsp;• Initialized: ${systemStatus.initialized ? '✅' : '❌'}<br>`;
+                status += `&nbsp;&nbsp;• Current Language: ${systemStatus.currentLanguage}<br>`;
+                status += `&nbsp;&nbsp;• App.I18n Available: ${systemStatus.appI18nAvailable ? '✅' : '❌'}<br>`;
+                
+                if (systemStatus.pendingLanguage) {
+                    status += `&nbsp;&nbsp;• Pending Language: ${systemStatus.pendingLanguage}<br>`;
+                    statusType = 'info';
+                }
+                
+                if (!systemStatus.initialized) {
+                    statusType = 'error';
+                }
+            } else {
+                status += '❌ AndroidLanguage system NOT available<br>';
+                statusType = 'error';
+            }
+            
+            // Check App.I18n
+            if (window.App && window.App.I18n) {
+                status += '✅ App.I18n available<br>';
+                status += `&nbsp;&nbsp;• Current Language: ${window.App.I18n.getLanguage()}<br>`;
+                
+                const availableLangs = window.App.I18n.getAvailableLanguages();
+                status += `&nbsp;&nbsp;• Available Languages: ${availableLangs.map(l => l.code).join(', ')}<br>`;
+            } else {
+                status += '❌ App.I18n NOT available<br>';
+                statusType = 'error';
+            }
+            
+            updateStatus('system-status', status, statusType);
+        }
+        
+        function setLanguage(lang) {
+            console.log(`Setting language to: ${lang}`);
+            updateStatus('language-result', `Setting language to ${lang}...`, 'info');
+            
+            if (window.setAppLanguage) {
+                const result = window.setAppLanguage(lang);
+                
+                setTimeout(() => {
+                    const currentLang = window.getAppLanguage();
+                    if (currentLang === lang) {
+                        updateStatus('language-result', `✅ Language successfully set to ${lang}`, 'success');
+                        updateDemo();
+                    } else {
+                        updateStatus('language-result', `⚠️ Language setting attempted, current: ${currentLang}`, 'info');
+                    }
+                }, 500);
+            } else {
+                updateStatus('language-result', '❌ setAppLanguage function not available', 'error');
+            }
+        }
+        
+        function updateDemo() {
+            console.log('Updating translation demo...');
+            
+            if (window.App && window.App.I18n) {
+                // Update individual elements
+                document.getElementById('demo-layers').textContent = window.App.I18n.t('ui.tabs.layers');
+                document.getElementById('demo-settings').textContent = window.App.I18n.t('ui.tabs.settings');
+                document.getElementById('demo-bookmarks').textContent = window.App.I18n.t('ui.bookmarks.empty');
+                document.getElementById('demo-delete').textContent = window.App.I18n.t('contextMenu.delete');
+                
+                // Update all data-i18n elements
+                window.App.I18n.updatePageTranslations();
+            } else {
+                console.warn('App.I18n not available for demo update');
+            }
+        }
+        
+        function copyCode() {
+            const code = document.getElementById('android-code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('✅ Android code copied to clipboard!');
+            }).catch(() => {
+                alert('❌ Could not copy code. Please select and copy manually.');
+            });
+        }
+        
+        function clearConsole() {
+            document.getElementById('debug-console').innerHTML = '';
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Android Language Test page loaded');
+            
+            // Check status after a short delay
+            setTimeout(() => {
+                checkStatus();
+                updateDemo();
+            }, 1000);
+        });
+        
+        // Listen for language change events
+        document.addEventListener('androidLanguageChanged', function(event) {
+            console.log('Language changed event received:', event.detail.language);
+            updateDemo();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual Language Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .test-box { background: white; padding: 20px; margin: 10px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .status { padding: 10px; margin: 10px 0; border-radius: 4px; font-weight: bold; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .warning { background: #fff3cd; color: #856404; }
+        button { padding: 12px 24px; margin: 8px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .translation-test { margin: 10px 0; padding: 15px; background: #f8f9fa; border-left: 4px solid #007bff; }
+        pre { background: #000; color: #0f0; padding: 10px; border-radius: 4px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Manual Language Test & Fix</h1>
+    
+    <div class="test-box">
+        <h2>System Status</h2>
+        <div id="system-status"></div>
+        <button class="btn-primary" onclick="checkSystem()">Check System</button>
+    </div>
+    
+    <div class="test-box">
+        <h2>Force Language Setting</h2>
+        <p>Test if the translation system works by forcing different languages:</p>
+        <button class="btn-success" onclick="forceLanguage('de')">🇩🇪 Force German</button>
+        <button class="btn-success" onclick="forceLanguage('en')">🇬🇧 Force English</button>
+        <button class="btn-success" onclick="forceLanguage('es')">🇪🇸 Force Spanish</button>
+        <div id="language-status"></div>
+    </div>
+    
+    <div class="test-box">
+        <h2>Translation Test</h2>
+        <div class="translation-test">
+            <strong>ui.tabs.layers:</strong> <span id="test-layers" data-i18n="ui.tabs.layers">Layers</span><br>
+            <strong>ui.tabs.settings:</strong> <span id="test-settings" data-i18n="ui.tabs.settings">Settings</span><br>
+            <strong>ui.bookmarks.empty:</strong> <span id="test-bookmarks">No bookmarks saved yet</span><br>
+            <strong>contextMenu.delete:</strong> <span id="test-context">Delete</span>
+        </div>
+    </div>
+    
+    <div class="test-box">
+        <h2>Android Integration Code</h2>
+        <p>If manual German works but Android doesn't set it automatically, add this to your Activity:</p>
+        <pre id="android-code">// Add to your Activity after WebView loads
+WebView webView = findViewById(R.id.your_webview);
+webView.evaluateJavascript("forceLanguageFromAndroid('de')", null);
+
+// Or use this more robust version:
+webView.evaluateJavascript(
+    "setTimeout(function() { " +
+    "  if (window.forceLanguageFromAndroid) { " +
+    "    window.forceLanguageFromAndroid('de'); " +
+    "  } else if (window.App && window.App.I18n) { " +
+    "    window.App.I18n.setLanguage('de'); " +
+    "  } " +
+    "}, 1000);", null);</pre>
+        <button class="btn-primary" onclick="copyCode()">📋 Copy Code</button>
+    </div>
+    
+    <div class="test-box">
+        <h2>Debug Information</h2>
+        <div id="debug-info"></div>
+        <button class="btn-primary" onclick="showDebug()">Show Debug Info</button>
+    </div>
+
+    <!-- Include the i18n manager -->
+    <script src="src/i18n/i18n-manager.js"></script>
+    
+    <script>
+        // Global function for Android to call
+        window.forceLanguageFromAndroid = function(lang) {
+            console.log('forceLanguageFromAndroid called with:', lang);
+            if (window.App && window.App.I18n) {
+                return window.App.I18n.setLanguage(lang).then(() => {
+                    console.log('Language successfully set to:', lang);
+                    updateTranslationTest();
+                    return true;
+                }).catch(error => {
+                    console.error('Error setting language:', error);
+                    return false;
+                });
+            } else {
+                console.error('App.I18n not available');
+                return Promise.resolve(false);
+            }
+        };
+        
+        function updateStatus(id, message, type = 'success') {
+            const element = document.getElementById(id);
+            element.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+        
+        function checkSystem() {
+            let status = '';
+            let hasErrors = false;
+            
+            // Check if App.I18n is available
+            if (window.App && window.App.I18n) {
+                status += '✅ App.I18n is available<br>';
+                
+                // Check current language
+                const currentLang = window.App.I18n.getLanguage();
+                status += `✅ Current language: ${currentLang}<br>`;
+                
+                // Check available languages
+                const availableLangs = window.App.I18n.getAvailableLanguages();
+                status += `✅ Available languages: ${availableLangs.map(l => l.code).join(', ')}<br>`;
+                
+                // Check if German is loaded
+                if (window.App.I18n.loadedLanguages && window.App.I18n.loadedLanguages.has('de')) {
+                    status += '✅ German translation is loaded<br>';
+                } else {
+                    status += '⚠️ German translation not loaded yet<br>';
+                    hasErrors = true;
+                }
+            } else {
+                status += '❌ App.I18n is NOT available<br>';
+                hasErrors = true;
+            }
+            
+            // Check browser language
+            const browserLang = navigator.language || navigator.userLanguage;
+            status += `ℹ️ Browser language: ${browserLang}<br>`;
+            
+            // Check Android bridge
+            if (window.bridge) {
+                status += '✅ Android bridge is available<br>';
+            } else {
+                status += '⚠️ Android bridge not available<br>';
+            }
+            
+            updateStatus('system-status', status, hasErrors ? 'warning' : 'success');
+        }
+        
+        function forceLanguage(lang) {
+            console.log('Forcing language to:', lang);
+            updateStatus('language-status', `Setting language to ${lang}...`, 'warning');
+            
+            if (window.App && window.App.I18n) {
+                window.App.I18n.setLanguage(lang).then(() => {
+                    updateStatus('language-status', `✅ Language successfully set to ${lang}`, 'success');
+                    updateTranslationTest();
+                }).catch(error => {
+                    updateStatus('language-status', `❌ Error setting language: ${error.message}`, 'error');
+                });
+            } else {
+                updateStatus('language-status', '❌ App.I18n not available', 'error');
+            }
+        }
+        
+        function updateTranslationTest() {
+            if (window.App && window.App.I18n) {
+                // Update translation tests
+                document.getElementById('test-layers').textContent = window.App.I18n.t('ui.tabs.layers');
+                document.getElementById('test-settings').textContent = window.App.I18n.t('ui.tabs.settings');
+                document.getElementById('test-bookmarks').textContent = window.App.I18n.t('ui.bookmarks.empty');
+                document.getElementById('test-context').textContent = window.App.I18n.t('contextMenu.delete');
+                
+                // Update all elements with data-i18n
+                window.App.I18n.updatePageTranslations();
+            }
+        }
+        
+        function showDebug() {
+            let debug = '';
+            
+            if (window.App && window.App.I18n) {
+                debug += `<strong>Current Language:</strong> ${window.App.I18n.getLanguage()}<br>`;
+                debug += `<strong>Fallback Language:</strong> ${window.App.I18n.fallbackLanguage}<br>`;
+                debug += `<strong>Loaded Languages:</strong> ${Array.from(window.App.I18n.loadedLanguages || []).join(', ')}<br>`;
+                
+                // Test some translations
+                debug += '<br><strong>Sample Translations:</strong><br>';
+                debug += `ui.tabs.layers: "${window.App.I18n.t('ui.tabs.layers')}"<br>`;
+                debug += `ui.tabs.settings: "${window.App.I18n.t('ui.tabs.settings')}"<br>`;
+                debug += `ui.bookmarks.empty: "${window.App.I18n.t('ui.bookmarks.empty')}"<br>`;
+                
+                // Check localStorage
+                const savedLang = localStorage.getItem('maplibre_language');
+                debug += `<br><strong>Saved Language:</strong> ${savedLang || 'none'}<br>`;
+                
+                // Browser info
+                debug += `<strong>Navigator Language:</strong> ${navigator.language}<br>`;
+                debug += `<strong>Navigator Languages:</strong> ${navigator.languages ? navigator.languages.join(', ') : 'not available'}<br>`;
+            } else {
+                debug += '❌ App.I18n not available for debugging';
+            }
+            
+            document.getElementById('debug-info').innerHTML = debug;
+        }
+        
+        function copyCode() {
+            const code = document.getElementById('android-code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('Code copied to clipboard!');
+            }).catch(() => {
+                alert('Could not copy code. Please select and copy manually.');
+            });
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Manual Language Test page loaded');
+            
+            // Initialize i18n if available
+            if (window.App && window.App.I18n) {
+                window.App.I18n.init().then(() => {
+                    console.log('I18n initialized');
+                    checkSystem();
+                    updateTranslationTest();
+                }).catch(error => {
+                    console.error('I18n initialization error:', error);
+                    updateStatus('system-status', 'I18n initialization failed: ' + error.message, 'error');
+                });
+            } else {
+                setTimeout(() => {
+                    if (window.App && window.App.I18n) {
+                        window.App.I18n.init().then(() => {
+                            checkSystem();
+                            updateTranslationTest();
+                        });
+                    } else {
+                        updateStatus('system-status', 'App.I18n still not available after 1 second', 'error');
+                    }
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>

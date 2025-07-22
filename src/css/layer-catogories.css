@@ -1,0 +1,660 @@
+/* Consolidated Layer Categories CSS - All styles in one file */
+
+/* Override any parent styles that might prevent full width */
+#left4 {
+  overflow: hidden;
+}
+
+#left4 .sidebar-content {
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Remove any gaps in the sidebar structure */
+#left4 .sidebar-content > * {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* Ensure layer header is at the very top */
+#left4 .sidebar-content > .layer-list-header:first-child {
+  margin-top: 0 !important;
+}
+
+/* Layer header structure */
+.layer-list-header {
+  background: var(--geolantis-blue, #4682b4);
+  color: white;
+  padding: 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 !important;
+  margin-bottom: 0 !important; /* No gap after header */
+  position: relative; /* Ensure proper stacking */
+}
+
+/* Collapse/Expand button styling */
+.layer-list-header sl-button {
+  --sl-color-neutral-0: var(--sl-color-neutral-500) !important;
+  --sl-color-neutral-700: var(--sl-color-neutral-700) !important;
+  --sl-input-border-color: transparent !important;
+  background-color: var(--sl-color-neutral-200) !important;
+  color: var(--sl-color-neutral-700) !important;
+  border: 1px solid var(--sl-color-neutral-300) !important;
+  font-size: 12px !important;
+  padding: 4px 8px !important;
+  height: 22px !important;
+  min-width: 80px !important;
+  margin-left: auto;
+}
+
+.layer-list-header sl-button:hover {
+  background-color: var(--sl-color-neutral-300) !important;
+}
+
+.layer-list-title {
+  font-size: 18px;
+  font-weight: 500;
+  font-family: "Roboto", sans-serif;
+  text-align: left;
+}
+
+/* Search container - Full width, no padding */
+.search-container {
+  padding: 0;
+  margin: 0 !important;
+  margin-top: 0 !important; /* Ensure no gap from header */
+  margin-bottom: 0 !important;
+  background: white;
+  border-bottom: 1px solid var(--sl-color-neutral-200);
+  width: 100%;
+  box-sizing: border-box;
+  display: block;
+}
+
+.search-container sl-input {
+  width: 100%;
+  margin: 0 !important;
+  padding: 0;
+  --sl-input-spacing-medium: 0;
+  --sl-spacing-medium: 0;
+  display: block;
+}
+
+/* Remove any wrapper spacing */
+.search-container > * {
+  margin: 0 !important;
+}
+
+/* Remove any vertical spacing above/below search */
+.search-container + * {
+  margin-top: 0;
+}
+
+/* Layer controls header - Compact version */
+.lc-layer-controls-header {
+  position: relative;
+  padding: 0 16px; /* No vertical padding */
+  margin: 0;
+  margin-bottom: 0 !important; /* No gap before categories */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 24px; /* Maintain minimum height for controls */
+}
+.lc-layer-controls-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--sl-color-neutral-200);
+  margin: 0;
+}
+
+.lc-layer-controls-description {
+  font-size: 12px;
+  color: var(--sl-color-neutral-700);
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+/* Master controls positioning */
+.lc-layer-controls-master {
+  display: flex;
+  align-items: left;
+  gap: 18px;
+  margin-top: 0;
+  padding-left: 0;
+  margin-left: auto; /* Push to the right */
+  margin-right: 8px; /* Prevent overflow */
+  flex-shrink: 0;
+  width: 100px; /* Fixed width to match controls below */
+  justify-content: flex-end; /* Align items to the right */
+}
+
+.lc-master-control {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  gap: 4px;
+  width: 32px;
+  flex-shrink: 0;
+}
+
+.lc-control-label {
+  font-size: 11px;
+  color: var(--sl-color-neutral-900);
+  user-select: none;
+  text-align: center;
+}
+
+/* Container for all categories */
+#featureLayersContainer {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  margin-top: 0 !important; /* No gap from controls header */
+  padding-top: 0;
+  margin-right: 0;
+  padding-right: 8px; /* Prevent overflow */
+}
+
+/* Category styling */
+.lc-category {
+  border-bottom: 1px solid var(--sl-color-neutral-200);
+  width: 100%;
+  margin: 0;
+}
+
+/* Ensure no gap between header and first category */
+.lc-category:first-child {
+  margin-top: 0 !important;
+  padding-top: 0;
+}
+
+.lc-category-header {
+  background: var(--sl-color-neutral-50);
+  padding: 2px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  min-height: 28px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.lc-category-header:hover {
+  background: var(--sl-color-neutral-100);
+}
+
+.lc-category-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0; /* Prevent overflow */
+}
+
+.lc-category-name {
+  font-weight: 500;
+  font-size: 15px;
+  font-family: "Roboto", sans-serif;
+  margin-left: 0; /* Align with feature text */
+}
+
+/* Chevron icon styling */
+sl-icon[name="chevron-down"] {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+  transform: rotate(0deg); /* Default expanded state */
+}
+
+.lc-category:not(.expanded) sl-icon[name="chevron-down"] {
+  transform: rotate(-90deg);
+}
+
+/* Controls alignment */
+.lc-category-controls,
+.lc-feature-controls {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-left: auto;
+  flex-shrink: 0;
+  padding-right: 0; /* Prevent settings from overflowing */
+  width: 100px; /* Fixed width to ensure alignment */
+  justify-content: flex-end; /* Align items to the right */
+}
+
+.lc-checkbox-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+/* Feature items */
+.lc-feature-item {
+  padding: 2px 16px;
+  display: flex;
+  align-items: center;
+  background: white;
+  transition: background 0.2s;
+  min-height: 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.lc-feature-item:hover {
+  background: var(--sl-color-neutral-50);
+}
+
+.lc-feature-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0; /* Prevent overflow */
+}
+
+/* Add invisible spacer to align feature icon with chevron position */
+.lc-feature-content::before {
+  content: "";
+  width: 24px;
+  flex-shrink: 0;
+}
+
+.lc-feature-icon {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.lc-feature-icon.bitmap {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.lc-feature-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.lc-feature-name {
+  font-size: 14px;
+  color: var(--sl-color-neutral-900);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  width: 100%;
+  display: block;
+  text-align: left;
+}
+
+/* Icon styling */
+.lc-feature-icon.point {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid #333;
+}
+
+.lc-feature-icon.line {
+  width: 20px;
+  height: 4px;
+  background-color: #333;
+  border-radius: 2px;
+}
+
+.lc-feature-icon.polygon {
+  width: 18px;
+  height: 18px;
+  border: 3px solid #333;
+  border-radius: 4px;
+}
+
+/* Checkbox styling */
+sl-checkbox::part(base) {
+  --sl-input-height-small: 18px;
+}
+
+sl-checkbox::part(control) {
+  width: 18px;
+  height: 18px;
+  background-color: white !important;
+  border: 1px solid var(--sl-color-neutral-400) !important;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+/* Checked state */
+sl-checkbox[checked]::part(control) {
+  background-color: white !important;
+  border-color: var(--geolantis-blue, #4682b4) !important;
+}
+
+/* Hide default checkmark */
+sl-checkbox[checked] svg {
+  display: none !important;
+}
+
+/* Custom blue checkmark */
+sl-checkbox[checked]::part(control)::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 6px;
+  height: 10px;
+  border: solid var(--geolantis-blue, #4682b4);
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+  opacity: 1;
+}
+
+/* Settings button */
+sl-icon-button::part(base) {
+  height: 28px;
+  width: 28px;
+
+  align-items: center;
+  justify-content: center;
+  color: var(--sl-color-neutral-600);
+}
+
+sl-icon-button::part(base):hover {
+  color: var(--geolantis-blue);
+}
+
+/* Feature list expansion */
+.lc-feature-list {
+  display: none;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  width: 100%;
+}
+
+.lc-feature-list.expanded {
+  display: block;
+}
+
+/* Hide checkbox labels */
+.lc-checkbox-label {
+  display: none;
+}
+
+/* Global color variables */
+:root {
+  --geolantis-blue: #4682b4;
+}
+
+/* Chevron icon button for expand/collapse */
+.expand-collapse-button {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.expand-collapse-button sl-icon {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s ease;
+  color: var(--sl-color-neutral-600);
+}
+
+.expand-collapse-button:hover sl-icon {
+  color: var(--sl-color-neutral-700);
+}
+
+.expand-collapse-button.collapsed sl-icon {
+  transform: rotate(-90deg);
+}
+
+/* Remove old button part styles */
+
+/* Removed duplicate - see main header styling above */
+
+/* First category should have no top margin/padding */
+#featureLayersContainer > .lc-category:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+/* Header content alignment */
+.lc-layer-controls-header > div:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 8px;
+}
+
+/* Master controls positioning */
+
+.lc-layer-controls-master {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 0;
+  padding-left: 0;
+  margin-left: auto; /* Push to the right */
+  margin-right: 8px; /* Prevent overflow */
+  flex-shrink: 0;
+  width: 100px; /* Fixed width to match controls below */
+  justify-content: flex-end; /* Align items to the right */
+  padding-right: 0; /* Ensure exact alignment */
+}
+
+/* ───────────────────  ALIGNMENT FIXES  ─────────────────── */
+
+/* 1.  Let feature icons sit directly under the chevron
+      (we used an invisible spacer before – drop it)       */
+.lc-feature-content::before {
+  display: none; /* kill the spacer        */
+}
+
+/* 3.  Give every “controls” column the exact same width so
+            master, category and feature check-boxes line-up       */
+.lc-layer-controls-master,
+.lc-category-controls,
+.lc-feature-controls {
+  width: 96px; /* pick any number, just be identical   */
+  gap: 18px;
+  justify-content: flex-end;
+}
+
+/* Chevron button alignment */
+.expand-collapse-button {
+  margin-left: 0;
+}
+
+/* Removed duplicate - see main header styling above */
+
+/* 2.  Collapse-All button flush with the left padding     */
+
+/* ───── MASTER CHECKBOX STRIP  ─────────────────────────── */
+
+/* 3.  Make the two master check-boxes sit on the **same
+         x-axis** as every other row’s check-boxes           */
+.lc-layer-controls-master {
+  justify-content: flex-end; /* already set – keep */
+  gap: 18px; /* keep column gap */
+}
+
+/* add an invisible “gear” placeholder so the geometry
+     matches the  ( visible  –  select  –  gear )  pattern
+     used by every category / feature row                    */
+.lc-layer-controls-master::after {
+  content: "";
+  width:28px; /* same as .lc-checkbox-container */
+  height: 28px;
+  flex-shrink: 0;
+}
+
+/* Removed duplicate - see main header styling above */
+
+/* Remove spacing between header and first category */
+.lc-layer-controls-header + #featureLayersContainer {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+#featureLayersContainer {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+#featureLayersContainer .lc-category:first-child {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  border-top: none;
+}
+
+/* Ensure search container has no gaps */
+.layer-list-header + .search-container {
+  margin-top: 0 !important;
+}
+
+/* Direct sibling selector for immediate following */
+.layer-list-header + * {
+  margin-top: 0 !important;
+}
+
+/* Any element after layer header should have no top margin */
+.layer-list-header ~ * {
+  margin-top: 0;
+}
+
+/* Ensure controls header follows search with no gap */
+.search-container + .lc-layer-controls-header {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Remove any default spacing that might be inherited */
+#left4 .layer-list-header {
+  margin-bottom: 0 !important;
+}
+
+#left4 .search-container {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Handle any possible wrapper divs between header and search */
+.layer-list-header + div,
+.layer-list-header + * > .search-container {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Force adjacent sibling spacing to zero */
+.layer-list-header + *,
+.layer-list-header + * + *,
+.layer-list-header ~ .search-container {
+  margin-top: 0 !important;
+}
+
+/* Nuclear option - any div after header should have no top spacing */
+#left4 .layer-list-header ~ div {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+/* Ensure the search wrapper (if any) has no spacing */
+#left4 > div > .search-container,
+#left4 .sidebar-content > div > .search-container {
+  margin-top: 0 !important;
+}
+
+/* Remove old button styles since we're using chevron icon now */
+/* Old #expandCollapseAll styles removed */
+
+/* 3 ▸ Fix the 3-column grid (Visible / Select / Gear = 140 px) */
+.lc-layer-controls-master,
+.lc-category-controls,
+.lc-feature-controls {
+  min-width: 140px !important; /* ← matches layers.html   */
+  width: 140px !important;
+  gap: 18px !important;
+  justify-content: flex-end !important;
+}
+
+/* master check-box column uses same 32 px cell */
+.lc-master-control {
+  width: 28px !important;
+}
+
+/* enlarged gear like in the reference demo */
+.lc-category-controls sl-icon-button::part(base),
+.lc-feature-controls sl-icon-button::part(base) {
+  width: 36px !important;
+  height: 36px !important; /* ← was 32 × 32 */
+  background: var(--sl-color-neutral-100);
+  color: var(--sl-color-neutral-600);
+  border-radius: 50%;
+}
+
+/* Anything you DON’T want the user to highlight or copy */
+sl-checkbox::part(label),
+sl-switch::part(label),
+sl-radio::part(label),
+sl-toggle::part(label),
+.lc-control-label {
+  /* your own helper class */
+  user-select: none; /* modern browsers          */
+  -webkit-user-select: none; /* Safari / old-Chrome      */
+  -moz-user-select: none; /* Firefox (old syntax)     */
+  -ms-user-select: none; /* pre-Edge IE              */
+}
+
+.no-select {
+  user-select: none; /* modern browsers          */
+  -webkit-user-select: none; /* Safari & old-Chrome      */
+  -moz-user-select: none; /* old Firefox syntax       */
+  -ms-user-select: none; /* IE / early Edge          */
+}
+
+/* These two rows sometimes refuse to shrink in a flex layout
+   and end up wider than the sidebar → scrollbar. */
+.lc-category-header,
+.lc-feature-item {
+  min-width: 0; /* ← let them shrink to fit */
+}
+
+/* Optional: if long layer names are the culprit,
+      cut them off with “…” instead of stretching the row. */
+.lc-feature-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>StakeOut AI Debug Test</title>
+</head>
+<body>
+    <h1>StakeOut AI Enhancement Debug Test</h1>
+    <div id="status"></div>
+    <div id="log" style="font-family: monospace; white-space: pre; background: #f0f0f0; padding: 10px; margin: 10px 0;"></div>
+    
+    <button onclick="testEnhancement()">Test Enhancement</button>
+    <button onclick="checkStatus()">Check Status</button>
+    
+    <script>
+        const log = (msg) => {
+            const logDiv = document.getElementById('log');
+            logDiv.textContent += `[${new Date().toLocaleTimeString()}] ${msg}\n`;
+            console.log(msg);
+        };
+        
+        // Check initial state
+        log('Initial state:');
+        log(`  window.StakeOutUICompact exists: ${!!window.StakeOutUICompact}`);
+        log(`  window.StakeOutUIEnhanced exists: ${!!window.StakeOutUIEnhanced}`);
+        log(`  window.StakeOutAI exists: ${!!window.StakeOutAI}`);
+        
+        function testEnhancement() {
+            if (window.StakeOutAI && window.StakeOutAI.triggerEnhancement) {
+                log('Triggering enhancement...');
+                window.StakeOutAI.triggerEnhancement();
+                checkStatus();
+            } else {
+                log('ERROR: StakeOutAI not available');
+            }
+        }
+        
+        function checkStatus() {
+            log('\nChecking status:');
+            log(`  window.StakeOutUICompact exists: ${!!window.StakeOutUICompact}`);
+            log(`  window.StakeOutUIEnhanced exists: ${!!window.StakeOutUIEnhanced}`);
+            
+            if (window.StakeOutUICompact) {
+                log(`  StakeOutUICompact.name: ${window.StakeOutUICompact.name}`);
+            }
+            
+            if (window.StakeOutAI && window.StakeOutAI.getStatus) {
+                const status = window.StakeOutAI.getStatus();
+                log(`  Enhancement status: ${JSON.stringify(status, null, 2)}`);
+            }
+        }
+        
+        // Listen for console messages
+        const originalLog = console.log;
+        const originalError = console.error;
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            if (args[0] && typeof args[0] === 'string' && args[0].includes('[StakeOutAI]')) {
+                log('CONSOLE: ' + args.join(' '));
+            }
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            if (args[0] && typeof args[0] === 'string' && args[0].includes('[StakeOutAI]')) {
+                log('ERROR: ' + args.join(' '));
+            }
+        };
+    </script>
+</body>
+</html>

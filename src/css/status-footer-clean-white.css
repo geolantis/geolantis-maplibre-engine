@@ -1,0 +1,58 @@
+/* Clean White Theme Enhancement for Status Footer */
+
+/* Ensure proper shadow/halo effect on map */
+status-footer-mobile .theme-clean-white {
+    filter: drop-shadow(0 -2px 4px rgba(0, 0, 0, 0.3));
+}
+
+/* Enhanced text readability for clean-white theme */
+status-footer-mobile .theme-clean-white .status-bar-content {
+    background: linear-gradient(to bottom, 
+        rgba(0, 0, 0, 0.05) 0%, 
+        rgba(0, 0, 0, 0.1) 100%);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+}
+
+/* Ensure coordinates section has proper contrast */
+status-footer-mobile .theme-clean-white .coordinates-section {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Add subtle animation to expanded sections */
+status-footer-mobile .theme-clean-white .expanded-sections {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Improve button hover states */
+status-footer-mobile .theme-clean-white sl-button#toggle-expand::part(base):hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Ensure proper z-index layering */
+status-footer-mobile {
+    isolation: isolate;
+}
+
+/* Add responsive adjustments for mobile */
+@media (max-width: 768px) {
+    status-footer-mobile .theme-clean-white .coord-label {
+        font-size: 10px;
+    }
+    
+    status-footer-mobile .theme-clean-white .coord-value {
+        font-size: 14px;
+    }
+}
+
+/* Ensure expand/collapse animation is smooth */
+status-footer-mobile .expanded-sections {
+    will-change: transform, opacity, max-height;
+}
+
+/* Fix for Safari backdrop-filter */
+@supports (-webkit-backdrop-filter: blur(10px)) {
+    status-footer-mobile .theme-clean-white .expanded-sections {
+        -webkit-backdrop-filter: blur(10px) !important;
+    }
+}

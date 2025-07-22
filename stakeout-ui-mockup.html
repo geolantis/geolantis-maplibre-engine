@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stakeout UI Concept Mockup</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f0f0f0;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .mockup-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .mockup {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .device-frame {
+            position: relative;
+            background: #222;
+            padding: 20px;
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .device-screen {
+            flex: 1;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="600"><rect fill="%23e8f4f8" width="400" height="600"/><text x="50%" y="50%" text-anchor="middle" fill="%23999" font-size="24">Map View</text></svg>');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .mockup-title {
+            padding: 20px;
+            background: #f8f9fa;
+            font-weight: 600;
+            text-align: center;
+            color: #333;
+        }
+        
+        /* Widget demos */
+        .demo-widget {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Compact bottom widget */
+        .bottom-widget {
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 120px;
+            border-radius: 20px 20px 0 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .widget-handle {
+            height: 20px;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        
+        .handle-bar {
+            width: 40px;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+        }
+        
+        .nav-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            flex: 1;
+        }
+        
+        .distance-display {
+            font-size: 32px;
+            font-weight: bold;
+            color: #4682b4;
+        }
+        
+        .arrow-display {
+            width: 60px;
+            height: 60px;
+            background: #4682b4;
+            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2l-7 9h4v11h6V11h4z"/></svg>') center/contain no-repeat;
+            transform: rotate(45deg);
+        }
+        
+        .coord-display {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        /* Floating compass widget */
+        .compass-widget {
+            top: 100px;
+            right: 20px;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        
+        .compass-distance {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4682b4;
+        }
+        
+        .compass-arrow {
+            width: 40px;
+            height: 40px;
+            background: #4682b4;
+            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2l-4 9h3v11h2V11h3z"/></svg>') center/contain no-repeat;
+            margin-top: 10px;
+        }
+        
+        /* Top bar widget */
+        .topbar-widget {
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            height: 60px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            gap: 20px;
+        }
+        
+        .topbar-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* Landscape adjustments */
+        .landscape .device-frame {
+            min-height: 400px;
+        }
+        
+        .landscape .bottom-widget {
+            height: 80px;
+        }
+        
+        /* Feature comparison */
+        .comparison {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 40px;
+        }
+        
+        .comparison h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            font-weight: 600;
+            color: #666;
+        }
+        
+        .pro {
+            color: #22c55e;
+        }
+        
+        .con {
+            color: #ef4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧭 Stakeout UI Redesign Concepts</h1>
+        
+        <div class="mockup-grid">
+            <!-- Concept 1: Bottom Sheet -->
+            <div class="mockup">
+                <div class="mockup-title">Concept 1: Bottom Sheet (Recommended)</div>
+                <div class="device-frame">
+                    <div class="device-screen">
+                        <div class="demo-widget bottom-widget">
+                            <div class="widget-handle">
+                                <div class="handle-bar"></div>
+                            </div>
+                            <div class="nav-info">
+                                <div class="distance-display">15.34m</div>
+                                <div class="arrow-display"></div>
+                                <div class="coord-display">
+                                    X: 12.5m E<br>
+                                    Y: 8.9m N
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Concept 2: Floating Compass -->
+            <div class="mockup">
+                <div class="mockup-title">Concept 2: Floating Compass</div>
+                <div class="device-frame">
+                    <div class="device-screen">
+                        <div class="demo-widget compass-widget">
+                            <div class="compass-distance">15.3m</div>
+                            <div class="compass-arrow" style="transform: rotate(45deg)"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Concept 3: Top Bar -->
+            <div class="mockup">
+                <div class="mockup-title">Concept 3: Top Bar</div>
+                <div class="device-frame">
+                    <div class="device-screen">
+                        <div class="demo-widget topbar-widget">
+                            <div class="topbar-item">
+                                <span style="font-size: 20px; font-weight: bold;">15.34m</span>
+                            </div>
+                            <div class="topbar-item">
+                                <div style="width: 30px; height: 30px; background: #4682b4; mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2l-4 9h3v11h2V11h3z"/></svg>') center/contain no-repeat; transform: rotate(45deg);"></div>
+                            </div>
+                            <div class="topbar-item" style="margin-left: auto;">
+                                <span style="opacity: 0.7; font-size: 14px;">Segments</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Landscape Example -->
+            <div class="mockup">
+                <div class="mockup-title">Landscape Mode (Bottom Sheet)</div>
+                <div class="device-frame landscape">
+                    <div class="device-screen">
+                        <div class="demo-widget bottom-widget">
+                            <div class="nav-info">
+                                <div class="distance-display">15.34m</div>
+                                <div class="arrow-display"></div>
+                                <div class="coord-display">
+                                    X: 12.5m E | Y: 8.9m N
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comparison">
+            <h2>Feature Comparison</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Bottom Sheet</th>
+                        <th>Floating Compass</th>
+                        <th>Top Bar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Map Visibility</td>
+                        <td class="pro">✓ Good (bottom only)</td>
+                        <td class="pro">✓ Excellent</td>
+                        <td class="con">✗ May overlap controls</td>
+                    </tr>
+                    <tr>
+                        <td>Information Display</td>
+                        <td class="pro">✓ All info visible</td>
+                        <td class="con">✗ Limited space</td>
+                        <td>◐ Basic info only</td>
+                    </tr>
+                    <tr>
+                        <td>Touch Targets</td>
+                        <td class="pro">✓ Large & accessible</td>
+                        <td>◐ Draggable but small</td>
+                        <td>◐ Limited interaction</td>
+                    </tr>
+                    <tr>
+                        <td>Expandability</td>
+                        <td class="pro">✓ Swipe to expand</td>
+                        <td>◐ Tap to expand</td>
+                        <td class="con">✗ No expansion</td>
+                    </tr>
+                    <tr>
+                        <td>Landscape Support</td>
+                        <td class="pro">✓ Auto-adjusts height</td>
+                        <td class="pro">✓ Works well</td>
+                        <td>◐ May be too wide</td>
+                    </tr>
+                    <tr>
+                        <td>Mode Toggle Access</td>
+                        <td class="pro">✓ In expanded view</td>
+                        <td>◐ In expanded popup</td>
+                        <td>◐ Dropdown menu</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div style="background: #e8f4f8; padding: 30px; border-radius: 15px; margin-top: 30px;">
+            <h3>💡 Recommendation: Bottom Sheet Widget</h3>
+            <p><strong>Why it's the best choice:</strong></p>
+            <ul>
+                <li>✅ <strong>Familiar Pattern:</strong> Users know this UI pattern from maps apps</li>
+                <li>✅ <strong>Responsive:</strong> Works perfectly on all screen sizes</li>
+                <li>✅ <strong>Non-intrusive:</strong> Doesn't block important map areas</li>
+                <li>✅ <strong>Expandable:</strong> Swipe up for mode toggle and additional info</li>
+                <li>✅ <strong>Touch-friendly:</strong> Large touch targets for outdoor use</li>
+                <li>✅ <strong>Clean Design:</strong> Shows essential info without clutter</li>
+            </ul>
+            
+            <p><strong>Key Features:</strong></p>
+            <ul>
+                <li>📏 Large distance display with dynamic units (cm/m/km)</li>
+                <li>🧭 Rotating arrow pointing to target</li>
+                <li>📍 X/Y coordinate differences with direction indicators</li>
+                <li>🔄 Swipe gesture to expand/collapse</li>
+                <li>🎯 Mode toggle (Segments/Nodes) in expanded view</li>
+                <li>📱 Automatic height adjustment for landscape</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

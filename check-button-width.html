@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Button Width Diagnostic</title>
+    <style>
+        body { font-family: monospace; padding: 20px; }
+        .rule { margin: 10px 0; padding: 10px; background: #f0f0f0; }
+        .important { color: red; font-weight: bold; }
+        .width-rule { background: #ffe0e0; }
+    </style>
+</head>
+<body>
+    <h1>CSS Rules Affecting Button Width</h1>
+    <button onclick="checkButton()">Check "Toggle Kataster" Button</button>
+    <div id="results"></div>
+
+    <script>
+    function checkButton() {
+        // Find the Toggle Kataster button
+        const button = document.getElementById('toggleKataster');
+        if (!button) {
+            document.getElementById('results').innerHTML = '<p>Button not found!</p>';
+            return;
+        }
+
+        // Get computed styles
+        const computed = window.getComputedStyle(button);
+        const buttonPart = button.shadowRoot ? button.shadowRoot.querySelector('[part="base"]') : null;
+        const computedPart = buttonPart ? window.getComputedStyle(buttonPart) : null;
+
+        // Get all stylesheets
+        const stylesheets = Array.from(document.styleSheets);
+        
+        let results = '<h2>Button Analysis:</h2>';
+        
+        // Show actual dimensions
+        results += '<div class="rule width-rule">';
+        results += `<strong>Actual Width:</strong> ${button.offsetWidth}px<br>`;
+        results += `<strong>Computed Width:</strong> ${computed.width}<br>`;
+        results += `<strong>Computed Max-Width:</strong> ${computed.maxWidth}<br>`;
+        results += `<strong>Computed Min-Width:</strong> ${computed.minWidth}<br>`;
+        results += `<strong>Display:</strong> ${computed.display}<br>`;
+        results += `<strong>Box-Sizing:</strong> ${computed.boxSizing}<br>`;
+        results += '</div>';
+
+        // Check parent containers
+        results += '<h3>Parent Container Widths:</h3>';
+        let parent = button.parentElement;
+        let level = 0;
+        while (parent && level < 10) {
+            const parentComputed = window.getComputedStyle(parent);
+            results += '<div class="rule">';
+            results += `<strong>${parent.tagName}${parent.className ? '.' + parent.className : ''}${parent.id ? '#' + parent.id : ''}</strong><br>`;
+            results += `Width: ${parent.offsetWidth}px (computed: ${parentComputed.width})<br>`;
+            results += `Display: ${parentComputed.display}<br>`;
+            results += `Padding: ${parentComputed.padding}<br>`;
+            results += `Box-sizing: ${parentComputed.boxSizing}`;
+            results += '</div>';
+            parent = parent.parentElement;
+            level++;
+        }
+
+        // Check for max-width constraints
+        results += '<h3>Width Constraints in CSS:</h3>';
+        
+        // Check inline styles
+        if (button.style.cssText) {
+            results += '<div class="rule width-rule">';
+            results += '<strong>Inline Styles:</strong><br>' + button.style.cssText;
+            results += '</div>';
+        }
+
+        // Check all CSS rules
+        stylesheets.forEach((sheet, sheetIndex) => {
+            try {
+                const rules = sheet.cssRules || sheet.rules;
+                Array.from(rules).forEach((rule, ruleIndex) => {
+                    if (rule.selectorText) {
+                        // Check if this rule might apply to our button
+                        const selector = rule.selectorText.toLowerCase();
+                        if (selector.includes('button') || 
+                            selector.includes('overlaycontrols') ||
+                            selector.includes('controls') ||
+                            selector.includes('drawer') ||
+                            selector.includes('tooltip') ||
+                            selector.includes('#togglekataster')) {
+                            
+                            const styleText = rule.style.cssText;
+                            if (styleText.includes('width') || 
+                                styleText.includes('max-width') || 
+                                styleText.includes('min-width')) {
+                                
+                                results += '<div class="rule width-rule">';
+                                results += `<strong>File:</strong> ${sheet.href ? sheet.href.split('/').pop() : 'inline'}<br>`;
+                                results += `<strong>Selector:</strong> ${rule.selectorText}<br>`;
+                                results += `<strong>Style:</strong> ${styleText}`;
+                                if (styleText.includes('!important')) {
+                                    results += ' <span class="important">(!important found)</span>';
+                                }
+                                results += '</div>';
+                            }
+                        }
+                    }
+                });
+            } catch (e) {
+                // Some stylesheets might not be accessible due to CORS
+            }
+        });
+
+        document.getElementById('results').innerHTML = results;
+    }
+    </script>
+</body>
+</html>

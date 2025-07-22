@@ -1,0 +1,232 @@
+/* ===== mobile-drawer-fixes.css ===== */
+/* Comprehensive fixes for sl-drawer elements on mobile devices */
+
+/* ============================================
+   SAMSUNG GALAXY & ANDROID SPECIFIC FIXES
+   ============================================ */
+
+/* Samsung Galaxy S20/S21/S22 series (typical dimensions) */
+@media (max-width: 412px) and (min-height: 869px) and (max-height: 915px) {
+  sl-drawer[placement="start"]::part(panel),
+  sl-drawer[placement="end"]::part(panel) {
+    height: 78vh !important;
+    max-height: 78vh !important;
+    /* Account for Samsung's navigation bar and status bar */
+    margin-bottom: 0.75rem !important;
+  }
+}
+
+/* Samsung Galaxy Note series (larger screens) */
+@media (max-width: 414px) and (min-height: 890px) {
+  sl-drawer[placement="start"]::part(panel),
+  sl-drawer[placement="end"]::part(panel) {
+    height: 82vh !important;
+    max-height: 82vh !important;
+  }
+}
+
+/* Samsung Galaxy A series (mid-range devices) */
+@media (max-width: 412px) and (min-height: 732px) and (max-height: 869px) {
+  sl-drawer[placement="start"]::part(panel),
+  sl-drawer[placement="end"]::part(panel) {
+    height: 75vh !important;
+    max-height: 75vh !important;
+  }
+}
+
+/* ============================================
+   ANDROID VIEWPORT FIXES
+   ============================================ */
+
+/* Fix for Android's dynamic viewport height */
+@media (max-width: 768px) {
+  sl-drawer[placement="start"]::part(panel),
+  sl-drawer[placement="end"]::part(panel) {
+    /* Use viewport units that work better with Android's dynamic viewport */
+    height: 75svh !important; /* Small viewport height - fallback */
+    height: 75dvh !important; /* Dynamic viewport height - preferred */
+    max-height: 75dvh !important;
+  }
+}
+
+/* Fallback for older Android browsers without dvh support */
+@supports not (height: 1dvh) {
+  @media (max-width: 768px) {
+    sl-drawer[placement="start"]::part(panel),
+    sl-drawer[placement="end"]::part(panel) {
+      height: 75vh !important;
+      max-height: 75vh !important;
+    }
+  }
+}
+
+/* ============================================
+   PORTRAIT MODE OPTIMIZATIONS
+   ============================================ */
+
+@media (orientation: portrait) and (max-width: 768px) {
+  /* Ensure drawers properly center and don't cause horizontal scroll */
+  sl-drawer[placement="start"]::part(panel),
+  sl-drawer[placement="end"]::part(panel) {
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    /* Prevent content from extending beyond viewport */
+    max-width: calc(100vw - 1rem) !important;
+    /* Ensure proper bottom positioning */
+    bottom: 0 !important;
+    top: auto !important;
+  }
+  
+  /* Improve content scrolling in portrait */
+  sl-drawer .sidebar-content {
+    /* Better padding for portrait viewing */
+    padding: 1.5rem 1rem 1.5rem 1rem !important;
+    /* Ensure content doesn't get cut off */
+    max-height: calc(100% - 3rem) !important;
+  }
+}
+
+/* ============================================
+   ANDROID KEYBOARD HANDLING
+   ============================================ */
+
+/* When keyboard is open (viewport height changes significantly) */
+@media (max-width: 768px) and (max-height: 500px) {
+  sl-drawer[placement="start"]::part(panel),
+  sl-drawer[placement="end"]::part(panel) {
+    /* Reduce height when keyboard is open */
+    height: 60vh !important;
+    max-height: 60vh !important;
+    /* Ensure drawer doesn't get pushed off screen */
+    bottom: 0 !important;
+  }
+  
+  sl-drawer .sidebar-content {
+    /* Reduce padding when space is limited */
+    padding: 1rem 0.75rem !important;
+  }
+}
+
+/* ============================================
+   ANDROID EDGE-TO-EDGE SUPPORT
+   ============================================ */
+
+@media (max-width: 768px) {
+  sl-drawer[placement="start"]::part(panel),
+  sl-drawer[placement="end"]::part(panel) {
+    /* Account for Android's gesture navigation */
+    padding-bottom: env(safe-area-inset-bottom, 0.5rem) !important;
+    /* Account for display cutouts */
+    padding-left: env(safe-area-inset-left, 0) !important;
+    padding-right: env(safe-area-inset-right, 0) !important;
+  }
+}
+
+/* ============================================
+   ANDROID SPECIFIC TOUCH IMPROVEMENTS
+   ============================================ */
+
+@media (max-width: 768px) {
+  /* Better touch targets for Android devices */
+  sl-drawer sl-button,
+  sl-drawer sl-checkbox,
+  sl-drawer sl-radio,
+  sl-drawer sl-switch {
+    --sl-input-height-medium: 3rem !important;
+    --sl-spacing-medium: 1rem !important;
+  }
+  
+  /* Improve touch scrolling momentum */
+  sl-drawer .sidebar-content {
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: contain !important;
+    /* Android-specific smooth scrolling */
+    scroll-behavior: smooth !important;
+  }
+  
+  /* Better tap handling for Android */
+  sl-drawer *[role="button"],
+  sl-drawer button,
+  sl-drawer sl-button {
+    touch-action: manipulation !important;
+    /* Prevent double-tap zoom on Android */
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+  }
+}
+
+/* ============================================
+   ANDROID CHROME SPECIFIC FIXES
+   ============================================ */
+
+/* Fix for Chrome on Android address bar behavior */
+@media (max-width: 768px) {
+  @supports (-webkit-appearance: none) {
+    sl-drawer[placement="start"]::part(panel),
+    sl-drawer[placement="end"]::part(panel) {
+      /* Use screen height instead of viewport height for more stability */
+      height: 75vh !important;
+      max-height: 75vh !important;
+    }
+  }
+}
+
+/* ============================================
+   SAMSUNG INTERNET BROWSER FIXES
+   ============================================ */
+
+/* Samsung Internet has specific behaviors */
+@media (max-width: 768px) {
+  @supports (-webkit-appearance: none) and (display: -webkit-flex) {
+    sl-drawer .sidebar-content {
+      /* Samsung Internet scrolling fix */
+      overflow-y: scroll !important;
+      -webkit-overflow-scrolling: touch !important;
+    }
+  }
+}
+
+/* ============================================
+   HIGH DENSITY DISPLAY OPTIMIZATIONS
+   ============================================ */
+
+@media (max-width: 768px) and (min-resolution: 2dppx) {
+  sl-drawer::part(panel) {
+    /* Sharper rendering on high-DPI Android displays */
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+    /* Better border rendering */
+    border: 0.5px solid rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  /* Improve icon rendering */
+  sl-drawer sl-icon {
+    transform: translateZ(0) !important;
+    -webkit-font-smoothing: antialiased !important;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY IMPROVEMENTS FOR MOBILE
+   ============================================ */
+
+@media (max-width: 768px) {
+  /* Better focus indicators for mobile users using external keyboards */
+  sl-drawer *:focus-visible {
+    outline: 2px solid #4682b4 !important;
+    outline-offset: 2px !important;
+  }
+  
+  /* Larger text for better readability */
+  sl-drawer .sidebar-content {
+    font-size: 1rem !important;
+    line-height: 1.6 !important;
+  }
+  
+  /* Better contrast for mobile outdoor use */
+  sl-drawer::part(panel) {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+  }
+}

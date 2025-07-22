@@ -1,0 +1,122 @@
+/* ===== mobile-drawer-center-fix.css ===== */
+/* Ensures ALL drawers center properly on mobile devices */
+
+/* ============================================
+   FORCE MOBILE BOTTOM SHEET BEHAVIOR
+   ============================================ */
+
+@media (max-width: 768px) {
+  /* Reset any desktop positioning that might interfere */
+  sl-drawer[placement="start"]::part(base),
+  sl-drawer[placement="end"]::part(base) {
+    position: fixed !important;
+    inset: 0 !important;
+  }
+  
+  /* Force ALL drawers to behave as centered bottom sheets */
+  sl-drawer::part(panel) {
+    /* Reset any conflicting styles */
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    
+    /* Bottom sheet positioning */
+    position: fixed !important;
+    bottom: 0 !important;
+    top: auto !important;
+    
+    /* Consistent sizing */
+    width: 90vw !important;
+    max-width: 90vw !important;
+    min-width: 90vw !important;
+    height: 75vh !important;
+    max-height: 75vh !important;
+    
+    /* Visual styling */
+    border-radius: 1rem 1rem 0 0 !important;
+    box-shadow: 0 -0.25rem 1rem rgba(0, 0, 0, 0.4) !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    
+    /* Ensure it's on top */
+    z-index: 20001 !important;
+  }
+  
+  /* Specific targeting for stubborn drawers */
+  #left1-drawer::part(panel),
+  #left2-drawer::part(panel),
+  #left3-drawer::part(panel),
+  #left4-drawer::part(panel),
+  #left4a-drawer::part(panel) {
+    /* Force centering */
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    
+    /* Ensure consistent width */
+    width: 90vw !important;
+    max-width: 90vw !important;
+    min-width: 90vw !important;
+  }
+  
+  /* Handle drawer animations */
+  sl-drawer[placement="start"]::part(panel),
+  sl-drawer[placement="end"]::part(panel) {
+    /* Slide up from bottom animation */
+    transition: transform 0.25s ease-out !important;
+  }
+  
+  /* When drawer is closed */
+  sl-drawer:not([open])::part(panel) {
+    transform: translateX(-50%) translateY(100%) !important;
+  }
+  
+  /* When drawer is open */
+  sl-drawer[open]::part(panel) {
+    transform: translateX(-50%) translateY(0) !important;
+  }
+}
+
+/* ============================================
+   SMALL PHONE ADJUSTMENTS
+   ============================================ */
+
+@media (max-width: 480px) {
+  sl-drawer::part(panel) {
+    width: 95vw !important;
+    max-width: 95vw !important;
+    min-width: 95vw !important;
+    height: 85vh !important;
+    max-height: 85vh !important;
+  }
+}
+
+/* ============================================
+   LANDSCAPE ADJUSTMENTS
+   ============================================ */
+
+@media (orientation: landscape) and (max-height: 600px) {
+  sl-drawer::part(panel) {
+    height: 70vh !important;
+    max-height: 70vh !important;
+  }
+}
+
+/* ============================================
+   SAMSUNG GALAXY SPECIFIC
+   ============================================ */
+
+@media (max-width: 412px) {
+  /* Ensure proper centering on Galaxy devices */
+  sl-drawer::part(panel) {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: calc(100vw - 1rem) !important;
+    max-width: calc(100vw - 1rem) !important;
+  }
+  
+  sl-drawer[open]::part(panel) {
+    transform: translateX(-50%) translateY(0) !important;
+  }
+}

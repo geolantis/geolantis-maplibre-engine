@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I18n Translation Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .language-selector {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+        .test-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .test-item {
+            margin: 10px 0;
+            padding: 8px;
+            background: #f9f9f9;
+        }
+        .key {
+            font-weight: bold;
+            color: #666;
+        }
+        .value {
+            color: #333;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            background: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        button.active {
+            background: #2196F3;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <h1>MapLibre I18n Translation Test</h1>
+    
+    <div class="language-selector">
+        <h2>Language Selection</h2>
+        <button onclick="changeLanguage('en')" id="btn-en">English</button>
+        <button onclick="changeLanguage('de')" id="btn-de">Deutsch</button>
+        <button onclick="changeLanguage('es')" id="btn-es">Español</button>
+        <button onclick="changeLanguage('fr')" id="btn-fr">Français</button>
+        <button onclick="changeLanguage('it')" id="btn-it">Italiano</button>
+        <div id="status" class="status" style="display: none;"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>UI Tab Labels</h3>
+        <div class="test-item">
+            <span class="key">ui.tabs.layers:</span>
+            <span class="value" data-i18n="ui.tabs.layers">Layers</span>
+        </div>
+        <div class="test-item">
+            <span class="key">ui.tabs.basemaps:</span>
+            <span class="value" data-i18n="ui.tabs.basemaps">Basemaps</span>
+        </div>
+        <div class="test-item">
+            <span class="key">ui.tabs.bookmarks:</span>
+            <span class="value" data-i18n="ui.tabs.bookmarks">Bookmarks</span>
+        </div>
+        <div class="test-item">
+            <span class="key">ui.tabs.settings:</span>
+            <span class="value" data-i18n="ui.tabs.settings">Settings</span>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Layer Controls</h3>
+        <div class="test-item">
+            <span class="key">ui.layers.featureLayers:</span>
+            <span class="value" data-i18n="ui.layers.featureLayers">Feature Layers</span>
+        </div>
+        <div class="test-item">
+            <span class="key">ui.layers.visible:</span>
+            <span class="value" data-i18n="ui.layers.visible">Visible</span>
+        </div>
+        <div class="test-item">
+            <span class="key">ui.layers.searchPlaceholder:</span>
+            <input type="text" placeholder="Search feature classes..." data-i18n-placeholder="ui.layers.searchPlaceholder">
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Settings</h3>
+        <div class="test-item">
+            <span class="key">ui.settings.mapRotation:</span>
+            <span class="value" data-i18n="ui.settings.mapRotation">Map Rotation</span>
+        </div>
+        <div class="test-item">
+            <span class="key">ui.settings.accuracyCircle:</span>
+            <span class="value" data-i18n="ui.settings.accuracyCircle">Accuracy Circle</span>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Messages</h3>
+        <div class="test-item">
+            <span class="key">messages.loading:</span>
+            <span class="value" data-i18n="messages.loading">Loading...</span>
+        </div>
+        <div class="test-item">
+            <span class="key">messages.noOfflineMaps:</span>
+            <span class="value" data-i18n="messages.noOfflineMaps">No offline maps available</span>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h3>JavaScript Translation Test</h3>
+        <div class="test-item">
+            <span class="key">Current Language:</span>
+            <span class="value" id="current-lang">en</span>
+        </div>
+        <div class="test-item">
+            <span class="key">JS Translation Test:</span>
+            <span class="value" id="js-translation">-</span>
+        </div>
+    </div>
+
+    <!-- Include the i18n manager -->
+    <script src="src/i18n/i18n-manager.js"></script>
+    
+    <script>
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            App.I18n.init().then(() => {
+                console.log('I18n initialized');
+                updateStatus('I18n manager initialized successfully', 'success');
+                updateCurrentLanguage();
+                testJsTranslation();
+            }).catch(error => {
+                console.error('I18n initialization error:', error);
+                updateStatus('Error initializing I18n: ' + error.message, 'error');
+            });
+        });
+        
+        function changeLanguage(lang) {
+            updateStatus('Changing language to ' + lang + '...', 'success');
+            
+            App.I18n.setLanguage(lang).then(() => {
+                updateStatus('Language changed to ' + lang, 'success');
+                updateActiveButton(lang);
+                updateCurrentLanguage();
+                testJsTranslation();
+            }).catch(error => {
+                updateStatus('Error changing language: ' + error.message, 'error');
+            });
+        }
+        
+        function updateActiveButton(lang) {
+            document.querySelectorAll('button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById('btn-' + lang).classList.add('active');
+        }
+        
+        function updateStatus(message, type) {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.style.display = 'block';
+            statusEl.className = 'status ' + type;
+        }
+        
+        function updateCurrentLanguage() {
+            document.getElementById('current-lang').textContent = App.I18n.getLanguage();
+        }
+        
+        function testJsTranslation() {
+            // Test JavaScript translation
+            const translation = App.I18n.t('ui.bookmarks.empty');
+            document.getElementById('js-translation').textContent = translation;
+        }
+        
+        // Simulate Android bridge call
+        function simulateAndroidCall() {
+            if (window.bridge && window.bridge.setLanguage) {
+                window.bridge.setLanguage('de');
+            }
+        }
+    </script>
+</body>
+</html>

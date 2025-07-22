@@ -1,0 +1,19 @@
+{
+  "name": "g360maps",
+  "buildCommand": "",
+  "outputDirectory": ".",
+  "installCommand": "npm install",
+  "framework": null,
+  "public": false,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    }
+  ]
+}

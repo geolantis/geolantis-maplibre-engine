@@ -1,0 +1,69 @@
+/* Hide UI elements during initialization to prevent flash of unstyled content */
+
+/* Hide feature layers container until properly initialized */
+#featureLayersContainer {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s;
+}
+
+/* Hide basemap and overlay lists until initialized */
+#baselayers-list,
+#overlays-list,
+#basemap-layers-container,
+#basemap-controls {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s;
+}
+
+/* Hide drawers until they're properly set up */
+sl-drawer[id$="-drawer"]:not(.initialized) {
+    visibility: hidden;
+}
+
+/* Class to show elements after initialization */
+.ui-initialized #featureLayersContainer,
+.ui-initialized #baselayers-list,
+.ui-initialized #overlays-list,
+.ui-initialized #basemap-layers-container,
+.ui-initialized #basemap-controls {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out, visibility 0s linear;
+}
+
+/* Show drawers when initialized */
+sl-drawer[id$="-drawer"].initialized {
+    visibility: visible;
+}
+
+/* Prevent any content flash during drawer setup */
+.sidebar-content:not(.ready) {
+    opacity: 0;
+}
+
+.sidebar-content.ready {
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+}
+
+/* Hide layer controls during initialization */
+.lc-layer-controls-header,
+.lc-category,
+.basemap-item {
+    opacity: 0;
+    animation: fadeIn 0.2s ease-in-out forwards;
+    animation-delay: 0.1s;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+/* Ensure smooth transition when elements become visible */
+.categories-container {
+    min-height: 100px; /* Prevent layout shift */
+}

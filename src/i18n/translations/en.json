@@ -1,0 +1,243 @@
+{
+  "ui": {
+    "tabs": {
+      "layers": "Layers",
+      "basemaps": "Basemaps",
+      "overlays": "Overlays",
+      "offlineMaps": "Offline Maps",
+      "bookmarks": "Bookmarks",
+      "settings": "Settings",
+      "tools": "Tools"
+    },
+    "layers": {
+      "title": "Layers",
+      "featureLayers": "Feature Layers",
+      "visible": "Visible",
+      "select": "Select",
+      "search": "Search",
+      "searchPlaceholder": "Search feature classes...",
+      "collapseAll": "Collapse all categories",
+      "expandAll": "Expand all categories",
+      "showHideLayer": "Show/hide layer",
+      "downloadLayer": "Download layer"
+    },
+    "bookmarks": {
+      "title": "Bookmarks",
+      "empty": "No bookmarks saved yet",
+      "dragToReorder": "Drag to reorder",
+      "goToBookmark": "Go to bookmark",
+      "deleteBookmark": "Delete bookmark",
+      "bookmarkPrefix": "Bookmark"
+    },
+    "settings": {
+      "mapSettings": "Map Settings",
+      "mapRotation": "Map Rotation",
+      "rotateWithCompass": "Rotate with compass",
+      "allowPitch": "Allow Pitch",
+      "background": "Background",
+      "accuracyCircle": "Accuracy Circle",
+      "layerSettings": "Layer Settings",
+      "backgroundTransparency": "Background Transparency",
+      "backgroundTransparencyDesc": "Adjust the transparency of background layers",
+      "uiSettings": "UI Settings",
+      "zoomControl": "Zoom control",
+      "showScale": "Show scale",
+      "metricUnits": "Metric units",
+      "displaySettings": "Display Settings",
+      "enableStatusBar": "Enable Status Bar",
+      "statusBarHeight": {
+        "ultraThin": "Ultra Thin (28px)",
+        "compact": "Compact (32px)",
+        "normal": "Normal (40px)"
+      },
+      "buttonSize": {
+        "label": "Button Size",
+        "small": "Small",
+        "medium": "Medium",
+        "large": "Large",
+        "extraLarge": "Extra Large"
+      },
+      "colorTheme": {
+        "label": "Color Theme",
+        "light": "Light",
+        "geolantis": "Geolantis",
+        "glow": "Glow",
+        "trans": "Trans",
+        "black": "Black",
+        "white": "White"
+      },
+      "threeDBuilding": "3D Building",
+      "resetBasemap": "Reset to Default Basemap"
+    },
+    "tools": {
+      "measurementModes": "Measurement Modes",
+      "toggleMeasurementDesc": "Toggle measurement modes on/off. Changes take effect when measurement tool is restarted.",
+      "modes": {
+        "point": "Point",
+        "line": "Line",
+        "polygon": "Polygon",
+        "rectangle": "Rectangle",
+        "circle": "Circle",
+        "sector": "Sector",
+        "sensor": "Sensor",
+        "freehand": "Freehand"
+      }
+    },
+    "statusBar": {
+      "statusBar": "Status Bar",
+      "latitude": "Latitude",
+      "longitude": "Longitude",
+      "altitude": "Altitude",
+      "accuracy": "Accuracy",
+      "gps": "GPS",
+      "gnss": "GNSS",
+      "fix": "Fix",
+      "status": "Status",
+      "coordinates": "Coordinates",
+      "speed": "Speed",
+      "heading": "Heading",
+      "satellites": "Satellites",
+      "deviceName": "Device Name",
+      "time": "Time",
+      "battery": "Battery"
+    }
+  },
+  "measurement": {
+    "enableSnapping": "Enable Snapping",
+    "disableSnapping": "Disable Snapping",
+    "units": {
+      "meters": "m",
+      "kilometers": "km",
+      "feet": "ft",
+      "miles": "mi",
+      "squareMeters": "m²",
+      "squareKilometers": "km²",
+      "hectares": "ha"
+    }
+  },
+  "featureInfo": {
+    "title": "Feature Info",
+    "unnamedFeature": "Unnamed Feature",
+    "noDescription": "No description available",
+    "unknown": "Unknown",
+    "noAdditionalAttributes": "No additional attributes available",
+    "noProperties": "No properties available for this feature",
+    "geometryTypes": {
+      "point": "Point",
+      "line": "Line",
+      "polygon": "Polygon"
+    }
+  },
+  "stakeout": {
+    "navigationMode": "Navigation Mode",
+    "nodes": "Nodes",
+    "lines": "Lines",
+    "segments": "Segments",
+    "totalDistance": "Total: {{distance}} m"
+  },
+  "messages": {
+    "loading": "Loading...",
+    "error": "Error",
+    "errorLoadingMap": "Error loading map",
+    "couldNotSavePreference": "Could not save preference",
+    "noDataAvailable": "No data available",
+    "noOfflineMaps": "No offline maps available",
+    "addOfflineMapsHint": "Add .mbtiles or .pmtiles files to enable offline mode",
+    "confirmDelete": "Are you sure you want to delete this feature?"
+  },
+  "contextMenu": {
+    "mapActions": "Map Actions",
+    "selectFeature": "Select Feature",
+    "manualCollection": "Manual Collection",
+    "construct": "Construct",
+    "measure": "Measure",
+    "selectedFeature": "Selected Feature",
+    "objectInfo": "Object Info",
+    "editCoordinates": "Edit Coordinates",
+    "stakeOutPoint": "Stake-Out Point",
+    "stakeOutLine": "Stake-Out Line",
+    "move": "Move",
+    "moveManually": "Move Manually",
+    "delete": "Delete",
+    "nodeOperations": "Node Operations",
+    "deleteNode": "Delete Node",
+    "insertNode": "Insert Node"
+  },
+  "radialMenu": {
+    "select": "Select",
+    "collect": "Collect",
+    "construct": "Construct",
+    "measure": "Measure",
+    "info": "Info",
+    "stake": "Stake",
+    "edit": "Edit",
+    "line": "Line",
+    "editSubmenu": "Edit",
+    "move": "Move",
+    "moveManual": "Move Manual",
+    "delete": "Delete",
+    "node": "Node",
+    "deleteNode": "Delete Node",
+    "insertNode": "Insert Node"
+  },
+  "measurementTool": {
+    "measureArea": "Measure area",
+    "measureLength": "Measure length",
+    "clearMeasurements": "Clear measurements"
+  },
+  "statusFooter": {
+    "connectionTypes": {
+      "wifi": "WiFi",
+      "bluetooth": "Bluetooth",
+      "ble": "BLE",
+      "usb": "USB",
+      "connectorApp": "ConnectorApp"
+    },
+    "locatorModels": {
+      "vLoc3RTKPro": "vLoc3 RTK Pro",
+      "rd8200sg": "RD8200SG",
+      "rd8200": "RD8200",
+      "vLoc3": "vLoc3",
+      "leicaUltra": "Leica Ultra"
+    },
+    "rtkStatus": {
+      "fix": " FIX",
+      "float": " FLOAT"
+    },
+    "prefixes": {
+      "ntrip": "NTRIP: ",
+      "rtcm": "RTCM: "
+    }
+  },
+  "stakeoutAlerts": {
+    "featureTypeNotSupported": {
+      "title": "Feature Type Not Supported",
+      "message": "Stake Out currently only supports polygons..."
+    },
+    "noFeatureSelected": {
+      "title": "No Feature Selected",
+      "message": "Please select a polygon feature on the map before starting Stake Out."
+    },
+    "stakeOutStarted": {
+      "title": "Stake Out Started",
+      "message": "Navigation to selected {{featureType}} has started. Follow the directional arrows."
+    },
+    "stakeOutStopped": {
+      "title": "Stake Out Stopped",
+      "message": "Navigation has been stopped."
+    }
+  },
+  "presets": {
+    "button": "Presets",
+    "managePresets": "Manage Presets",
+    "savePreset": "Save Preset",
+    "presetName": "Preset Name",
+    "layerPresets": "Layer Presets",
+    "uiPresets": "UI Presets"
+  },
+  "kataster": {
+    "toggle": "Toggle Kataster",
+    "toggleBEV": "Toggle Kataster BEV",
+    "toggleGray": "Toggle Kataster Gray"
+  }
+}

@@ -1,0 +1,148 @@
+/* Sidebar Header Styling */
+
+/* Import responsive variables */
+@import 'responsive-variables.css';
+
+/* ============================================
+   DRAWER STRUCTURE
+   ============================================ */
+
+/* Remove default drawer padding */
+sl-drawer::part(panel) {
+  padding: 0;
+}
+
+sl-drawer::part(body) {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+}
+
+sl-drawer::part(header) {
+  display: none; /* Hidden since using no-header attribute */
+}
+
+/* ============================================
+   SIDEBAR CONTENT STRUCTURE
+   ============================================ */
+
+sl-drawer .sidebar-content {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ============================================
+   HEADER STYLING
+   ============================================ */
+
+/* Style headers with consistent positioning */
+sl-drawer .sidebar-content > h3 {
+  background: #4682b4;
+  color: white;
+  padding: var(--spacing-md, 0.75rem) 0;
+  text-align: center;
+  font-size: var(--font-lg, 1.2rem);
+  font-weight: 500;
+  margin: 0 0 var(--spacing-lg, 1rem) 0;
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+/* First child header has no top margin */
+sl-drawer .sidebar-content > h3:first-child {
+  margin-top: 0;
+}
+
+/* Left sidebars have rounded corners only on the right */
+sl-drawer[id^="left"] .sidebar-content > h3 {
+  border-top-right-radius: 1rem;
+}
+
+/* Right sidebars have rounded corners only on the left */
+sl-drawer[id^="right"] .sidebar-content > h3 {
+  border-top-left-radius: 1rem;
+}
+
+/* Hide all br elements */
+sl-drawer .sidebar-content > br {
+  display: none;
+}
+
+/* ============================================
+   TAB GROUP FIXES
+   ============================================ */
+
+sl-drawer sl-tab-group {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: row !important;
+  overflow: hidden !important;
+}
+
+sl-drawer sl-tab-panel {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow-x: hidden !important;
+  box-sizing: border-box !important;
+}
+
+/* ============================================
+   SPECIFIC DRAWER FIXES
+   ============================================ */
+
+/* Left4 drawer specific fixes */
+sl-drawer#left4-drawer .sidebar-content {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+sl-drawer#left4-drawer .sidebar-content > h3 {
+  margin: 0 0 var(--spacing-lg, 1rem) 0 !important;
+  padding: var(--spacing-md, 0.75rem) 0 !important;
+}
+
+/* Remove any top padding/margin from first elements */
+sl-drawer#left4-drawer .sidebar-content > *:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+/* Search container spacing */
+sl-drawer#left4-drawer .search-container {
+  margin-top: 0;
+  padding-top: var(--spacing-md, 0.75rem);
+  padding-left: var(--spacing-lg, 1rem);
+  padding-right: var(--spacing-lg, 1rem);
+}
+
+/* Layer controls header spacing */
+sl-drawer#left4-drawer .lc-layer-controls-header {
+  margin-top: var(--spacing-md, 0.75rem);
+  padding-left: var(--spacing-lg, 1rem);
+  padding-right: var(--spacing-lg, 1rem);
+}
+
+/* Categories container spacing */
+sl-drawer#left4-drawer .categories-container {
+  margin-top: var(--spacing-md, 0.75rem);
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 var(--spacing-lg, 1rem);
+}
+
+/* Force remove any pseudo-elements */
+sl-drawer#left4-drawer .sidebar-content::before {
+  display: none !important;
+}

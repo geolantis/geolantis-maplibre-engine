@@ -1,0 +1,48 @@
+/* Status Footer Positioning Fix */
+
+/* Ensure the mobile status footer is properly positioned */
+status-footer-mobile {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 1000 !important;
+    pointer-events: auto !important;
+}
+
+/* Legacy ultra-thin footer positioning (for compatibility) */
+status-footer-ultrathin {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 1000 !important;
+    pointer-events: auto !important;
+}
+
+/* Adjust map container to account for footer */
+#map {
+    /* Do not add padding-bottom, let the footer overlay the map */
+    position: relative;
+    z-index: 1;
+}
+
+
+/* Ensure stake button is positioned correctly */
+#G360StakeButtonControl {
+    bottom: 55px !important;
+}
+
+.footer-expanded #G360StakeButtonControl {
+    bottom: 250px !important;
+}
+
+/* Old status footer should be completely hidden */
+status-footer:not(.mobile):not(.ultrathin) {
+    display: none !important;
+}
+
+/* Ensure the footer stays on top of map controls */
+.maplibregl-control-container {
+    z-index: 999;
+}

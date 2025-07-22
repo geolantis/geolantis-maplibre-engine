@@ -1,0 +1,33 @@
+/* Terrain Control Styles */
+
+.maplibregl-ctrl-terrain,
+.maplibregl-ctrl-terrain-enabled {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+}
+
+.maplibregl-ctrl-terrain svg,
+.maplibregl-ctrl-terrain-enabled svg {
+  width: 20px;
+  height: 20px;
+  stroke: #333;
+}
+
+.maplibregl-ctrl-terrain:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.maplibregl-ctrl-terrain-enabled {
+  background-color: rgba(70, 130, 180, 0.2);
+}
+
+.maplibregl-ctrl-terrain-enabled svg {
+  stroke: #4682b4;
+}

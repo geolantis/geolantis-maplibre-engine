@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test StatusFooter Expand</title>
+</head>
+<body>
+    <h1>StatusFooter Expand Test</h1>
+    
+    <button onclick="testExpand()">Test Expand/Collapse</button>
+    <button onclick="checkState()">Check State</button>
+    <button onclick="forceExpand()">Force Expand</button>
+    <button onclick="debugFooter()">Debug Footer</button>
+    
+    <div id="output"></div>
+    
+    <!-- Load components -->
+    <script src="src/ui/status-footer-ultrathin.js"></script>
+    <script src="src/bridge/status-footer-ultrathin-bridge.js"></script>
+    
+    <script>
+        let footer;
+        
+        // Wait for DOM
+        setTimeout(() => {
+            // Create footer
+            footer = document.createElement('status-footer-ultrathin');
+            document.body.appendChild(footer);
+            
+            // Initialize bridge
+            window.ultraThinFooterBridge.initialize(footer);
+            
+            // Configure
+            window.ultraThinFooterBridge.configure({
+                behavior: {
+                    expandOnTap: true,
+                    swipeToExpand: true
+                }
+            });
+            
+            console.log('Footer initialized');
+        }, 100);
+        
+        function testExpand() {
+            if (footer) {
+                footer.toggleExpanded();
+                console.log('Toggled expanded state');
+            }
+        }
+        
+        function checkState() {
+            if (footer) {
+                const output = document.getElementById('output');
+                const expanded = footer.shadowRoot.querySelector('.expanded-sections');
+                const hasVisible = expanded ? expanded.classList.contains('visible') : false;
+                
+                output.innerHTML = `
+                    <p>Footer exists: ${!!footer}</p>
+                    <p>isExpanded: ${footer.isExpanded}</p>
+                    <p>Expanded element exists: ${!!expanded}</p>
+                    <p>Has visible class: ${hasVisible}</p>
+                    <p>Expanded styles: ${expanded ? window.getComputedStyle(expanded).maxHeight : 'N/A'}</p>
+                `;
+            }
+        }
+        
+        function forceExpand() {
+            if (footer) {
+                const expanded = footer.shadowRoot.querySelector('.expanded-sections');
+                if (expanded) {
+                    expanded.classList.add('visible');
+                    expanded.style.maxHeight = '300px';
+                    expanded.style.opacity = '1';
+                    console.log('Forced expansion');
+                }
+            }
+        }
+        
+        function debugFooter() {
+            if (footer) {
+                console.log('Footer config:', footer.config);
+                console.log('Footer data:', footer.data);
+                console.log('Shadow root:', footer.shadowRoot);
+                
+                const expanded = footer.shadowRoot.querySelector('.expanded-sections');
+                console.log('Expanded element:', expanded);
+                console.log('Expanded innerHTML:', expanded ? expanded.innerHTML : 'N/A');
+            }
+        }
+    </script>
+</body>
+</html>

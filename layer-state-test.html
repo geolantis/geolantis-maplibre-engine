@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layer State Management Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #333;
+        }
+        .test-section {
+            background: #f5f5f5;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .console-output {
+            background: #000;
+            color: #0f0;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 12px;
+            height: 200px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+        button {
+            background: #4682b4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #5a91c3;
+        }
+        .info-box {
+            background: #e8f4f8;
+            border-left: 4px solid #4682b4;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        code {
+            background: #f0f0f0;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Layer State Management Test</h1>
+    
+    <div class="info-box">
+        <h2>What this module does:</h2>
+        <p>The <code>App.Map.Layers.State</code> module manages the persistence of layer visibility and UI state across sidebar toggles:</p>
+        <ul>
+            <li>Saves layer visibility (checked/unchecked) states</li>
+            <li>Saves category expansion states</li>
+            <li>Saves search input values</li>
+            <li>Saves master checkbox states</li>
+            <li>Automatically saves when the sidebar is closed</li>
+            <li>Automatically restores when the sidebar is opened</li>
+            <li>Persists state to localStorage for up to 24 hours</li>
+        </ul>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test Layer State Functions</h2>
+        <button onclick="testSaveState()">Save Current State</button>
+        <button onclick="testRestoreState()">Restore State</button>
+        <button onclick="testClearState()">Clear All States</button>
+        <button onclick="testGetState()">Show Current State</button>
+        <button onclick="clearConsole()">Clear Console</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>Console Output</h2>
+        <div id="console" class="console-output"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>How to Test in the Main Application</h2>
+        <ol>
+            <li>Open the main application (index.html)</li>
+            <li>Click the layers button (left sidebar, button 2) to open the Feature Layers panel</li>
+            <li>Toggle some layer visibility checkboxes on/off</li>
+            <li>Expand/collapse some categories</li>
+            <li>Enter a search term in the search box</li>
+            <li>Close the sidebar</li>
+            <li>Open the sidebar again - all states should be restored!</li>
+        </ol>
+        
+        <h3>Debug Commands (run in browser console):</h3>
+        <pre>
+// View current state
+App.Map.Layers.State.getState()
+
+// Manually save state
+App.Map.Layers.State.saveState()
+
+// Manually restore state
+App.Map.Layers.State.restoreState()
+
+// Clear all saved states
+App.Map.Layers.State.clearState()
+
+// Check localStorage
+localStorage.getItem('geo360_layer_states')
+        </pre>
+    </div>
+    
+    <script>
+        // Console output helper
+        function log(message) {
+            const console = document.getElementById('console');
+            const timestamp = new Date().toLocaleTimeString();
+            console.innerHTML += `[${timestamp}] ${message}\n`;
+            console.scrollTop = console.scrollHeight;
+        }
+        
+        function clearConsole() {
+            document.getElementById('console').innerHTML = '';
+            log('Console cleared');
+        }
+        
+        // Test functions
+        function testSaveState() {
+            log('Testing save state...');
+            
+            // Simulate some state
+            const testState = {
+                layers: [
+                    ['layer1', { visible: true, selectable: false }],
+                    ['layer2', { visible: false, selectable: true }]
+                ],
+                categories: [
+                    ['Buildings', { visible: true, expanded: true }],
+                    ['Roads', { visible: false, expanded: false }]
+                ],
+                search: { value: 'test search', active: true }
+            };
+            
+            // Save to localStorage
+            localStorage.setItem('geo360_layer_states', JSON.stringify({
+                ...testState,
+                timestamp: new Date().toISOString()
+            }));
+            
+            log('State saved to localStorage');
+            log('Saved data: ' + JSON.stringify(testState, null, 2));
+        }
+        
+        function testRestoreState() {
+            log('Testing restore state...');
+            
+            const savedData = localStorage.getItem('geo360_layer_states');
+            if (savedData) {
+                const parsed = JSON.parse(savedData);
+                log('Restored data: ' + JSON.stringify(parsed, null, 2));
+            } else {
+                log('No saved state found');
+            }
+        }
+        
+        function testClearState() {
+            log('Clearing all states...');
+            localStorage.removeItem('geo360_layer_states');
+            log('State cleared from localStorage');
+        }
+        
+        function testGetState() {
+            log('Getting current state from localStorage...');
+            const savedData = localStorage.getItem('geo360_layer_states');
+            if (savedData) {
+                const parsed = JSON.parse(savedData);
+                log('Current state:');
+                log('- Layers: ' + (parsed.layers ? parsed.layers.length : 0));
+                log('- Categories: ' + (parsed.categories ? parsed.categories.length : 0));
+                log('- Search: ' + JSON.stringify(parsed.search));
+                log('- Timestamp: ' + parsed.timestamp);
+                log('Full data: ' + JSON.stringify(parsed, null, 2));
+            } else {
+                log('No state found in localStorage');
+            }
+        }
+        
+        // Initialize
+        clearConsole();
+        log('Layer State Management Test Page Loaded');
+        log('This page demonstrates the layer state persistence functionality');
+    </script>
+</body>
+</html>

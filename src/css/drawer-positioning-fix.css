@@ -1,0 +1,179 @@
+/* Drawer positioning fix to ensure drawers appear above StatusFooter and map controls */
+
+/* ============================================
+   Z-INDEX HIERARCHY
+   ============================================ */
+/* 
+   StatusFooter: z-index: 1000
+   Some elements: z-index: 10000
+   Drawers need to be above everything: z-index: 20000+
+*/
+
+/* ============================================
+   ALL DRAWERS - Z-INDEX FIX
+   ============================================ */
+sl-drawer::part(overlay) {
+  z-index: 20000 !important; /* Above all other elements */
+}
+
+sl-drawer::part(panel) {
+  z-index: 20001 !important; /* Panel above overlay */
+}
+
+/* More specific targeting for left drawers */
+sl-drawer[placement="start"]::part(overlay) {
+  z-index: 20000 !important;
+}
+
+sl-drawer[placement="start"]::part(panel) {
+  z-index: 20001 !important;
+}
+
+/* Override Shoelace's internal CSS custom properties */
+sl-drawer {
+  --sl-z-index-drawer: 20000 !important;
+}
+
+/* ============================================
+   RIGHT DRAWERS - FULL HEIGHT
+   ============================================ */
+#right1-drawer,
+#right2-drawer {
+  height: 100vh !important;
+}
+
+#right1-drawer::part(panel),
+#right2-drawer::part(panel) {
+  position: fixed !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  right: 0 !important;
+}
+
+#right1-drawer::part(body),
+#right2-drawer::part(body) {
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow-y: auto !important;
+}
+
+/* Ensure right2 drawer content fills the height */
+#right2-drawer .sidebar-content {
+  height: 100vh !important;
+  max-height: 100vh !important;
+}
+
+/* ============================================
+   LEFT DRAWERS - ENSURE PROPER Z-INDEX
+   ============================================ */
+/* Override CSS custom properties for left drawers */
+#left1-drawer,
+#left2-drawer,
+#left3-drawer,
+#left4-drawer,
+#left4a-drawer {
+  --sl-z-index-drawer: 20000 !important;
+}
+
+/* Target overlay by ID */
+#left1-drawer::part(overlay),
+#left2-drawer::part(overlay),
+#left3-drawer::part(overlay),
+#left4-drawer::part(overlay),
+#left4a-drawer::part(overlay) {
+  z-index: 20000 !important;
+}
+
+/* Target panel by ID */
+#left1-drawer::part(panel),
+#left2-drawer::part(panel),
+#left3-drawer::part(panel),
+#left4-drawer::part(panel),
+#left4a-drawer::part(panel) {
+  z-index: 20001 !important;
+}
+
+/* Also target by placement attribute for better coverage */
+sl-drawer[placement="start"]::part(overlay) {
+  z-index: 20000 !important;
+}
+
+sl-drawer[placement="start"]::part(panel) {
+  z-index: 20001 !important;
+  position: fixed !important;
+}
+
+/* Ensure left drawers appear above StatusFooter even in mobile views */
+sl-drawer[placement="start"][open]::part(panel) {
+  z-index: 20001 !important;
+}
+
+/* ============================================
+   ARROW CONTAINER SPECIFIC ADJUSTMENTS
+   ============================================ */
+#arrow-container {
+  height: 100vh !important;
+  max-height: 100vh !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding: var(--spacing-lg, 1rem) 0;
+  box-sizing: border-box;
+}
+
+/* ============================================
+   AGGRESSIVE Z-INDEX FIXES
+   ============================================ */
+/* Force all drawer overlays and panels above StatusFooter */
+sl-drawer {
+  --sl-z-index-drawer: 20000 !important;
+}
+
+/* Ensure drawer host elements have proper stacking context */
+sl-drawer[placement="start"] {
+  z-index: 20000 !important;
+  position: relative !important;
+}
+
+/* Target shadow DOM parts more specifically */
+sl-drawer[placement="start"]::part(base) {
+  z-index: 20000 !important;
+}
+
+/* ============================================
+   MOBILE RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+  /* Ensure drawers still appear above StatusFooter on mobile */
+  sl-drawer::part(overlay) {
+    z-index: 20000 !important;
+  }
+  
+  sl-drawer::part(panel) {
+    z-index: 20001 !important;
+  }
+  
+  /* Mobile-specific placement="start" fixes */
+  sl-drawer[placement="start"]::part(overlay) {
+    z-index: 20000 !important;
+  }
+  
+  sl-drawer[placement="start"]::part(panel) {
+    z-index: 20001 !important;
+  }
+}
+
+/* ============================================
+   OPTIONAL: Hide status footer when drawers are open
+   ============================================ */
+/* Uncomment this section if you want to hide the status footer when drawers are open
+body:has(sl-drawer[open]) status-footer-ultrathin,
+body:has(sl-drawer[open]) status-footer-mobile,
+body:has(sl-drawer[open]) status-footer {
+  visibility: hidden;
+  transition: visibility 0.3s ease;
+}
+*/

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MapLibre Language Initialization Debug Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .status-box {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            background-color: #fafafa;
+        }
+        .status-ok {
+            border-color: #28a745;
+            background-color: #d4edda;
+        }
+        .status-error {
+            border-color: #dc3545;
+            background-color: #f8d7da;
+        }
+        .status-warning {
+            border-color: #ffc107;
+            background-color: #fff3cd;
+        }
+        .test-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .test-button:hover {
+            background-color: #0056b3;
+        }
+        .log-output {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .section {
+            margin: 20px 0;
+        }
+        .section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>MapLibre Language Initialization Debug Test</h1>
+        <p>This page helps debug why the MapLibre language initialization is not working properly.</p>
+        
+        <div class="section">
+            <h3>Test Controls</h3>
+            <button class="test-button" onclick="runQuickTest()">Run Quick Test</button>
+            <button class="test-button" onclick="testLanguageSetting()">Test Language Setting</button>
+            <button class="test-button" onclick="clearLog()">Clear Log</button>
+            <button class="test-button" onclick="simulateAndroidCall()">Simulate Android Call</button>
+        </div>
+        
+        <div class="section">
+            <h3>System Status</h3>
+            <div id="status-container">
+                <div class="status-box">
+                    <strong>Status:</strong> <span id="overall-status">Checking...</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h3>Debug Log</h3>
+            <div id="log-output" class="log-output">
+                Debug log will appear here...
+            </div>
+        </div>
+        
+        <div class="section">
+            <h3>Test Results</h3>
+            <div id="test-results">
+                <div class="status-box">
+                    Results will appear here after running tests...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include necessary scripts -->
+    <script src="https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.js"></script>
+    <script src="src/mapconfig.js"></script>
+    <script src="src/app.js"></script>
+    <script src="src/map/app.map.init.js"></script>
+    
+    <!-- Include i18n system -->
+    <script src="src/i18n/i18n-manager.js"></script>
+    
+    <!-- Include debug scripts -->
+    <script src="debug-initialization-flow.js"></script>
+    <script src="quick-debug-test.js"></script>
+    
+    <script>
+        let logOutput = '';
+        
+        // Override console.log to capture output
+        const originalLog = console.log;
+        console.log = function(...args) {
+            const message = args.map(arg => 
+                typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
+            ).join(' ');
+            
+            logOutput += new Date().toLocaleTimeString() + ': ' + message + '\n';
+            updateLogDisplay();
+            
+            // Call original console.log
+            originalLog.apply(console, args);
+        };
+        
+        function updateLogDisplay() {
+            const logElement = document.getElementById('log-output');
+            logElement.textContent = logOutput;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+        
+        function clearLog() {
+            logOutput = '';
+            updateLogDisplay();
+        }
+        
+        function runQuickTest() {
+            console.log('🔍 Running Quick Debug Test...');
+            
+            try {
+                const results = quickDebugTest();
+                updateTestResults(results);
+                updateStatus(results);
+            } catch (error) {
+                console.error('Error running quick test:', error);
+                updateStatus({ error: error.message });
+            }
+        }
+        
+        function testLanguageSetting() {
+            console.log('🧪 Testing Language Setting...');
+            
+            if (typeof App !== 'undefined' && App.I18n && App.I18n.setLanguage) {
+                try {
+                    console.log('Setting language to German (de)...');
+                    App.I18n.setLanguage('de');
+                    console.log('✅ Language setting successful');
+                    
+                    if (App.I18n.getLanguage) {
+                        const currentLang = App.I18n.getLanguage();
+                        console.log('Current language:', currentLang);
+                    }
+                } catch (error) {
+                    console.error('❌ Language setting failed:', error);
+                }
+            } else {
+                console.error('❌ App.I18n.setLanguage not available');
+            }
+        }
+        
+        function simulateAndroidCall() {
+            console.log('📱 Simulating Android call...');
+            
+            // Simulate the Android bridge
+            if (typeof Android === 'undefined') {
+                console.log('Creating mock Android object...');
+                window.Android = {
+                    onCallback: function(action, data) {
+                        console.log('Mock Android.onCallback called:', action, data);
+                    },
+                    receiveData: function(data) {
+                        console.log('Mock Android.receiveData called:', data);
+                    },
+                    log: function(message) {
+                        console.log('Mock Android.log called:', message);
+                    }
+                };
+            }
+            
+            // Simulate the language setting call
+            const jsCall = "if (typeof App !== 'undefined' && App.I18n) { " +
+                "console.log('Setting MapLibre language to: de'); " +
+                "App.I18n.setLanguage('de'); " +
+                "console.log('Language set successfully'); " +
+                "} else { " +
+                "console.error('App.I18n not available for language setting'); " +
+                "}";
+            
+            console.log('Executing JavaScript call:', jsCall);
+            
+            try {
+                eval(jsCall);
+            } catch (error) {
+                console.error('Error executing JavaScript:', error);
+            }
+        }
+        
+        function updateTestResults(results) {
+            const container = document.getElementById('test-results');
+            
+            let html = '<div class="status-box">';
+            html += '<h4>Test Results</h4>';
+            html += '<p><strong>Timestamp:</strong> ' + results.timestamp + '</p>';
+            
+            // Engine detection
+            html += '<p><strong>Engine Type:</strong> ' + 
+                (results.engineDetection.currentUrl.includes('engine_ml') ? 'MAPLIBRE' : 'LEAFLET') + '</p>';
+            
+            // I18n system
+            html += '<p><strong>I18n System:</strong> ' + 
+                (results.i18nSystem.i18nNamespace ? '✅ Available' : '❌ Not Available') + '</p>';
+            
+            // Android bridge
+            html += '<p><strong>Android Bridge:</strong> ' + 
+                (results.androidBridge.androidObject ? '✅ Available' : '❌ Not Available') + '</p>';
+            
+            // Map instance
+            html += '<p><strong>Map Instance:</strong> ' + 
+                (results.mapInstance.mapReady ? '✅ Ready' : '❌ Not Ready') + '</p>';
+            
+            // Recommendations
+            if (results.recommendations.length > 0) {
+                html += '<h5>Issues Found:</h5>';
+                html += '<ul>';
+                results.recommendations.forEach(rec => {
+                    html += '<li><strong>' + rec.severity + ':</strong> ' + rec.issue + ' - ' + rec.solution + '</li>';
+                });
+                html += '</ul>';
+            }
+            
+            html += '</div>';
+            container.innerHTML = html;
+        }
+        
+        function updateStatus(results) {
+            const statusElement = document.getElementById('overall-status');
+            const statusContainer = document.getElementById('status-container');
+            
+            if (results.error) {
+                statusElement.textContent = 'Error: ' + results.error;
+                statusContainer.className = 'status-box status-error';
+            } else if (results.recommendations && results.recommendations.length > 0) {
+                const criticalCount = results.recommendations.filter(r => r.severity === 'CRITICAL').length;
+                if (criticalCount > 0) {
+                    statusElement.textContent = 'Critical issues found (' + criticalCount + ')';
+                    statusContainer.className = 'status-box status-error';
+                } else {
+                    statusElement.textContent = 'Minor issues found';
+                    statusContainer.className = 'status-box status-warning';
+                }
+            } else {
+                statusElement.textContent = 'System appears to be working correctly';
+                statusContainer.className = 'status-box status-ok';
+            }
+        }
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Debug test page loaded');
+            
+            // Run initial test after a short delay
+            setTimeout(function() {
+                console.log('Running initial system check...');
+                runQuickTest();
+            }, 1000);
+        });
+        
+        // Also run test when everything is loaded
+        window.addEventListener('load', function() {
+            console.log('Page fully loaded, running comprehensive test...');
+            runQuickTest();
+        });
+    </script>
+</body>
+</html>

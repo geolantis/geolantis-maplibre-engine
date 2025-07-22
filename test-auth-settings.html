@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Authentication Settings Test</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0/dist/themes/light.css" />
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0/dist/shoelace.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        /* Authentication Settings Styles */
+        .auth-settings {
+            padding: 20px;
+        }
+        
+        .auth-settings h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .auth-settings h4 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--sl-color-neutral-700);
+        }
+        
+        .auth-section {
+            margin-bottom: 20px;
+        }
+        
+        .auth-control-group {
+            margin-bottom: 15px;
+        }
+        
+        .auth-control-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--sl-color-neutral-700);
+        }
+        
+        .token-input-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .auth-button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .auth-status {
+            padding: 15px;
+            border-radius: 8px;
+            background-color: var(--sl-color-neutral-50);
+            border: 1px solid var(--sl-color-neutral-200);
+            margin-bottom: 20px;
+        }
+        
+        .status-display {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 5px;
+        }
+        
+        .status-display sl-icon {
+            flex-shrink: 0;
+        }
+        
+        .last-tested {
+            font-size: 12px;
+            color: var(--sl-color-neutral-600);
+            font-style: italic;
+        }
+        
+        .auth-info {
+            padding-top: 15px;
+            border-top: 1px solid var(--sl-color-neutral-200);
+        }
+        
+        .auth-info .info-text {
+            font-size: 12px;
+            color: var(--sl-color-neutral-600);
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-settings">
+        <h3>Authentication Settings Test</h3>
+        
+        <div class="auth-section">
+            <h4>Tools Access Token</h4>
+            
+            <div class="auth-control-group">
+                <label for="auth-token-input">Access Token</label>
+                <div class="token-input-container">
+                    <sl-input 
+                        id="auth-token-input" 
+                        type="password" 
+                        placeholder="Enter your tools access token..."
+                        clearable
+                        size="medium"
+                        style="flex: 1;">
+                    </sl-input>
+                    <sl-button 
+                        id="toggle-token-visibility" 
+                        variant="outline" 
+                        size="medium" 
+                        style="margin-left: 8px;">
+                        <sl-icon name="eye"></sl-icon>
+                    </sl-button>
+                </div>
+            </div>
+            
+            <div class="auth-button-group">
+                <sl-button 
+                    id="save-test-token-btn" 
+                    variant="primary" 
+                    size="medium"
+                    disabled>
+                    <sl-icon slot="prefix" name="check-circle"></sl-icon>
+                    Save & Test
+                </sl-button>
+                <sl-button 
+                    id="clear-token-btn" 
+                    variant="outline" 
+                    size="medium">
+                    <sl-icon slot="prefix" name="trash"></sl-icon>
+                    Clear
+                </sl-button>
+            </div>
+            
+            <sl-divider></sl-divider>
+            
+            <div id="auth-status-container" class="auth-status" style="display: none;">
+                <div class="status-display">
+                    <sl-icon id="auth-status-icon" name="info-circle"></sl-icon>
+                    <span id="auth-status-text">Ready to test connection</span>
+                </div>
+                <div id="auth-last-tested" class="last-tested"></div>
+            </div>
+            
+            <div class="auth-info">
+                <p class="info-text">
+                    <strong>What is this?</strong><br>
+                    The tools access token allows the map engine to connect to your geospatial platform and access your data layers, overlays, and other platform-specific features.
+                </p>
+                <p class="info-text">
+                    <strong>How to get a token:</strong><br>
+                    Contact your platform administrator or check your account settings for API access tokens.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- App namespace setup -->
+    <script>
+        window.App = window.App || {};
+        window.App.UI = window.App.UI || {};
+    </script>
+    
+    <!-- Load our auth settings module -->
+    <script src="src/ui/app.ui.auth-settings.js"></script>
+    
+    <!-- Initialize the module -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Initializing auth settings...');
+            if (App.UI.AuthSettings && typeof App.UI.AuthSettings.initialize === 'function') {
+                App.UI.AuthSettings.initialize();
+                console.log('Auth settings initialized successfully');
+            } else {
+                console.error('Auth settings module not found');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GLRM Tilt Widget Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #1a1a1a;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        #map {
+            width: 100%;
+            height: 400px;
+            background: #333;
+            border: 1px solid #555;
+        }
+        .controls {
+            margin-top: 20px;
+            padding: 20px;
+            background: #2a2a2a;
+            border-radius: 8px;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .info {
+            margin-top: 10px;
+            padding: 10px;
+            background: #333;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>GLRM Tilt Widget Test</h1>
+    <div id="map"></div>
+    
+    <div class="controls">
+        <h3>Widget Controls</h3>
+        <button onclick="initializeWidget()">Initialize Widget</button>
+        <button onclick="showWidget()">Show Widget</button>
+        <button onclick="hideWidget()">Hide Widget</button>
+        <button onclick="testWidget()">Test Widget</button>
+        <button onclick="updateTiltData()">Update Tilt Data</button>
+        <button onclick="simulateGLRMEnable()">Enable GLRM Tilt</button>
+        <button onclick="simulateGLRMDisable()">Disable GLRM Tilt</button>
+        
+        <div class="info">
+            <h4>Console Output</h4>
+            <div id="console-output"></div>
+        </div>
+    </div>
+
+    <!-- Load the App framework -->
+    <script>
+        // Mock App framework structure
+        window.App = {
+            UI: {},
+            Core: {
+                Events: {
+                    trigger: function(event, data) {
+                        console.log('[Events] Trigger:', event, data);
+                    },
+                    on: function(event, callback) {
+                        console.log('[Events] On:', event);
+                    }
+                },
+                State: {
+                    get: function(key) {
+                        return localStorage.getItem(key) ? JSON.parse(localStorage.getItem(key)) : null;
+                    },
+                    set: function(key, value) {
+                        localStorage.setItem(key, JSON.stringify(value));
+                    }
+                }
+            }
+        };
+
+        // Mock console output to display on page
+        const originalConsoleLog = console.log;
+        console.log = function(...args) {
+            originalConsoleLog.apply(console, args);
+            const output = document.getElementById('console-output');
+            if (output) {
+                output.innerHTML += args.join(' ') + '<br>';
+                output.scrollTop = output.scrollHeight;
+            }
+        };
+    </script>
+
+    <!-- Load the TiltDisplayWidget -->
+    <script src="src/ui/TiltDisplayWidget.js"></script>
+
+    <script>
+        // Test functions
+        function initializeWidget() {
+            console.log('=== Initializing Widget ===');
+            App.UI.TiltDisplayWidget.initialize();
+        }
+
+        function showWidget() {
+            console.log('=== Showing Widget ===');
+            App.UI.TiltDisplayWidget.showWidget();
+        }
+
+        function hideWidget() {
+            console.log('=== Hiding Widget ===');
+            App.UI.TiltDisplayWidget.hideWidget();
+        }
+
+        function testWidget() {
+            console.log('=== Testing Widget ===');
+            App.UI.TiltDisplayWidget.testWidget();
+        }
+
+        function updateTiltData() {
+            console.log('=== Updating Tilt Data ===');
+            const angle = Math.random() * 30;
+            const azimuth = Math.random() * 360;
+            const status = ['active', 'calibrating', 'inactive'][Math.floor(Math.random() * 3)];
+            App.UI.TiltDisplayWidget.updateTiltData(angle, azimuth, status);
+        }
+
+        function simulateGLRMEnable() {
+            console.log('=== Simulating GLRM Enable ===');
+            App.UI.TiltDisplayWidget.setTiltCompensationEnabled(true);
+            App.UI.TiltDisplayWidget.showWidget();
+        }
+
+        function simulateGLRMDisable() {
+            console.log('=== Simulating GLRM Disable ===');
+            App.UI.TiltDisplayWidget.setTiltCompensationEnabled(false);
+            App.UI.TiltDisplayWidget.hideWidget();
+        }
+
+        // Auto-initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('=== Page Loaded - Auto-initializing widget ===');
+            initializeWidget();
+        });
+    </script>
+</body>
+</html>

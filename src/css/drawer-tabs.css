@@ -1,0 +1,406 @@
+/* Vertical tabs styling for drawers */
+
+/* Import responsive variables */
+@import 'responsive-variables.css';
+
+/* ============================================
+   DRAWER BASE STYLES
+   ============================================ */
+
+/* Drawer sizing */
+#left1-drawer,
+#left2-drawer,
+#left3-drawer,
+#left4a-drawer {
+  height: 100vh !important;
+  --size: 350px; /* Width of drawer */
+}
+
+/* Drawer panel positioning */
+sl-drawer[placement="start"]::part(panel) {
+  position: fixed !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+}
+
+/* Drawer body setup */
+sl-drawer[placement="start"]::part(body) {
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow-y: auto !important;
+}
+
+/* ============================================
+   TAB GROUP STYLING
+   ============================================ */
+
+/* Tab group layout */
+sl-tab-group[placement="start"] {
+  height: 100vh;
+  display: flex;
+  width: 100% !important;
+  overflow: hidden !important;
+}
+
+/* Tab navigation styling */
+sl-tab-group[placement="start"]::part(nav) {
+  flex: 0 0 auto !important;
+  min-width: var(--button-size-lg, 4rem);
+  width: var(--button-size-lg, 4rem);
+  max-width: var(--button-size-lg, 4rem);
+  align-items: flex-start;
+  background-color: #f5f8fa;
+  border-right: 1px solid #e1e4e8;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 0 !important; /* Remove padding from nav */
+}
+
+/* Tab body area */
+sl-tab-group::part(body) {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: auto;
+  box-sizing: border-box;
+  width: 100% !important;
+  padding: 0 !important;
+}
+
+/* ============================================
+   TAB STYLING
+   ============================================ */
+
+/* Individual tabs */
+sl-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+}
+
+sl-tab::part(base) {
+  padding: var(--spacing-sm, 0.5rem);
+  margin: var(--spacing-xs, 0.25rem) var(--spacing-sm, 0.5rem);
+  border-radius: var(--spacing-sm, 0.5rem);
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--button-size-md, 3rem);
+  height: var(--button-size-md, 3rem);
+}
+
+sl-tab::part(base):hover {
+  background-color: rgba(70, 130, 180, 0.1);
+}
+
+sl-tab[active]::part(base) {
+  background-color: rgba(70, 130, 180, 0.2);
+}
+
+/* Tab icons */
+sl-tab sl-icon {
+  font-size: var(--font-xl, 1.75rem);
+  color: #4682b4;
+  display: block;
+}
+
+sl-tab[active] sl-icon {
+  color: #004d99;
+}
+
+sl-icon::part(base) {
+  outline: none;
+}
+
+/* ============================================
+   TAB PANEL STYLING
+   ============================================ */
+
+sl-tab-panel {
+  --padding: 0;
+  height: 100vh;
+  overflow: hidden;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+sl-tab-panel::part(base) {
+  padding: var(--spacing-md, 0.75rem);
+  box-sizing: border-box;
+  width: 100% !important;
+}
+
+/* Target all dynamically generated tab panels */
+[id^="sl-tab-panel-"] {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* ============================================
+   CONTENT STYLING
+   ============================================ */
+
+/* Sidebar content container */
+.sidebar-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Special handling for drawers with tabs - remove padding */
+#left1-drawer .sidebar-content,
+#left2-drawer .sidebar-content {
+  padding: 0 !important;
+}
+
+/* Drawer headers */
+.drawer-header {
+  padding: var(--spacing-lg, 1rem);
+  text-align: center;
+  border-bottom: 1px solid #e1e4e8;
+}
+
+.drawer-header h3 {
+  margin: 0;
+  color: #4682b4;
+  font-family: "Roboto", sans-serif;
+  font-size: var(--font-lg, 1.125rem);
+  font-weight: 500;
+}
+
+/* Section headers within panels */
+sl-tab-panel > h3 {
+  margin: 0;
+  padding: var(--spacing-sm, 0.5rem) var(--spacing-md, 0.75rem);
+  font-size: var(--font-base, 1rem);
+  color: #4682b4;
+  font-weight: 500;
+}
+
+/* Controls container */
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm, 0.5rem);
+  width: 100%;
+  align-items: stretch; /* Changed from flex-start to stretch */
+  padding: 0; /* Remove padding from controls container */
+  box-sizing: border-box;
+}
+
+/* Add padding to individual control items instead */
+.controls > *:not(.overlaycontrols) {
+  padding: var(--spacing-sm, 0.5rem) var(--spacing-md, 0.75rem);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Ensure overlaycontrols inside controls has no padding */
+.controls > .overlaycontrols {
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Specific styles for left4a-drawer */
+#left4a-drawer .sidebar-content {
+  align-items: stretch !important;
+  padding: 15px !important;
+}
+
+#left4a-drawer .controls {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: var(--spacing-sm, 0.5rem) !important;
+  padding: 0 !important;
+}
+
+#left4a-drawer .controls sl-button {
+  width: 100% !important;
+  margin: 0 0 var(--spacing-sm, 0.5rem) 0 !important;
+}
+
+#left4a-drawer .controls sl-tooltip {
+  width: 100% !important;
+  display: block !important;
+}
+
+#left4a-drawer .controls sl-tooltip sl-button {
+  width: 100% !important;
+}
+
+/* ============================================
+   SPECIFIC COMPONENT STYLING
+   ============================================ */
+
+/* Toggle switches */
+sl-switch {
+  width: 100%;
+  background: white;
+  transition: background-color 0.2s;
+  border-radius: var(--spacing-xs, 0.25rem);
+}
+
+sl-switch:hover {
+  background-color: var(--sl-color-neutral-50);
+}
+
+sl-switch::part(base) {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-md, 0.75rem);
+}
+
+sl-switch::part(label) {
+  font-size: var(--font-sm, 0.875rem);
+  color: #333;
+  text-align: left;
+  flex-grow: 1;
+}
+
+sl-switch::part(control) {
+  margin-left: auto;
+  position: relative;
+}
+
+/* Labels */
+sl-label {
+  font-size: var(--font-sm, 0.875rem);
+  color: #333;
+  margin-bottom: var(--spacing-xs, 0.25rem);
+  display: block;
+  text-align: left;
+}
+
+/* Settings sections */
+.settings-label {
+  font-weight: bold;
+  margin: var(--spacing-md, 0.75rem) 0 var(--spacing-sm, 0.5rem) 0;
+  text-align: left;
+  display: block;
+}
+
+.settings-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--spacing-sm, 0.5rem);
+  width: 100%;
+}
+
+.settings-buttons button {
+  flex: 1;
+  padding: var(--spacing-sm, 0.5rem);
+  border: 1px solid #ccc;
+  background: white;
+  border-radius: var(--spacing-xs, 0.25rem);
+  cursor: pointer;
+  font-size: var(--font-sm, 0.875rem);
+  transition: all 0.2s;
+}
+
+.settings-buttons button:hover {
+  background-color: #f0f0f0;
+}
+
+.settings-buttons button.active {
+  background: #e0e0e0;
+  font-weight: bold;
+  border-color: #4682b4;
+}
+
+/* Overlay controls */
+.overlaycontrols {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm, 0.5rem);
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0; /* Ensure no padding */
+}
+
+.overlaycontrols sl-button {
+  width: 100%;
+  margin: 0;
+}
+
+.overlaycontrols sl-button::part(base) {
+  width: 100%;
+  justify-content: flex-start;
+  text-align: left;
+  padding: var(--spacing-sm, 0.5rem) var(--spacing-md, 0.75rem);
+  background-color: rgba(70, 130, 180, 0.1);
+  color: #4682b4;
+  border: 1px solid rgba(70, 130, 180, 0.3);
+}
+
+.overlaycontrols sl-button::part(base):hover {
+  background-color: rgba(70, 130, 180, 0.2);
+}
+
+/* Placeholder content */
+.placeholder-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #6c757d;
+  font-family: "Roboto", sans-serif;
+}
+
+.placeholder-content sl-icon {
+  font-size: var(--font-2xl, 3rem);
+  color: #4682b4;
+  margin-bottom: var(--spacing-lg, 1rem);
+}
+
+/* Measurement controls */
+.measurement-modes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.measurement-modes sl-switch {
+  font-size: 14px;
+}
+
+.info-text {
+  font-size: 12px;
+  color: var(--sl-color-neutral-600);
+  margin: 12px 0;
+  line-height: 1.4;
+}
+
+h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 12px 0 8px 0;
+  color: var(--sl-color-neutral-900);
+}
+
+/* ============================================
+   MOBILE RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+  #left1-drawer,
+  #left2-drawer,
+  #left3-drawer,
+  #left4a-drawer {
+    --size: 300px !important;
+  }
+}

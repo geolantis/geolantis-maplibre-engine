@@ -1,0 +1,267 @@
+{
+  "ui": {
+    "tabs": {
+      "layers": "Ebenen",
+      "basemaps": "Basiskarten",
+      "overlays": "Overlays",
+      "offlineMaps": "Offline-Karten",
+      "bookmarks": "Lesezeichen",
+      "settings": "Einstellungen",
+      "tools": "Werkzeuge"
+    },
+    "layers": {
+      "title": "Ebenen",
+      "featureLayers": "Feature-Ebenen",
+      "visible": "Sichtbar",
+      "select": "Auswählen",
+      "search": "Suche",
+      "searchPlaceholder": "Feature-Klassen suchen...",
+      "collapseAll": "Alle Kategorien einklappen",
+      "expandAll": "Alle Kategorien ausklappen",
+      "showHideLayer": "Ebene ein-/ausblenden",
+      "downloadLayer": "Ebene herunterladen"
+    },
+    "bookmarks": {
+      "title": "Lesezeichen",
+      "empty": "Noch keine Lesezeichen gespeichert",
+      "dragToReorder": "Ziehen zum Neuanordnen",
+      "goToBookmark": "Zum Lesezeichen gehen",
+      "deleteBookmark": "Lesezeichen löschen",
+      "bookmarkPrefix": "Lesezeichen"
+    },
+    "settings": {
+      "mapSettings": "Karteneinstellungen",
+      "mapRotation": "Kartendrehung",
+      "rotateWithCompass": "Mit Kompass drehen",
+      "allowPitch": "Neigung erlauben",
+      "background": "Hintergrund",
+      "accuracyCircle": "Genauigkeitskreis",
+      "layerSettings": "Ebeneneinstellungen",
+      "backgroundTransparency": "Hintergrundtransparenz",
+      "backgroundTransparencyDesc": "Transparenz der Hintergrundebenen anpassen",
+      "uiSettings": "UI-Einstellungen",
+      "zoomControl": "Zoom-Steuerung",
+      "showScale": "Maßstab anzeigen",
+      "metricUnits": "Metrische Einheiten",
+      "displaySettings": "Anzeigeeinstellungen",
+      "enableStatusBar": "Statusleiste aktivieren",
+      "statusBarHeight": {
+        "ultraThin": "Ultra dünn (28px)",
+        "compact": "Kompakt (32px)",
+        "normal": "Normal (40px)"
+      },
+      "buttonSize": {
+        "label": "Schaltflächengröße",
+        "small": "Klein",
+        "medium": "Mittel",
+        "large": "Groß",
+        "extraLarge": "Extra groß"
+      },
+      "colorTheme": {
+        "label": "Farbschema",
+        "light": "Hell",
+        "geolantis": "Geolantis",
+        "glow": "Leuchten",
+        "trans": "Transparent",
+        "black": "Schwarz",
+        "white": "Weiß"
+      },
+      "threeDBuilding": "3D Gebäude",
+      "resetBasemap": "Basiskarte zurücksetzen",
+      "commandLineTool": "Kommandozeilen-Tool"
+    },
+    "tools": {
+      "measurementModes": "Messmodi",
+      "toggleMeasurementDesc": "Messmodi ein-/ausschalten. Änderungen werden wirksam, wenn das Messwerkzeug neu gestartet wird.",
+      "commandLineTool": "Kommandozeilen-Tool",
+      "modes": {
+        "point": "Punkt",
+        "line": "Linie",
+        "polygon": "Polygon",
+        "rectangle": "Rechteck",
+        "circle": "Kreis",
+        "sector": "Sektor",
+        "sensor": "Sensor",
+        "freehand": "Freihand",
+        "angledRectangle": "Schräges Rechteck"
+      }
+    },
+    "statusBar": {
+      "statusBar": "Statusleiste",
+      "latitude": "Breitengrad",
+      "longitude": "Längengrad",
+      "altitude": "Höhe",
+      "accuracy": "Genauigkeit",
+      "gps": "GPS",
+      "gnss": "GNSS",
+      "fix": "Fix",
+      "status": "Status",
+      "coordinates": "Koordinaten",
+      "speed": "Geschwindigkeit",
+      "heading": "Richtung",
+      "satellites": "Satelliten",
+      "deviceName": "Gerätename",
+      "time": "Zeit",
+      "battery": "Batterie"
+    }
+  },
+  "measurement": {
+    "enableSnapping": "Einrasten aktivieren",
+    "disableSnapping": "Einrasten deaktivieren",
+    "units": {
+      "meters": "m",
+      "kilometers": "km",
+      "feet": "ft",
+      "miles": "mi",
+      "squareMeters": "m²",
+      "squareKilometers": "km²",
+      "hectares": "ha"
+    }
+  },
+  "featureInfo": {
+    "title": "Feature-Info",
+    "unnamedFeature": "Unbenanntes Feature",
+    "noDescription": "Keine Beschreibung verfügbar",
+    "unknown": "Unbekannt",
+    "noAdditionalAttributes": "Keine zusätzlichen Attribute verfügbar",
+    "noProperties": "Keine Eigenschaften für dieses Feature verfügbar",
+    "geometryTypes": {
+      "point": "Punkt",
+      "line": "Linie",
+      "polygon": "Polygon"
+    }
+  },
+  "stakeout": {
+    "navigationMode": "Navigationsmodus",
+    "nodes": "Absteckungspunkte",
+    "lines": "Absteckungslinien",
+    "segments": "Segmente",
+    "totalDistance": "Gesamt: {{distance}} m",
+    "total": "Gesamt"
+  },
+  "messages": {
+    "loading": "Laden...",
+    "error": "Fehler",
+    "errorLoadingMap": "Fehler beim Laden der Karte",
+    "couldNotSavePreference": "Einstellung konnte nicht gespeichert werden",
+    "noDataAvailable": "Keine Daten verfügbar",
+    "noOfflineMaps": "Keine Offline-Karten verfügbar",
+    "addOfflineMapsHint": "Fügen Sie .mbtiles- oder .pmtiles-Dateien hinzu, um den Offline-Modus zu aktivieren",
+    "confirmDelete": "Möchten Sie dieses Feature wirklich löschen?"
+  },
+  "contextMenu": {
+    "mapActions": "Kartenaktionen",
+    "selectFeature": "Feature auswählen",
+    "manualCollection": "Manuelle Erfassung",
+    "construct": "Konstruieren",
+    "measure": "Messen",
+    "selectedFeature": "Ausgewähltes Feature",
+    "objectInfo": "Objektinfo",
+    "editCoordinates": "Koordinaten bearbeiten",
+    "stakeOutPoint": "Punkt abstecken",
+    "stakeOutLine": "Linie abstecken",
+    "move": "Verschieben",
+    "moveManually": "Manuell verschieben",
+    "delete": "Löschen",
+    "nodeOperations": "Knotenoperationen",
+    "deleteNode": "Knoten löschen",
+    "insertNode": "Knoten einfügen"
+  },
+  "radialMenu": {
+    "select": "Auswählen",
+    "collect": "Erfassen",
+    "construct": "Konstruieren",
+    "measure": "Messen",
+    "info": "Info",
+    "stake": "Abstecken",
+    "edit": "Bearbeiten",
+    "line": "Linie",
+    "editSubmenu": "Bearbeiten",
+    "move": "Verschieben",
+    "moveManual": "Manuell verschieben",
+    "delete": "Löschen",
+    "node": "Knoten",
+    "deleteNode": "Knoten löschen",
+    "insertNode": "Knoten einfügen"
+  },
+  "measurementTool": {
+    "measureArea": "Fläche messen",
+    "measureLength": "Länge messen",
+    "clearMeasurements": "Messungen löschen"
+  },
+  "statusFooter": {
+    "connectionTypes": {
+      "wifi": "WLAN",
+      "bluetooth": "Bluetooth",
+      "ble": "BLE",
+      "usb": "USB",
+      "connectorApp": "ConnectorApp"
+    },
+    "locatorModels": {
+      "vLoc3RTKPro": "vLoc3 RTK Pro",
+      "rd8200sg": "RD8200SG",
+      "rd8200": "RD8200",
+      "vLoc3": "vLoc3",
+      "leicaUltra": "Leica Ultra"
+    },
+    "rtkStatus": {
+      "fix": " FIX",
+      "float": " FLOAT"
+    },
+    "prefixes": {
+      "ntrip": "NTRIP: ",
+      "rtcm": "RTCM: "
+    }
+  },
+  "stakeoutAlerts": {
+    "featureTypeNotSupported": {
+      "title": "Feature-Typ nicht unterstützt",
+      "message": "Die Absteckung unterstützt derzeit nur Polygone..."
+    },
+    "noFeatureSelected": {
+      "title": "Kein Feature ausgewählt",
+      "message": "Bitte wählen Sie ein Polygon-Feature auf der Karte aus, bevor Sie mit der Absteckung beginnen."
+    },
+    "stakeOutStarted": {
+      "title": "Absteckung gestartet",
+      "message": "Navigation zum ausgewählten {{featureType}} wurde gestartet. Folgen Sie den Richtungspfeilen."
+    },
+    "stakeOutStopped": {
+      "title": "Absteckung beendet",
+      "message": "Navigation wurde beendet."
+    }
+  },
+  "presets": {
+    "button": "Voreinstellungen",
+    "managePresets": "Voreinstellungen verwalten",
+    "savePreset": "Voreinstellung speichern",
+    "presetName": "Name der Voreinstellung",
+    "layerPresets": "Ebenen-Voreinstellungen",
+    "uiPresets": "UI-Voreinstellungen",
+    "presets": "Voreinstellungen",
+    "saverestore_ui_layout": "UI-Layout speichern/wiederherstellen",
+    "ui_presets": "UI-Voreinstellungen"
+  },
+  "kataster": {
+    "toggle": "Kataster umschalten",
+    "toggleBEV": "Kataster BEV umschalten",
+    "toggleGray": "Kataster Grau umschalten"
+  },
+  "common": {
+    "total": "Gesamt",
+    "segments": "Segmente",
+    "loading": "Laden...",
+    "error": "Fehler",
+    "ok": "OK",
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "close": "Schließen",
+    "back": "Zurück",
+    "next": "Weiter",
+    "previous": "Zurück",
+    "yes": "Ja",
+    "no": "Nein"
+  }
+}

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple I18n Debug Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .debug-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .debug-section h2 {
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        .info-line {
+            margin: 10px 0;
+            padding: 8px;
+            background: #f9f9f9;
+            border-left: 4px solid #4CAF50;
+        }
+        .error-line {
+            margin: 10px 0;
+            padding: 8px;
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+            color: #c62828;
+        }
+        .success-line {
+            margin: 10px 0;
+            padding: 8px;
+            background: #e8f5e8;
+            border-left: 4px solid #4CAF50;
+            color: #2e7d32;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        button.secondary {
+            background: #2196F3;
+        }
+        button.secondary:hover {
+            background: #1976D2;
+        }
+        .translation-test {
+            background: #fff3e0;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border: 1px solid #ffb74d;
+        }
+        .translation-test strong {
+            color: #f57c00;
+        }
+        pre {
+            background: #263238;
+            color: #fff;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 I18n Debug Test - Simple Version</h1>
+    
+    <div class="debug-section">
+        <h2>Quick Actions</h2>
+        <button onclick="runFullDiagnosis()">🔍 Run Full Diagnosis</button>
+        <button onclick="forceGerman()" class="secondary">🇩🇪 Force German</button>
+        <button onclick="testTranslation()">🔤 Test Translation</button>
+        <button onclick="clearStorage()">🗑️ Clear Storage</button>
+        <button onclick="showDebugInfo()">📊 Show Debug Info</button>
+    </div>
+    
+    <div class="debug-section">
+        <h2>Browser Information</h2>
+        <div id="browser-info"></div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>I18n Manager Status</h2>
+        <div id="i18n-status"></div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>Translation Test</h2>
+        <div class="translation-test">
+            <strong>ui.tabs.layers:</strong> <span id="translation-test" data-i18n="ui.tabs.layers">Not translated</span>
+        </div>
+        <div class="translation-test">
+            <strong>ui.settings.mapRotation:</strong> <span id="translation-test2" data-i18n="ui.settings.mapRotation">Not translated</span>
+        </div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>Console Output</h2>
+        <div id="console-output"></div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>Debug Commands</h2>
+        <p>Open browser console and run:</p>
+        <pre>
+// Check debug info
+App.I18n.getDebugInfo()
+
+// Test language detection
+App.I18n.detectLanguage()
+
+// Force German
+App.I18n.forceLanguage('de')
+
+// Test translation
+App.I18n.t('ui.tabs.layers')
+
+// Check loaded languages
+Array.from(App.I18n.loadedLanguages)
+
+// Check translations
+App.I18n.translations
+        </pre>
+    </div>
+
+    <!-- Load the enhanced i18n manager -->
+    <script src="src/i18n/i18n-manager.js"></script>
+    
+    <script>
+        // Override console.log to capture output
+        const originalLog = console.log;
+        const originalError = console.error;
+        const consoleOutput = document.getElementById('console-output');
+        
+        function addToConsole(message, isError = false) {
+            const div = document.createElement('div');
+            div.className = isError ? 'error-line' : 'info-line';
+            div.textContent = message;
+            consoleOutput.appendChild(div);
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addToConsole(args.join(' '));
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addToConsole(args.join(' '), true);
+        };
+        
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, starting i18n debug test...');
+            
+            // Show browser info
+            showBrowserInfo();
+            
+            // Initialize i18n
+            if (App && App.I18n) {
+                App.I18n.init().then(() => {
+                    console.log('I18n initialized successfully');
+                    showI18nStatus();
+                    updateTranslationTest();
+                }).catch(error => {
+                    console.error('I18n initialization failed:', error);
+                    showI18nStatus();
+                });
+            } else {
+                console.error('App.I18n is not available!');
+                showI18nStatus();
+            }
+        });
+        
+        function showBrowserInfo() {
+            const info = document.getElementById('browser-info');
+            info.innerHTML = `
+                <div class="info-line"><strong>navigator.language:</strong> ${navigator.language}</div>
+                <div class="info-line"><strong>navigator.userLanguage:</strong> ${navigator.userLanguage || 'undefined'}</div>
+                <div class="info-line"><strong>navigator.languages:</strong> ${navigator.languages ? navigator.languages.join(', ') : 'undefined'}</div>
+                <div class="info-line"><strong>localStorage language:</strong> ${localStorage.getItem('maplibre_language') || 'not set'}</div>
+                <div class="info-line"><strong>Document lang:</strong> ${document.documentElement.lang}</div>
+                <div class="info-line"><strong>User agent:</strong> ${navigator.userAgent}</div>
+            `;
+        }
+        
+        function showI18nStatus() {
+            const status = document.getElementById('i18n-status');
+            
+            if (typeof App === 'undefined') {
+                status.innerHTML = '<div class="error-line">❌ App object not available</div>';
+                return;
+            }
+            
+            if (typeof App.I18n === 'undefined') {
+                status.innerHTML = '<div class="error-line">❌ App.I18n not available</div>';
+                return;
+            }
+            
+            const debugInfo = App.I18n.getDebugInfo();
+            status.innerHTML = `
+                <div class="success-line">✅ App.I18n is available</div>
+                <div class="info-line"><strong>Current language:</strong> ${debugInfo.currentLanguage}</div>
+                <div class="info-line"><strong>Fallback language:</strong> ${debugInfo.fallbackLanguage}</div>
+                <div class="info-line"><strong>Loaded languages:</strong> ${debugInfo.loadedLanguages.join(', ')}</div>
+                <div class="info-line"><strong>Translation keys:</strong> ${debugInfo.translationKeys.join(', ')}</div>
+                <div class="info-line"><strong>Supported languages:</strong> ${debugInfo.supportedLanguages.join(', ')}</div>
+                <div class="info-line"><strong>Detected language:</strong> ${debugInfo.detectLanguageResult}</div>
+                <div class="info-line"><strong>Bridge available:</strong> ${debugInfo.bridgeAvailable ? '✅' : '❌'}</div>
+                <div class="info-line"><strong>Bridge has language method:</strong> ${debugInfo.bridgeHasLanguageMethod ? '✅' : '❌'}</div>
+            `;
+        }
+        
+        function updateTranslationTest() {
+            if (App && App.I18n) {
+                const test1 = App.I18n.t('ui.tabs.layers');
+                const test2 = App.I18n.t('ui.settings.mapRotation');
+                
+                document.getElementById('translation-test').textContent = test1;
+                document.getElementById('translation-test2').textContent = test2;
+                
+                // Update all elements with data-i18n
+                App.I18n.updatePageTranslations();
+            }
+        }
+        
+        function runFullDiagnosis() {
+            console.log('=== FULL DIAGNOSIS START ===');
+            
+            if (typeof I18nDebugger !== 'undefined') {
+                I18nDebugger.diagnose();
+            } else {
+                console.log('Running built-in diagnosis...');
+                
+                // Browser info
+                console.log('Browser language:', navigator.language);
+                console.log('Browser languages:', navigator.languages);
+                console.log('Saved language:', localStorage.getItem('maplibre_language'));
+                
+                // I18n status
+                if (App && App.I18n) {
+                    console.log('Current language:', App.I18n.getLanguage());
+                    console.log('Loaded languages:', Array.from(App.I18n.loadedLanguages));
+                    console.log('Debug info:', App.I18n.getDebugInfo());
+                } else {
+                    console.error('App.I18n not available');
+                }
+            }
+            
+            console.log('=== FULL DIAGNOSIS END ===');
+        }
+        
+        function forceGerman() {
+            console.log('Forcing German language...');
+            if (App && App.I18n) {
+                App.I18n.forceLanguage('de').then(() => {
+                    console.log('Successfully forced German');
+                    showI18nStatus();
+                    updateTranslationTest();
+                }).catch(error => {
+                    console.error('Failed to force German:', error);
+                });
+            } else {
+                console.error('App.I18n not available');
+            }
+        }
+        
+        function testTranslation() {
+            console.log('Testing translation...');
+            if (App && App.I18n) {
+                const tests = [
+                    'ui.tabs.layers',
+                    'ui.tabs.settings',
+                    'ui.settings.mapRotation',
+                    'messages.loading'
+                ];
+                
+                tests.forEach(key => {
+                    const translation = App.I18n.t(key);
+                    console.log(`${key}: "${translation}"`);
+                });
+                
+                updateTranslationTest();
+            } else {
+                console.error('App.I18n not available');
+            }
+        }
+        
+        function clearStorage() {
+            console.log('Clearing localStorage...');
+            localStorage.removeItem('maplibre_language');
+            console.log('Storage cleared, reload page to test detection');
+        }
+        
+        function showDebugInfo() {
+            if (App && App.I18n) {
+                const debugInfo = App.I18n.getDebugInfo();
+                console.log('Debug Info:', debugInfo);
+                
+                // Also display in UI
+                const div = document.createElement('div');
+                div.className = 'debug-section';
+                div.innerHTML = `
+                    <h2>Debug Info (Latest)</h2>
+                    <pre>${JSON.stringify(debugInfo, null, 2)}</pre>
+                `;
+                document.body.appendChild(div);
+            }
+        }
+    </script>
+</body>
+</html>

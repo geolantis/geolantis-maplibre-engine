@@ -1,0 +1,393 @@
+/* ============================================
+   DRAWER PADDING FIX - COMPREHENSIVE OVERRIDE
+   This file MUST be loaded LAST to override all other CSS
+   ============================================ */
+
+/* ============================================
+   RESET ALL DRAWER PADDING/MARGIN
+   ============================================ */
+
+/* Remove ALL padding/margin from drawer parts */
+sl-drawer::part(panel),
+sl-drawer::part(header),
+sl-drawer::part(header-actions),
+sl-drawer::part(body),
+sl-drawer::part(footer) {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Remove ALL padding from sidebar content */
+sl-drawer .sidebar-content,
+sl-drawer[id$="-drawer"] .sidebar-content,
+#left1-drawer .sidebar-content,
+#left2-drawer .sidebar-content,
+#left3-drawer .sidebar-content,
+#left4-drawer .sidebar-content,
+#left4a-drawer .sidebar-content {
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  align-items: stretch !important; /* Override center alignment */
+  box-sizing: border-box !important;
+}
+
+/* ============================================
+   TAB GROUP COMPACT LAYOUT
+   ============================================ */
+
+/* Tab group container - proper flex layout */
+sl-tab-group[placement="start"] {
+  margin-top: 0 !important;
+  display: flex !important;
+  flex-direction: row !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Tab group base part - ensure proper flex layout */
+sl-tab-group[placement="start"]::part(base) {
+  display: flex !important;
+  flex-direction: row !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Tab navigation - narrow and compact, fixed width */
+sl-tab-group[placement="start"]::part(nav) {
+  padding: 4px 0 !important;
+  margin: 0 !important;
+  gap: 0 !important;
+  width: 44px !important;
+  min-width: 44px !important;
+  max-width: 44px !important;
+  flex: 0 0 44px !important; /* Don't grow or shrink, stay at 44px */
+  align-items: center !important;
+}
+
+/* Tab body - fill remaining space after nav */
+sl-tab-group[placement="start"]::part(body) {
+  padding: 0 !important;
+  margin: 0 !important;
+  flex: 1 !important; /* Take up remaining space */
+  min-width: 0 !important; /* Allow shrinking */
+  overflow: visible !important;
+}
+
+/* Tab panels - minimal top padding */
+sl-tab-panel,
+sl-tab-panel::part(base),
+[id^="sl-tab-panel-"] {
+  padding: 0px 0 0 0 !important;
+  margin: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  --padding: 0 !important;
+}
+
+/* Individual tabs - ultra compact */
+sl-tab {
+  margin: 1px 0 !important;
+}
+
+sl-tab::part(base) {
+  padding: 4px !important;
+  margin: 2px !important;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 4px !important;
+}
+
+/* Tab icons - slightly smaller */
+sl-tab sl-icon {
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+}
+
+/* ============================================
+   CONTENT AREA FULL WIDTH
+   ============================================ */
+
+/* Controls container - full width, tight spacing */
+.controls,
+sl-drawer .controls,
+sl-drawer[id$="-drawer"] .controls,
+#left1-drawer .controls,
+#left2-drawer .controls,
+#left3-drawer .controls,
+#left4-drawer .controls,
+#left4a-drawer .controls {
+  padding: 0 !important; /* Remove horizontal padding for full width */
+  margin: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 4px !important;
+  box-sizing: border-box !important;
+}
+
+/* Individual control items - compact spacing */
+.controls > *,
+sl-drawer .controls > *,
+sl-drawer[id$="-drawer"] .controls > * {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 6px 12px !important;
+  box-sizing: border-box !important;
+}
+
+/* ============================================
+   BASEMAP CONTROLS SPECIFIC
+   ============================================ */
+
+#basemap-controls,
+sl-drawer #basemap-controls,
+#left1-drawer #basemap-controls {
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+/* Ensure the controls div parent has no padding */
+#left1-drawer .controls#basemap-controls {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Basemap table full width */
+#basemap-controls table {
+  width: 100% !important;
+  table-layout: fixed !important;
+  border-collapse: collapse !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Basemap scroll container */
+#basemap-controls > div {
+  width: 100% !important;
+  height: 100% !important;
+  overflow: auto !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+#basemap-controls .basemap-radio,
+#basemap-controls label.basemap-label {
+  width: 100% !important;
+  margin: 0 0 var(--spacing-sm, 0.5rem) 0 !important;
+  padding: var(--spacing-sm, 0.5rem) var(--spacing-md, 0.75rem) !important;
+  box-sizing: border-box !important;
+}
+
+/* ============================================
+   BUTTONS AND COMPONENTS FULL WIDTH
+   ============================================ */
+
+/* All buttons in drawers - compact */
+sl-drawer sl-button,
+sl-drawer[id$="-drawer"] sl-button,
+sl-drawer .controls sl-button,
+sl-drawer sl-tooltip sl-button {
+  width: 100% !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Button internals - smaller padding */
+sl-drawer sl-button::part(base) {
+  width: 100% !important;
+  justify-content: flex-start !important;
+  padding: 6px 12px !important;
+  font-size: 13px !important;
+}
+
+/* Overlay control buttons - extra compact */
+.overlaycontrols sl-button::part(base) {
+  padding: 6px 12px !important;
+}
+
+/* Tooltips full width */
+sl-drawer sl-tooltip {
+  width: 100% !important;
+  display: block !important;
+}
+
+/* Switches - compact spacing */
+sl-drawer sl-switch {
+  width: 100% !important;
+  padding: 6px 12px !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Settings switches specific - tighter */
+#left2-drawer sl-switch {
+  padding: 6px 12px !important;
+}
+
+/* Radio groups full width */
+sl-drawer sl-radio-group,
+sl-drawer sl-radio-button {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* ============================================
+   HEADERS AND TITLES
+   ============================================ */
+
+/* Main drawer headers - compact spacing */
+sl-drawer .sidebar-content > h3,
+sl-drawer[id$="-drawer"] .sidebar-content > h3 {
+  width: 100% !important;
+  margin: 0 0 8px 0 !important;
+  padding: 8px 12px !important;
+  font-size: 16px !important;
+  box-sizing: border-box !important;
+}
+
+/* Section headers within panels - even tighter */
+sl-tab-panel > h3,
+sl-tab-panel .controls > h3 {
+  width: 100% !important;
+  margin: 0 0 6px 0 !important;
+  padding: 0 8px !important;
+  font-size: 14px !important;
+  box-sizing: border-box !important;
+}
+
+/* ============================================
+   SPECIAL CASES
+   ============================================ */
+
+/* Overlay controls - compact with proper spacing */
+.overlaycontrols {
+  padding: 0 !important; /* Remove horizontal padding for full width */
+  margin: 0 !important;
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+  box-sizing: border-box !important;
+}
+
+.overlaycontrols sl-button {
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+.overlaycontrols sl-tooltip {
+  width: 100% !important;
+  display: block !important;
+  margin: 0 !important;
+}
+
+/* Settings buttons - compact layout */
+.settings-buttons {
+  width: 100% !important;
+  padding: 0 !important;
+  margin: 8px 0 !important;
+  gap: 4px !important;
+  box-sizing: border-box !important;
+}
+
+.settings-buttons button {
+  padding: 4px 8px !important;
+  font-size: 12px !important;
+}
+
+/* Remove any shoelace custom width constraints */
+sl-drawer .sidebar-content sl-button,
+sl-drawer .sidebar-content sl-switch,
+sl-drawer .sidebar-content sl-select,
+sl-drawer .sidebar-content sl-radio-group,
+sl-drawer .sidebar-content sl-input,
+sl-drawer .sidebar-content sl-range,
+sl-drawer .sidebar-content sl-label,
+sl-drawer .sidebar-content sl-tooltip::part(base),
+sl-drawer .sidebar-content sl-divider {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+}
+
+/* Extra specificity for overlaycontrols buttons */
+.overlaycontrols sl-button,
+.overlaycontrols sl-tooltip sl-button,
+#toggleKataster {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+}
+
+/* ============================================
+   DIVIDERS
+   ============================================ */
+
+sl-drawer sl-divider {
+  padding: 0 !important;
+  margin: 6px 0 !important;
+  width: 100% !important;
+}
+
+/* ============================================
+   REMOVE DUPLICATE HEADINGS
+   ============================================ */
+
+/* Hide the h3 inside tab panels since tab names already show the section */
+sl-tab-panel[name="baselayers"] > h3,
+sl-tab-panel[name="overlays"] > h3,
+sl-tab-panel[name="tools"] > h3 {
+  display: none !important;
+}
+
+/* ============================================
+   SCROLLING FIX
+   ============================================ */
+
+sl-drawer .sidebar-content,
+sl-drawer sl-tab-panel {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+/* Search panel handled by search-fix.css */
+
+/* ============================================
+   MOBILE RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+  /* Even tighter spacing on mobile */
+  .controls > *,
+  sl-drawer .controls > *,
+  sl-drawer sl-button::part(base),
+  sl-drawer sl-switch,
+  sl-drawer .sidebar-content > h3 {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+  
+  /* Smaller tab nav on mobile */
+  sl-tab-group[placement="start"]::part(nav) {
+    width: 40px !important;
+    min-width: 40px !important;
+    max-width: 40px !important;
+  }
+  
+  sl-tab::part(base) {
+    width: 32px !important;
+    height: 32px !important;
+  }
+}
