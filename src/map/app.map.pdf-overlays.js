@@ -73,11 +73,11 @@ App.Map.PdfOverlays = (function() {
         
         // Check if we're on the production domain
         if (hostname === 'tools.geolantis.com') {
-            return 'https://tools.geolantis.com';
+            return 'https://tools-production-a74e.up.railway.app';
         }
         
-        // For Vercel previews or other domains, use the same domain
-        return 'https://tools.geolantis.com';
+        // For Vercel previews or other domains, use Railway backend
+        return 'https://tools-production-a74e.up.railway.app';
     }
 
     /**
@@ -137,12 +137,24 @@ App.Map.PdfOverlays = (function() {
         console.log('📡 Fetching overlays from:', `${apiUrl}?${params}`);
         console.log('🔐 Request cookies being sent:', document.cookie);
         
+        // Get Bearer token for cross-domain authentication
+        const token = App.UI && App.UI.AuthSettings ? App.UI.AuthSettings.getToken() : null;
+        console.log('🔐 Bearer token available:', !!token);
+        
+        const headers = {
+            'Content-Type': 'application/json'
+        };
+        
+        // Add Bearer token for cross-domain requests
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+            console.log('🔐 Added Bearer token to headers');
+        }
+        
         fetch(`${apiUrl}`, {
             method: 'GET',
-            credentials: 'include', // Important for session cookies
-            headers: {
-                'Content-Type': 'application/json'
-            }
+            credentials: 'include', // Important for same-domain session cookies
+            headers: headers
         })
             .then(response => {
                 console.log('📨 API Response status:', response.status);
@@ -223,10 +235,21 @@ App.Map.PdfOverlays = (function() {
                         // FORCE all overlays to use /image endpoint (not tiles) like PDF Manager
                         const baseImageUrl = `${apiBaseUrl}/api/overlays/${overlay.id}/image`;
                         
-                        // Only add session_id if we have one
-                        const imageUrl = finalSessionId 
-                            ? `${baseImageUrl}?session_id=${finalSessionId}`
-                            : baseImageUrl;
+                        // For cross-domain requests, pass Bearer token as query parameter
+                        const token = App.UI && App.UI.AuthSettings ? App.UI.AuthSettings.getToken() : null;
+                        let imageUrl = baseImageUrl;
+                        
+                        if (token) {
+                            // Use Bearer token for cross-domain authentication
+                            imageUrl = `${baseImageUrl}?bearer_token=${token}`;
+                            console.log(`🔐 Using Bearer token for image: ${overlay.name}`);
+                        } else if (finalSessionId) {
+                            // Fallback to session_id if available
+                            imageUrl = `${baseImageUrl}?session_id=${finalSessionId}`;
+                            console.log(`🔐 Using session_id for image: ${overlay.name}`);
+                        } else {
+                            console.warn(`⚠️ No authentication available for image: ${overlay.name}`);
+                        }
                         
                         if (!finalSessionId) {
                             console.warn(`⚠️ No session_id available for ${overlay.name} - image may fail to load`);

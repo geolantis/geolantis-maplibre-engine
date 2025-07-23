@@ -419,6 +419,23 @@ App.UI.AuthSettings = (function() {
         },
         
         /**
+         * Get current session token for API calls
+         * @returns {string|null} Current session token
+         */
+        getToken: function() {
+            try {
+                var savedLoginStatus = localStorage.getItem(LOGIN_STATUS_KEY);
+                if (savedLoginStatus) {
+                    var loginData = JSON.parse(savedLoginStatus);
+                    return loginData.sessionToken || null;
+                }
+            } catch (error) {
+                console.error('Error getting token:', error);
+            }
+            return null;
+        },
+        
+        /**
          * Trigger login programmatically
          */
         login: function() {
