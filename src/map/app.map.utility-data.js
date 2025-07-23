@@ -157,11 +157,11 @@ App.Map.UtilityData = (function() {
         
         // Check if we're on the production domain
         if (hostname === 'tools.geolantis.com') {
-            return 'https://g360tools-backend.onrender.com';
+            return 'https://tools.geolantis.com';
         }
         
-        // For Vercel previews or other domains, use the backend URL
-        return 'https://g360tools-backend.onrender.com';
+        // For Vercel previews or other domains, use same domain
+        return `https://${hostname}`;
     }
 
     /**
