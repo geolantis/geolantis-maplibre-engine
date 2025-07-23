@@ -165,8 +165,8 @@ App.UI.AuthSettings = (function() {
         var hostname = window.location.hostname;
         
         if (hostname === 'tools.geolantis.com') {
-            // Same domain - backend should be deployed as Vercel serverless functions
-            return 'https://tools.geolantis.com';
+            // Production - use Railway backend
+            return 'https://tools-production-a74e.up.railway.app';
         } else if (hostname === 'localhost' || hostname === '127.0.0.1') {
             return 'http://localhost:8000';
         } else {
